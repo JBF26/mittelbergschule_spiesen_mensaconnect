@@ -855,7 +855,30 @@
   <!-- JAVASCRIPT LOGIK & FIREBASE INTEGRATION                 -->
   <!-- ======================================================== -->
   <script>
-    // App-ID nach Vorgabe
+
+    // FESTE FIREBASE KONFIGURATION
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZyzV1FfeV_5V6VIaeFDluPOSpKjVMsJE",
+      authDomain: "mensa-mittelbergschule.firebaseapp.com",
+      projectId: "mensa-mittelbergschule",
+      storageBucket: "mensa-mittelbergschule.firebasestorage.app",
+      messagingSenderId: "66867389897",
+      appId: "1:66867389897:web:5d6730d8e24ce3a2293418"
+    };
+
+    // Firebase Initialisierung
+    let db = null;
+    try {
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+        console.log("Firebase erfolgreich gestartet!");
+      }
+    } catch (e) {
+      console.error("Firebase Init Fehler:", e);
+    }    // App-ID nach Vorgabe
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'mittelbergschule-spiesen-app';
 
     // App Status Variablen
