@@ -42,22 +42,18 @@
         </div>
       </div>
 
-      <!-- Navigation & Rollen -->
-      <div class="flex flex-wrap items-center gap-2">
-        <!-- PDF Button Direktlink -->
+      <!-- Navigation & Rollen (Aufgeräumt: Ein einziger PDF-Button) -->
+      <div class="flex items-center gap-2">
+        <!-- DER EINZIGE PDF-BUTTON -->
         <a id="btn-pdf-link" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
           <i class="ph-bold ph-file-pdf text-rose-600 text-base"></i>
-          <span>Original PDF</span>
+          <span>Original-Speiseplan (PDF)</span>
         </a>
 
         <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs md:text-sm font-bold">
           <button id="nav-btn-eltern" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition">
             <i class="ph-bold ph-shopping-cart-simple text-emerald-600"></i>
             <span>Bestellung</span>
-          </button>
-          <button id="nav-btn-info" onclick="navigate('info')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
-            <i class="ph-bold ph-newspaper-clipping text-sky-600"></i>
-            <span>Speiseplan</span>
           </button>
           <button id="nav-btn-admin" onclick="requestAdminAccess()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
             <i class="ph-bold ph-lock-key text-slate-500"></i>
@@ -79,16 +75,13 @@
       <!-- Frist & Deadline Banner -->
       <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-emerald-900 text-white rounded-2xl p-5 md:p-6 shadow-lg border border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div class="flex flex-wrap items-center gap-2 mb-2">
+          <div class="flex items-center gap-2 mb-2">
             <span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2 py-0.5 rounded uppercase">Wichtige Frist</span>
-            <span id="banner-kw-tag" class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46 (09.11. - 13.11.2026)</span>
-            <a id="banner-pdf-link" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="bg-rose-500/80 hover:bg-rose-500 text-white text-xs px-2.5 py-0.5 rounded font-medium flex items-center gap-1">
-              <i class="ph-bold ph-file-pdf"></i> Caterer-PDF öffnen
-            </a>
+            <span id="banner-kw-tag" class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46 (09.11. – 13.11.2026)</span>
           </div>
           <h1 class="text-xl md:text-2xl font-black text-white">Mittagessen verbindlich vorbestellen</h1>
           <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-2xl">
-            Bestellungen müssen bis spätestens <strong class="text-amber-300 underline" id="banner-deadline-text">Mittwoch um 18:00 Uhr</strong> abgeschlossen und bezahlt sein.
+            Caterer: <strong>pirrung monsterlecker</strong>. Bestellungen müssen bis spätestens <strong class="text-amber-300 underline" id="banner-deadline-text">Mittwoch um 18:00 Uhr</strong> abgeschlossen sein.
           </p>
         </div>
         <div class="bg-white/10 border border-white/20 rounded-2xl p-3 text-center min-w-[130px] self-start md:self-auto">
@@ -132,7 +125,7 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">E-Mail für Beleg & Quittung *</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">E-Mail für Quittung & Beleg *</label>
                 <input type="email" id="order-email" placeholder="eltern@beispiel.de" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
               </div>
               <div class="sm:col-span-2">
@@ -142,20 +135,22 @@
             </div>
           </div>
 
-          <!-- Tage Montag bis Freitag -->
+          <!-- Speiseplan Auswahl Mo - Fr -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <div class="flex items-center gap-2">
                 <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">2</span>
-                <span>Essensauswahl: Hauptgericht 1 oder Hauptgericht 2</span>
+                <span>Tageswahl: Hauptgericht 1 oder Hauptgericht 2</span>
               </div>
-              <span class="text-xs text-slate-500 font-normal">Tage flexibel wählbar</span>
+              <span class="text-xs text-slate-500 font-normal">Tage frei wählbar</span>
             </div>
+            
+            <!-- HIER WERDEN DIE TAGESKARTEN DYNAMISCH GELADEN -->
             <div id="parent-days-list" class="space-y-4"></div>
           </div>
         </div>
 
-        <!-- Rechts: Abrechnung -->
+        <!-- Rechts: Bestellübersicht & Bezahlung -->
         <div class="lg:col-span-1">
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm sticky top-20 space-y-4">
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2 pb-2 border-b border-slate-100">
@@ -183,7 +178,7 @@
                 <i class="ph-bold ph-credit-card text-emerald-400"></i>
                 <div class="text-left leading-tight">
                   <div>Mit Debit- / Kreditkarte zahlen</div>
-                  <div class="text-[10px] text-emerald-300 font-normal">Ohne PayPal-Konto</div>
+                  <div class="text-[10px] text-emerald-300 font-normal">Ohne Registrierung</div>
                 </div>
               </button>
             </div>
@@ -192,41 +187,7 @@
       </div>
     </div>
 
-    <!-- 2. ELTERN: SPEISEPLAN-INFO & AUSHANG -->
-    <div id="view-info" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
-          <div>
-            <div class="text-xs uppercase font-extrabold tracking-wider text-emerald-700">Caterer: pirrung monsterlecker (St. Ingbert)</div>
-            <h1 class="text-2xl font-black text-slate-900" id="info-sheet-title">Speiseplan Kalenderwoche 46</h1>
-            <p class="text-xs text-slate-500 mt-0.5">09.11.2026 – 13.11.2026 • DGE-zertifizierte Menülinie inklusive Salat und Dessert</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <a id="info-pdf-download-btn" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs rounded-xl flex items-center gap-1.5 transition">
-              <i class="ph-bold ph-file-pdf text-rose-600 text-base"></i> Original Caterer-PDF öffnen
-            </a>
-            <button onclick="window.print()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5">
-              <i class="ph-bold ph-printer"></i> Drucken
-            </button>
-          </div>
-        </div>
-
-        <div id="info-days-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-
-        <!-- Allergen-Legende laut Caterer Pirrung -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
-          <div class="font-bold text-slate-800 flex items-center gap-1">
-            <i class="ph-bold ph-info text-emerald-600"></i> Allergen- & Zusatzstoff-Kennzeichnung (pirrung monsterlecker):
-          </div>
-          <p class="text-[11px] leading-relaxed text-slate-500">
-            <strong>Allergene:</strong> a = Gluten (a1 Weizen, a2 Roggen, a3 Gerste/Malz, a4 Hafer), c = Eier, d = Fisch, f = Soja, g = Milch/Milcherzeugnisse, g1 = Milcheiweiß, i = Sellerie, k = Sesam, y = Hülsenfrucht, z = Zitrusfrucht.<br>
-            <strong>Zusatzstoffe:</strong> 1 = mit Farbstoff, 2 = mit Konservierungsstoffen, 3 = mit Antioxidationsmittel, 16 = Schwefeldioxid und Sulfite.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. ADMIN & BETREUER BEREICH -->
+    <!-- 2. ADMIN & BETREUER BEREICH -->
     <div id="view-admin" class="hidden space-y-6">
       <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
@@ -234,7 +195,7 @@
             <h1 class="text-lg md:text-xl font-black text-slate-900">Verwaltung Mittelbergschule</h1>
             <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold" id="admin-kw-badge">KW 46</span>
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">Echtzeit-Synchronisation, Meldung & Ausgabeliste</p>
+          <p class="text-xs text-slate-500 mt-0.5">Meldung an Caterer & Ausgabeliste</p>
         </div>
 
         <div class="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs font-bold">
@@ -251,7 +212,7 @@
             <i class="ph-bold ph-list-dashes text-indigo-600"></i> Buchungen & Kasse
           </button>
           <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
-            <i class="ph-bold ph-gear text-slate-500"></i> Einstellungen & PDF
+            <i class="ph-bold ph-gear text-slate-500"></i> Einstellungen
           </button>
         </div>
       </div>
@@ -266,7 +227,7 @@
             </div>
             <div class="flex gap-2">
               <button onclick="copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5">
-                <i class="ph-bold ph-copy"></i> Fertige Caterer-E-Mail kopieren
+                <i class="ph-bold ph-copy"></i> Fertige E-Mail kopieren
               </button>
               <button onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5">
                 <i class="ph-bold ph-printer"></i> Drucken
@@ -349,7 +310,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
               <h2 class="text-base font-extrabold text-slate-900">Speiseplan pflegen & bearbeiten</h2>
-              <p class="text-xs text-slate-500">Alle Gerichte aus KW 46 sind bereits geladen. Änderungen werden sofort aktiv.</p>
+              <p class="text-xs text-slate-500">Alle Gerichte aus der Caterer-PDF für KW 46 sind aktiv hinterlegt.</p>
             </div>
             <div class="flex gap-2">
               <button onclick="resetToKW46()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1">
@@ -361,14 +322,13 @@
             </div>
           </div>
 
-          <!-- Kalenderwoche & PDF Verlinkung -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
             <div>
               <label class="block font-bold text-slate-700 mb-1">Kalenderwoche (KW)</label>
               <input type="number" id="edit-kw-number" value="46" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white">
             </div>
             <div class="sm:col-span-2">
-              <label class="block font-bold text-slate-700 mb-1">Link zur aktuellen Caterer-PDF (wird auf der Startseite verlinkt)</label>
+              <label class="block font-bold text-slate-700 mb-1">Link zur Original-PDF (Schul-Website / Caterer)</label>
               <input type="url" id="edit-pdf-url" value="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white">
             </div>
           </div>
@@ -462,7 +422,7 @@
       <div id="paypal-success-view" class="hidden text-center py-4 space-y-3">
         <i class="ph-bold ph-check-circle text-4xl text-emerald-600 mx-auto block"></i>
         <div class="font-extrabold text-slate-900">Buchung erfolgreich!</div>
-        <p class="text-xs text-slate-500">Das Essen wurde direkt für die Betreuung gespeichert.</p>
+        <p class="text-xs text-slate-500">Das Essen wurde direkt im System gespeichert.</p>
         <button onclick="finishCheckout()" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl text-xs">Fertig</button>
       </div>
     </div>
@@ -529,7 +489,7 @@
   </div>
 
   <!-- ======================================================== -->
-  <!-- JAVASCRIPT LOGIK MIT VOLLSTÄNDIGEN DATEN AUS DER PDF     -->
+  <!-- JAVASCRIPT LOGIK                                         -->
   <!-- ======================================================== -->
   <script>
     const firebaseConfig = {
@@ -552,11 +512,11 @@
       pdfUrl: "https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf"
     };
 
-    // ORIGINALDATEN AUS DER PDF KW 46 (pirrung monsterlecker)
-    const kw46Data = {
+    // ORIGINALDATEN AUS DER CATERER-PDF KW 46
+    const defaultKW46Plan = {
       kw: 46,
       period: "09.11.2026 – 13.11.2026",
-      caterer: "pirrung monsterlecker - Küche St. Ingbert",
+      caterer: "pirrung monsterlecker - St. Ingbert",
       pdfUrl: "https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf",
       days: [
         {
@@ -564,8 +524,8 @@
           name: 'Montag',
           date: '09.11.2026',
           salat: '–',
-          hg1: { name: 'Blumenkohl-Creme-Suppe mit Mehrkornbrötchen', desc: 'Blumenkohl, Kartoffel, Milch & frisches Brötchen', allergens: 'a, a1, a2, a3, a4, g, g1, k' },
-          hg2: { name: 'Ravioli mit Tomatenfüllung in Tomatensoße', desc: 'feine Nudeltaschen vegetarisch', allergens: 'a, a1, c' },
+          hg1: { name: 'Blumenkohl-Creme-Suppe mit Mehrkornbrötchen', desc: 'Blumenkohl, Kartoffel, Milch & Mehrkornbrötchen', allergens: 'a, a1, a2, a3, a4, g, g1, k' },
+          hg2: { name: 'Ravioli mit Tomatenfüllung in Tomatensoße', desc: 'feine gefüllte Pasta vegetarisch', allergens: 'a, a1, c' },
           dessert: 'Apfel'
         },
         {
@@ -582,8 +542,8 @@
           name: 'Mittwoch',
           date: '11.11.2026',
           salat: 'Gurkensalat',
-          hg1: { name: 'Wild/MSC paniertes Seelachsfilet mit kalter Kräutersauce & Kartoffelstampf', desc: 'DGE-zertifizierter Fisch', allergens: 'a, a1, d, g, g1' },
-          hg2: { name: 'Rahmkartoffeln mit Brokkoli', desc: 'vegetarischer Auflaufklassiker', allergens: 'g, g1' },
+          hg1: { name: 'Wild/MSC paniertes Seelachsfilet mit Kräutersauce & Kartoffelstampf', desc: 'DGE-zertifizierter Fisch', allergens: 'a, a1, d, g, g1' },
+          hg2: { name: 'Rahmkartoffeln mit Brokkoli', desc: 'herzhafter Kartoffelauflauf', allergens: 'g, g1' },
           dessert: 'Birne'
         },
         {
@@ -600,14 +560,14 @@
           name: 'Freitag',
           date: '13.11.2026',
           salat: 'Möhrensalat mit Orangen-Dressing',
-          hg1: { name: 'Penne mit Tomatensauce & Reibekäse', desc: 'Pasta-Liebling der Kinder', allergens: 'a, a1, g, g1' },
-          hg2: { name: 'Käsespätzle', desc: 'herzhaft mit würzigem Käse überbacken', allergens: 'a, a1, c, g, g1' },
+          hg1: { name: 'Penne mit Tomatensauce & Reibekäse', desc: 'Nudelliebling der Kinder', allergens: 'a, a1, g, g1' },
+          hg2: { name: 'Käsespätzle', desc: 'mit würzigem Käse überbacken', allergens: 'a, a1, c, g, g1' },
           dessert: 'Banane'
         }
       ]
     };
 
-    let menuPlan = JSON.parse(JSON.stringify(kw46Data));
+    let menuPlan = JSON.parse(JSON.stringify(defaultKW46Plan));
     let orders = [];
     let currentSelection = { mo: 'none', di: 'none', mi: 'none', do: 'none', fr: 'none' };
     let selectedPaymentMode = 'paypal';
@@ -616,7 +576,6 @@
       loadLocalStorageFallback();
       initFirebase();
       renderParentDays();
-      renderInfoCards();
       updateCheckoutCalculation();
     });
 
@@ -651,11 +610,13 @@
 
       db.collection('config').doc('menuPlan').onSnapshot((doc) => {
         if (doc.exists) {
-          menuPlan = doc.data();
-          localStorage.setItem('mbs_menu', JSON.stringify(menuPlan));
-          applySettingsToUI();
-          renderParentDays();
-          renderInfoCards();
+          const remotePlan = doc.data();
+          if (remotePlan && remotePlan.days && remotePlan.days[0].hg1) {
+            menuPlan = remotePlan;
+            localStorage.setItem('mbs_menu', JSON.stringify(menuPlan));
+            applySettingsToUI();
+            renderParentDays();
+          }
         }
       });
     }
@@ -671,8 +632,15 @@
       try {
         const storedOrders = localStorage.getItem('mbs_orders');
         if (storedOrders) orders = JSON.parse(storedOrders);
+
         const storedMenu = localStorage.getItem('mbs_menu');
-        if (storedMenu) menuPlan = JSON.parse(storedMenu);
+        if (storedMenu) {
+          const parsed = JSON.parse(storedMenu);
+          // Nur laden wenn neue hg1/hg2 Struktur vorhanden ist
+          if (parsed && parsed.days && parsed.days[0].hg1) {
+            menuPlan = parsed;
+          }
+        }
         const storedSettings = localStorage.getItem('mbs_settings');
         if (storedSettings) appSettings = { ...appSettings, ...JSON.parse(storedSettings) };
       } catch (e) {}
@@ -683,16 +651,13 @@
       const p = appSettings.price.toFixed(2).replace('.', ',') + ' €';
       document.getElementById('display-price-header').innerText = p;
       document.getElementById('checkout-single-price').innerText = p;
-      document.getElementById('banner-kw-tag').innerText = `KW ${menuPlan.kw} (${menuPlan.period || 'Woche'})`;
+      document.getElementById('banner-kw-tag').innerText = `KW ${menuPlan.kw} (${menuPlan.period || '09.11. – 13.11.2026'})`;
       document.getElementById('admin-kw-badge').innerText = `KW ${menuPlan.kw}`;
       document.getElementById('caterer-title-kw').innerText = `KW ${menuPlan.kw}`;
-      document.getElementById('info-sheet-title').innerText = `Speiseplan Kalenderwoche ${menuPlan.kw}`;
       document.getElementById('edit-kw-number').value = menuPlan.kw;
       
       const pdfUrl = menuPlan.pdfUrl || appSettings.pdfUrl;
       document.getElementById('btn-pdf-link').href = pdfUrl;
-      document.getElementById('banner-pdf-link').href = pdfUrl;
-      document.getElementById('info-pdf-download-btn').href = pdfUrl;
       document.getElementById('edit-pdf-url').value = pdfUrl;
     }
 
@@ -703,20 +668,15 @@
 
     function navigate(view) {
       document.getElementById('view-eltern').classList.add('hidden');
-      document.getElementById('view-info').classList.add('hidden');
       document.getElementById('view-admin').classList.add('hidden');
 
       document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
-      document.getElementById('nav-btn-info').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
       document.getElementById('nav-btn-admin').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
 
       if (view === 'eltern') {
         document.getElementById('view-eltern').classList.remove('hidden');
         document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition";
-      } else if (view === 'info') {
-        document.getElementById('view-info').classList.remove('hidden');
-        document.getElementById('nav-btn-info').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition";
-        renderInfoCards();
+        renderParentDays();
       } else if (view === 'admin') {
         document.getElementById('view-admin').classList.remove('hidden');
         document.getElementById('nav-btn-admin').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition";
@@ -761,42 +721,56 @@
       if (name === 'speiseplan') renderEditorFields();
     }
 
-    // ELTERN: TAGESAUSWAHL HAUPTGERICHT 1 / HAUPTGERICHT 2
+    // ELTERN: TAGESKARTEN RENDERN (SICHER MIT HG1 UND HG2)
     function renderParentDays() {
       const c = document.getElementById('parent-days-list');
+      if (!c) return;
       c.innerHTML = '';
+
+      if (!menuPlan || !menuPlan.days || !menuPlan.days[0].hg1) {
+        menuPlan = JSON.parse(JSON.stringify(defaultKW46Plan));
+      }
+
       menuPlan.days.forEach(d => {
         const div = document.createElement('div');
-        div.className = "border border-slate-200 rounded-2xl p-4 bg-white";
+        div.className = "border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs";
         div.innerHTML = `
-          <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
             <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
               <span>${d.name} (${d.date || ''})</span>
             </div>
             <div class="text-[11px] text-slate-500">
-              <span class="font-semibold text-slate-700">Dessert:</span> ${d.dessert} ${d.salat && d.salat !== '–' ? `• <span class="font-semibold text-slate-700">Salat:</span> ${d.salat}` : ''}
+              ${d.salat && d.salat !== '–' ? `<span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: ${d.salat}</span>` : ''}
+              <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: ${d.dessert || 'Obst'}</span>
             </div>
           </div>
+
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             <!-- HG 1 -->
-            <label class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between ${currentSelection[d.id] === 'hg1' ? 'border-blue-600 bg-blue-50/60 ring-1 ring-blue-500' : 'border-slate-200 hover:border-slate-300 bg-white'}">
+            <label class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between ${currentSelection[d.id] === 'hg1' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-500' : 'border-slate-200 hover:border-slate-300 bg-white'}">
               <div>
                 <input type="radio" name="choice-${d.id}" value="hg1" class="hidden" onchange="pickMeal('${d.id}', 'hg1')" ${currentSelection[d.id] === 'hg1' ? 'checked' : ''}>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                  <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                </div>
                 <div class="font-bold text-xs text-slate-900 mt-1">${d.hg1.name}</div>
-                <div class="text-[11px] text-slate-500 mt-0.5">${d.hg1.desc || ''}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">${d.hg1.desc || ''}</div>
               </div>
               <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: ${d.hg1.allergens || '-'}</div>
             </label>
 
             <!-- HG 2 -->
-            <label class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between ${currentSelection[d.id] === 'hg2' ? 'border-emerald-600 bg-emerald-50/60 ring-1 ring-emerald-500' : 'border-slate-200 hover:border-slate-300 bg-white'}">
+            <label class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between ${currentSelection[d.id] === 'hg2' ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-500' : 'border-slate-200 hover:border-slate-300 bg-white'}">
               <div>
                 <input type="radio" name="choice-${d.id}" value="hg2" class="hidden" onchange="pickMeal('${d.id}', 'hg2')" ${currentSelection[d.id] === 'hg2' ? 'checked' : ''}>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                  <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                </div>
                 <div class="font-bold text-xs text-slate-900 mt-1">${d.hg2.name}</div>
-                <div class="text-[11px] text-slate-500 mt-0.5">${d.hg2.desc || ''}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">${d.hg2.desc || ''}</div>
               </div>
               <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: ${d.hg2.allergens || '-'}</div>
             </label>
@@ -822,6 +796,7 @@
 
     function updateCheckoutCalculation() {
       const summary = document.getElementById('checkout-day-summary');
+      if (!summary) return;
       summary.innerHTML = '';
       let count = 0;
       menuPlan.days.forEach(d => {
@@ -842,53 +817,7 @@
       document.getElementById('checkout-total-price').innerText = total.toFixed(2).replace('.', ',') + ' €';
     }
 
-    // SPEISEPLAN AUSHANG-ANSICHT
-    function renderInfoCards() {
-      const container = document.getElementById('info-days-cards');
-      if (!container) return;
-      container.innerHTML = '';
-      menuPlan.days.forEach(d => {
-        const card = document.createElement('div');
-        card.className = "border border-slate-200 rounded-2xl p-4 bg-slate-50/50 flex flex-col justify-between";
-        card.innerHTML = `
-          <div>
-            <div class="font-black text-slate-900 text-sm pb-2 mb-3 border-b border-slate-200 flex items-center justify-between">
-              <span>${d.name} <span class="text-slate-400 text-xs font-normal">(${d.date || ''})</span></span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold uppercase">Tagesplan</span>
-            </div>
-
-            ${d.salat && d.salat !== '–' ? `
-            <div class="bg-amber-50 border border-amber-200 p-2 rounded-xl text-[11px] text-amber-900 mb-2">
-              <span class="font-bold">Salat:</span> ${d.salat}
-            </div>` : ''}
-
-            <div class="space-y-2.5">
-              <div class="bg-white p-3 rounded-xl border border-blue-100 shadow-2xs">
-                <div class="text-[10px] font-bold text-blue-700 uppercase">Hauptgericht 1</div>
-                <div class="font-bold text-xs text-slate-900 mt-0.5">${d.hg1.name}</div>
-                <div class="text-[11px] text-slate-500">${d.hg1.desc || ''}</div>
-                <div class="text-[10px] text-slate-400 mt-1 font-mono">Allergene: ${d.hg1.allergens || '-'}</div>
-              </div>
-
-              <div class="bg-white p-3 rounded-xl border border-emerald-100 shadow-2xs">
-                <div class="text-[10px] font-bold text-emerald-700 uppercase">Hauptgericht 2</div>
-                <div class="font-bold text-xs text-slate-900 mt-0.5">${d.hg2.name}</div>
-                <div class="text-[11px] text-slate-500">${d.hg2.desc || ''}</div>
-                <div class="text-[10px] text-slate-400 mt-1 font-mono">Allergene: ${d.hg2.allergens || '-'}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-600 flex items-center gap-1.5">
-            <i class="ph-bold ph-apple-logo text-emerald-600"></i>
-            <span><strong>Dessert:</strong> ${d.dessert || '-'}</span>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // CHECKOUT
+    // CHECKOUT MODAL
     function startCheckout(mode) {
       selectedPaymentMode = mode;
       const v = document.getElementById('order-vorname').value.trim();
@@ -953,7 +882,7 @@
       updateCheckoutCalculation();
     }
 
-    // ADMIN: CATERER-MELDUNG
+    // ADMIN: CATERER MELDUNG
     function renderCatererTable() {
       const tbody = document.getElementById('caterer-table-body');
       tbody.innerHTML = '';
@@ -1060,13 +989,13 @@
             <div class="bg-blue-50/60 p-3 rounded-lg border border-blue-200 space-y-2">
               <span class="font-bold text-blue-900 block">Hauptgericht 1</span>
               <input type="text" id="edit-${d.id}-hg1-name" value="${d.hg1.name}" placeholder="Name" class="w-full p-2 border rounded bg-white font-medium">
-              <input type="text" id="edit-${d.id}-hg1-desc" value="${d.hg1.desc || ''}" placeholder="Beschreibung / Beilage" class="w-full p-2 border rounded bg-white">
+              <input type="text" id="edit-${d.id}-hg1-desc" value="${d.hg1.desc || ''}" placeholder="Beschreibung" class="w-full p-2 border rounded bg-white">
               <input type="text" id="edit-${d.id}-hg1-all" value="${d.hg1.allergens || ''}" placeholder="Allergene" class="w-full p-2 border rounded bg-white font-mono">
             </div>
             <div class="bg-emerald-50/60 p-3 rounded-lg border border-emerald-200 space-y-2">
               <span class="font-bold text-emerald-900 block">Hauptgericht 2</span>
               <input type="text" id="edit-${d.id}-hg2-name" value="${d.hg2.name}" placeholder="Name" class="w-full p-2 border rounded bg-white font-medium">
-              <input type="text" id="edit-${d.id}-hg2-desc" value="${d.hg2.desc || ''}" placeholder="Beschreibung / Beilage" class="w-full p-2 border rounded bg-white">
+              <input type="text" id="edit-${d.id}-hg2-desc" value="${d.hg2.desc || ''}" placeholder="Beschreibung" class="w-full p-2 border rounded bg-white">
               <input type="text" id="edit-${d.id}-hg2-all" value="${d.hg2.allergens || ''}" placeholder="Allergene" class="w-full p-2 border rounded bg-white font-mono">
             </div>
           </div>
@@ -1077,7 +1006,7 @@
 
     function resetToKW46() {
       if (confirm("Möchtest du den Speiseplan auf den Original-Plan der KW 46 zurücksetzen?")) {
-        menuPlan = JSON.parse(JSON.stringify(kw46Data));
+        menuPlan = JSON.parse(JSON.stringify(defaultKW46Plan));
         saveMealPlanInputs();
       }
     }
@@ -1105,7 +1034,6 @@
       localStorage.setItem('mbs_menu', JSON.stringify(menuPlan));
       applySettingsToUI();
       renderParentDays();
-      renderInfoCards();
       renderCatererTable();
       alert("Speiseplan erfolgreich gespeichert!");
     }
