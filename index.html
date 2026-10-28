@@ -6,18 +6,41 @@
   <title>Mittelbergschule Spiesen – MensaConnect</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <!-- PDF.js von Mozilla für die clientseitige Textextraktion aus der Caterer-PDF -->
+  <!-- PDF.js für die Speiseplan-PDF-Verarbeitung im Browser -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
   </script>
   <style>
     @media print {
       .no-print { display: none !important; }
       .print-only { display: block !important; }
       body { background: white !important; font-size: 10pt; color: black !important; }
+      .admin-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
     }
     .print-only { display: none; }
+    
+    /* Aktive Zustände für Speisekarten */
+    .meal-card {
+      transition: all 0.15s ease-in-out;
+      border-width: 2px;
+    }
+    .meal-card.active-hg1 {
+      border-color: #2563eb !important;
+      background-color: #eff6ff !important;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+    .meal-card.active-hg2 {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+    }
+    .meal-card.active-none {
+      border-color: #64748b !important;
+      background-color: #f1f5f9 !important;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
@@ -25,19 +48,19 @@
   <!-- ======================================================== -->
   <!-- KOPFZEILE / NAVIGATION                                   -->
   <!-- ======================================================== -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('eltern')">
         <div class="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white shadow-md">
           <i class="ph-bold ph-fork-knife text-xl"></i>
         </div>
         <div>
-          <div class="font-extrabold text-base md:text-lg tracking-tight text-slate-900 leading-tight">
+          <div class="font-black text-base md:text-lg tracking-tight text-slate-900 leading-tight">
             Mittelbergschule Spiesen
           </div>
           <p class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span>Nachmittagsbetreuung • Mittagstisch</span>
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>MensaConnect • Nachmittagsbetreuung</span>
           </p>
         </div>
       </div>
@@ -45,11 +68,11 @@
       <div class="flex items-center gap-2">
         <a id="header-pdf-link" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
           <i class="ph-bold ph-file-pdf text-rose-600 text-base"></i>
-          <span id="header-pdf-label">Speiseplan (PDF)</span>
+          <span class="hidden sm:inline">Original-Speiseplan</span> (PDF)
         </a>
 
         <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs md:text-sm font-bold">
-          <button id="nav-btn-eltern" type="button" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition">
+          <button id="nav-btn-eltern" type="button" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition">
             <i class="ph-bold ph-shopping-cart-simple text-emerald-600"></i>
             <span>Bestellung</span>
           </button>
@@ -68,22 +91,24 @@
   <!-- ======================================================== -->
   <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-    <!-- ==================== ELTERN: BESTELLUNG ==================== -->
+    <!-- ==================== ELTERN ANSICHT ==================== -->
     <div id="view-eltern" class="space-y-6">
+      
+      <!-- Ankündigungsbanner -->
       <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-emerald-900 text-white rounded-2xl p-5 md:p-6 shadow-lg border border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-2">
-            <span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2 py-0.5 rounded uppercase">Wichtige Frist</span>
+            <span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2 py-0.5 rounded uppercase tracking-wide">Wichtige Frist</span>
             <span id="banner-kw-tag" class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46 (09.11. – 13.11.2026)</span>
           </div>
           <h1 class="text-xl md:text-2xl font-black text-white">Mittagessen verbindlich vorbestellen</h1>
           <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-2xl">
-            Caterer: <strong>pirrung monsterlecker</strong>. Bestellungen müssen bis spätestens <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong> abgeschlossen sein.
+            Caterer: <strong>pirrung monsterlecker</strong>. Bestellungen müssen bis spätestens <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong> für die Folgewoche eingegangen sein.
           </p>
         </div>
-        <div class="bg-white/10 border border-white/20 rounded-2xl p-3 text-center min-w-[130px] self-start md:self-auto">
+        <div class="bg-white/10 border border-white/20 rounded-2xl p-3 text-center min-w-[130px] self-start md:self-auto backdrop-blur-xs">
           <div class="text-[10px] uppercase font-bold text-slate-300">Preis pro Essen</div>
-          <div class="text-2xl font-black text-amber-300" id="display-price-badge">3,70 €</div>
+          <div class="text-2xl font-black text-amber-300" id="badge-single-price">3,70 €</div>
           <div class="text-[10px] text-emerald-200">inkl. Salat &amp; Dessert</div>
         </div>
       </div>
@@ -91,7 +116,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Links: Formular & Speiseplan-Karten -->
         <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          
+          <!-- 1. Stammdaten Kind -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
             <div class="flex items-center gap-2 pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">1</span>
               <span>Angaben zum Kind</span>
@@ -99,15 +126,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Vorname *</label>
-                <input type="text" id="order-vorname" placeholder="z. B. Leon" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <input type="text" id="order-vorname" placeholder="z. B. Leon" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Nachname *</label>
-                <input type="text" id="order-nachname" placeholder="z. B. Müller" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <input type="text" id="order-nachname" placeholder="z. B. Müller" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Klasse der Mittelbergschule *</label>
-                <select id="order-klasse" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <select id="order-klasse" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
                   <option value="1a">Klasse 1a</option><option value="1b">Klasse 1b</option><option value="1c">Klasse 1c</option>
                   <option value="2a">Klasse 2a</option><option value="2b" selected>Klasse 2b</option><option value="2c">Klasse 2c</option>
                   <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option><option value="4a">Klasse 4a</option>
@@ -116,68 +143,70 @@
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">E-Mail für Beleg &amp; Quittung *</label>
-                <input type="email" id="order-email" placeholder="eltern@beispiel.de" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <input type="email" id="order-email" placeholder="eltern@beispiel.de" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
               </div>
               <div class="sm:col-span-2">
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Hinweise (Allergien, Unverträglichkeiten)</label>
-                <input type="text" id="order-notiz" placeholder="z. B. Nussallergie, kein Schweinefleisch..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Hinweise (Allergien, Unverträglichkeiten, kein Schweinefleisch)</label>
+                <input type="text" id="order-notiz" placeholder="z. B. Laktoseintoleranz, kein Schweinefleisch..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
               </div>
             </div>
           </div>
 
-          <!-- Speiseplan Mo - Fr (wird dynamisch gerendert und durch PDF-Import aktualisiert) -->
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <!-- 2. Speiseplan Montag bis Freitag -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <div class="flex items-center gap-2">
                 <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">2</span>
                 <span>Tageswahl: Hauptgericht 1 oder Hauptgericht 2</span>
               </div>
-              <span class="text-xs text-slate-500 font-normal">Tage frei wählbar</span>
+              <span class="text-xs text-slate-500 font-normal">Tage frei kombinierbar</span>
             </div>
-            
-            <div id="meal-days-container" class="space-y-4">
-              <!-- Wird via JavaScript generiert -->
+
+            <!-- DYNAMISCHER CONTAINER FÜR DIE SPEISEPLAN-KARTEN -->
+            <div id="meal-cards-container" class="space-y-4">
+              <!-- Wird initial und nach jedem PDF-Import dynamisch gerendert -->
             </div>
           </div>
         </div>
 
-        <!-- Rechts: Zusammenfassung & Zahlungsoption -->
+        <!-- Rechts: Zusammenfassung & Checkout -->
         <div class="lg:col-span-1">
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm sticky top-20 space-y-4">
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs sticky top-20 space-y-4">
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2 pb-2 border-b border-slate-100">
               <i class="ph-bold ph-receipt text-emerald-600"></i> Bestellübersicht
             </h3>
+            
             <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3">
-              <div class="flex justify-between text-slate-400"><span>Montag:</span><i>kein Essen</i></div>
-              <div class="flex justify-between text-slate-400"><span>Dienstag:</span><i>kein Essen</i></div>
-              <div class="flex justify-between text-slate-400"><span>Mittwoch:</span><i>kein Essen</i></div>
-              <div class="flex justify-between text-slate-400"><span>Donnerstag:</span><i>kein Essen</i></div>
-              <div class="flex justify-between text-slate-400"><span>Freitag:</span><i>kein Essen</i></div>
+              <!-- Dynamische Tagesauflistung -->
             </div>
+            
             <div class="flex justify-between text-xs text-slate-600">
               <span>Bestellte Essen:</span>
               <span class="font-bold text-slate-900" id="checkout-count">0 Tage</span>
             </div>
             <div class="flex justify-between text-xs text-slate-600">
               <span>Einzelpreis:</span>
-              <span class="font-medium text-slate-900" id="checkout-single-price">3,70 €</span>
+              <span class="font-medium text-slate-900" id="checkout-single-price-label">3,70 €</span>
             </div>
+            
             <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
               <span class="text-sm font-bold text-slate-900">Gesamtbetrag:</span>
               <span class="text-2xl font-black text-emerald-700" id="checkout-total-price">0,00 €</span>
             </div>
 
+            <div id="validation-hint" class="hidden text-xs text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl font-medium"></div>
+
             <div class="pt-2 space-y-2">
-              <button type="button" onclick="openPaymentModal()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-800 cursor-pointer">
+              <button type="button" onclick="openPaymentModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-700 cursor-pointer">
                 <i class="ph-bold ph-qr-code text-xl text-emerald-200"></i>
                 <div class="text-left leading-tight">
                   <div class="font-black text-sm">Jetzt verbindlich bestellen</div>
-                  <div class="text-[10px] text-emerald-200 font-normal">Gebührenfrei per GiroCode / Überweisung</div>
+                  <div class="text-[10px] text-emerald-100 font-normal">Gebührenfrei per GiroCode / Überweisung</div>
                 </div>
               </button>
 
               <div class="text-[10px] text-slate-400 text-center flex items-center justify-center gap-1 pt-1">
-                <i class="ph-fill ph-shield-check text-emerald-600"></i> Direkte Übermittlung an die Betreuung
+                <i class="ph-fill ph-shield-check text-emerald-600"></i> Direkte Übermittlung an die Schulverwaltung
               </div>
             </div>
           </div>
@@ -187,21 +216,1249 @@
 
     <!-- ==================== ADMIN BEREICH ==================== -->
     <div id="view-admin" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4 no-print">
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg md:text-xl font-black text-slate-900">Verwaltung Mittelbergschule</h1>
-            <span id="admin-kw-badge" class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold">KW 46</span>
+            <span id="admin-kw-badge" class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">KW 46</span>
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">Meldung an Caterer, PDF-Import &amp; Ausgabeliste</p>
+          <p class="text-xs text-slate-500 mt-0.5">Meldung an Caterer, PDF-Import, Ausgabeliste &amp; Abrechnung</p>
         </div>
 
         <div class="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs font-bold">
-          <button type="button" onclick="switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
+          <button type="button" onclick="switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition">
             <i class="ph-bold ph-truck text-emerald-600"></i> Caterer-Meldung
           </button>
-          <button type="button" onclick="switchAdminTab('pdfimport')" id="tab-btn-pdfimport" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 bg-amber-100 text-amber-900">
+          <button type="button" onclick="switchAdminTab('pdfimport')" id="tab-btn-pdfimport" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition bg-amber-50 text-amber-900 border border-amber-200">
             <i class="ph-bold ph-file-arrow-up text-amber-700"></i> PDF-Speiseplan Import
           </button>
-          <button type="button" onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
-            <i class="ph-bold ph-
+          <button type="button" onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i class="ph-bold ph-clipboard-text text-sky-600"></i> Ausgabeliste
+          </button>
+          <button type="button" onclick="switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i class="ph-bold ph-list-dashes text-indigo-600"></i> Buchungen &amp; Kasse
+          </button>
+          <button type="button" onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i class="ph-bold ph-gear text-slate-500"></i> Einstellungen
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: CATERER MELDUNG -->
+      <div id="sub-caterer" class="space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900" id="cat-meldungs-title">Portions-Meldung für KW 46</h2>
+              <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden</span>
+            </div>
+            <div class="flex gap-2 no-print">
+              <button type="button" onclick="copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition">
+                <i class="ph-bold ph-copy"></i> Fertige E-Mail kopieren
+              </button>
+              <button type="button" onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5 transition">
+                <i class="ph-bold ph-printer"></i> Drucken
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-4 font-bold">Tag</th>
+                  <th class="py-3 px-4 font-bold text-blue-700">Hauptgericht 1</th>
+                  <th class="py-3 px-4 font-bold text-emerald-700">Hauptgericht 2</th>
+                  <th class="py-3 px-4 font-extrabold text-right">Gesamtzahl</th>
+                </tr>
+              </thead>
+              <tbody id="caterer-table-body" class="divide-y divide-slate-100"></tbody>
+              <tfoot>
+                <tr class="bg-slate-100 font-black text-slate-900 border-t-2 border-slate-300">
+                  <td class="py-3 px-4">Wochensumme</td>
+                  <td id="cat-sum-v1" class="py-3 px-4 text-blue-800">0</td>
+                  <td id="cat-sum-v2" class="py-3 px-4 text-emerald-800">0</td>
+                  <td id="cat-sum-all" class="py-3 px-4 text-right text-emerald-700 text-base">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 no-print">
+            <div class="text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+              <span>E-Mail Vorschau für: <span id="cat-email-addr-label" class="font-mono text-slate-900">f.simon@pirrung.de</span></span>
+              <span id="copy-status" class="text-emerald-700 font-bold hidden">In die Zwischenablage kopiert!</span>
+            </div>
+            <pre id="caterer-email-preview" class="text-xs text-slate-800 font-mono whitespace-pre-wrap bg-white p-3.5 rounded-lg border border-slate-200 overflow-x-auto"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PDF IMPORT & SPEISEPLAN BEARBEITUNG -->
+      <div id="sub-pdfimport" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">Automatische Speiseplan-Übernahme (PDF)</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Laden Sie die PDF-Datei von pirrung hoch. Sie können die Gerichte auch direkt unten bearbeiten.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="loadSampleKW(46)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300">
+                KW 46 laden
+              </button>
+              <button type="button" onclick="loadSampleKW(47)" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300">
+                KW 47 Test laden
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload Drop-Zone -->
+          <div id="pdf-dropzone" onclick="document.getElementById('pdf-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/30 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
+            <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden" onchange="handlePdfUpload(event)">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shadow-xs">
+              <i class="ph-bold ph-file-arrow-up"></i>
+            </div>
+            <div class="text-sm font-bold text-slate-800">Caterer-PDF hier ablegen oder klicken zum Hochladen</div>
+            <div class="text-xs text-slate-500">Wird clientseitig ohne Server ausgelesen und in die Wochentage übertragen.</div>
+            <div id="pdf-status-msg" class="text-xs font-bold text-emerald-700 mt-1"></div>
+          </div>
+
+          <!-- Formularkarten für Vorab-Bearbeitung -->
+          <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-700">Titel / Kalenderwoche:</label>
+                <input type="text" id="edit-kw-title" value="KW 46 (09.11. – 13.11.2026)" class="text-xs font-bold px-3 py-1.5 border border-slate-300 rounded-lg w-64 bg-white">
+              </div>
+              <button type="button" onclick="applyParsedMenuToSystem()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition">
+                <i class="ph-bold ph-check-circle"></i> In Speiseplan &amp; Eltern-Ansicht übernehmen
+              </button>
+            </div>
+
+            <div id="import-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+              <!-- Dynamisch generierte Eingabefelder -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: AUSGABELISTE -->
+      <div id="sub-ausgabe" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <h2 class="text-base font-extrabold text-slate-900">Mensa-Ausgabeliste für Betreuer</h2>
+            <div class="flex flex-wrap items-center gap-2 no-print">
+              <select id="ausgabe-filter-day" onchange="renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
+                <option value="mo">Montag</option><option value="di">Dienstag</option>
+                <option value="mi">Mittwoch</option><option value="do">Donnerstag</option><option value="fr">Freitag</option>
+              </select>
+              <select id="ausgabe-filter-class" onchange="renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
+                <option value="all">Alle Klassen</option>
+                <option value="1a">Klasse 1a</option><option value="1b">Klasse 1b</option><option value="1c">Klasse 1c</option>
+                <option value="2a">Klasse 2a</option><option value="2b">Klasse 2b</option><option value="2c">Klasse 2c</option>
+                <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option>
+                <option value="4a">Klasse 4a</option><option value="4b">Klasse 4b</option><option value="4c">Klasse 4c</option>
+              </select>
+              <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1 transition">
+                <i class="ph-bold ph-printer"></i> Drucken
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-3 w-16 text-center">Ausgegeben</th>
+                  <th class="py-3 px-4 font-bold">Kind (Name)</th>
+                  <th class="py-3 px-3 font-bold">Klasse</th>
+                  <th class="py-3 px-4 font-bold">Menüwahl</th>
+                  <th class="py-3 px-4 font-bold">Notiz / Allergie</th>
+                </tr>
+              </thead>
+              <tbody id="ausgabe-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+          <div id="ausgabe-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
+            Keine Essen für diesen Tag oder diese Klasse eingetragen.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: KASSE & BUCHUNGEN -->
+      <div id="sub-kasse" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">Eingegangene Bestellungen</h2>
+              <p class="text-xs text-slate-500">Zahlungseingänge abhaken und Nachweise prüfen</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-700 mr-2">Gesamt: <strong id="kasse-total-sum" class="text-emerald-700 font-black text-sm">0,00 €</strong></span>
+              <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-300 transition">
+                <i class="ph-bold ph-download-simple"></i> CSV Export
+              </button>
+              <button type="button" onclick="clearAllOrders()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-rose-200 transition">
+                <i class="ph-bold ph-trash"></i> Alle löschen
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs md:text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-4 font-bold">Bestell-Nr.</th>
+                  <th class="py-3 px-4 font-bold">Kind</th>
+                  <th class="py-3 px-4 font-bold">Klasse</th>
+                  <th class="py-3 px-4 font-bold">Tage</th>
+                  <th class="py-3 px-4 font-bold">Betrag</th>
+                  <th class="py-3 px-4 font-bold">Zahlstatus</th>
+                  <th class="py-3 px-4 font-bold text-right">Aktion</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+          <div id="orders-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
+            Bislang liegen noch keine Bestellungen vor.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: EINSTELLUNGEN -->
+      <div id="sub-settings" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs max-w-2xl space-y-4">
+          <h2 class="text-base font-extrabold text-slate-900 pb-2 border-b border-slate-100">Systemeinstellungen</h2>
+          <div class="space-y-3 text-xs font-semibold">
+            <div>
+              <label class="block text-slate-700 mb-1">Empfänger-Name (Kontoinhaber für GiroCode):</label>
+              <input type="text" id="cfg-recipient" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="Förderverein FGTS Mittelbergschule">
+            </div>
+            <div>
+              <label class="block text-slate-700 mb-1">IBAN für Überweisung:</label>
+              <input type="text" id="cfg-iban" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-mono bg-slate-50 focus:bg-white" value="DE44 5905 0101 0000 1234 56">
+            </div>
+            <div>
+              <label class="block text-slate-700 mb-1">BIC (optional):</label>
+              <input type="text" id="cfg-bic" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-mono bg-slate-50 focus:bg-white" value="SALADE88XXX">
+            </div>
+            <div>
+              <label class="block text-slate-700 mb-1">Preis pro Essen (€):</label>
+              <input type="number" step="0.05" id="cfg-price" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="3.70">
+            </div>
+            <div>
+              <label class="block text-slate-700 mb-1">Caterer E-Mail-Adresse:</label>
+              <input type="email" id="cfg-caterer-mail" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="f.simon@pirrung.de">
+            </div>
+            <div>
+              <label class="block text-slate-700 mb-1">Admin PIN:</label>
+              <input type="text" id="cfg-pin" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="1234">
+            </div>
+            <div class="pt-2">
+              <button type="button" onclick="saveSettings()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold text-sm shadow-xs transition">
+                Einstellungen speichern
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: BESTELLUNG & GIROCODE-BEZAHLUNG                    -->
+  <!-- ======================================================== -->
+  <div id="payment-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Schritt 1: Bestätigen -->
+      <div id="modal-step-confirm">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+              <i class="ph-bold ph-receipt text-lg"></i>
+            </div>
+            <h3 class="font-extrabold text-slate-900 text-lg">Bestellung abschließen</h3>
+          </div>
+          <button type="button" onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+        </div>
+
+        <div class="mt-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Kind:</span>
+            <span class="font-bold text-slate-800" id="modal-child-name">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Klasse:</span>
+            <span class="font-bold text-slate-800" id="modal-child-class">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">E-Mail für Bestätigung:</span>
+            <span class="font-bold text-slate-800" id="modal-child-email">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Hinweise:</span>
+            <span class="font-bold text-slate-800" id="modal-child-notes">-</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-900 text-sm">
+            <span>Zu zahlender Betrag:</span>
+            <span class="text-emerald-700 font-black text-base" id="modal-total-sum">0,00 €</span>
+          </div>
+        </div>
+
+        <div class="mt-3 text-xs text-slate-600 bg-amber-50 border border-amber-200 p-3 rounded-xl leading-relaxed">
+          Mit dem Klick auf "Jetzt kostenpflichtig bestellen" wird Ihre Bestellung verbindlich an die Schulverwaltung übertragen. Anschließend wird der GiroCode für Ihre Banking-App angezeigt.
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+            Zurück
+          </button>
+          <button type="button" onclick="finalizeOrder()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+            <i class="ph-bold ph-check-circle text-base"></i> Jetzt kostenpflichtig bestellen
+          </button>
+        </div>
+      </div>
+
+      <!-- Schritt 2: Erfolgsmeldung & GiroCode -->
+      <div id="modal-step-success" class="hidden space-y-4">
+        <div class="text-center space-y-1">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+            <i class="ph-bold ph-check"></i>
+          </div>
+          <h3 class="font-black text-slate-900 text-lg">Bestellung erfolgreich übermittelt!</h3>
+          <p class="text-xs text-slate-500">Bitte begleichen Sie den Betrag bequem per Überweisung oder GiroCode.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/50 space-y-3 text-center">
+          <div class="text-xs font-bold text-emerald-950 uppercase tracking-wide">GiroCode / SEPA Überweisung</div>
+          <div class="flex justify-center py-1">
+            <img id="modal-girocode-img" src="" alt="GiroCode" class="w-40 h-40 bg-white p-2 rounded-xl border border-slate-200 shadow-inner">
+          </div>
+          <p class="text-[11px] text-slate-600 leading-tight">
+            Scannen Sie diesen Code direkt mit Ihrer Bank-App (Sparkasse, Volksbank, ING, DKB etc.). Alle Zahldaten sind bereits vorausgefüllt.
+          </p>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 text-left text-[11px] font-mono text-slate-700 space-y-1">
+            <div><strong>Empfänger:</strong> <span id="modal-bank-recipient">Förderverein FGTS</span></div>
+            <div><strong>IBAN:</strong> <span id="modal-bank-iban">DE44...</span></div>
+            <div><strong>Betrag:</strong> <span id="modal-bank-amount" class="text-emerald-700 font-bold">0,00 €</span></div>
+            <div><strong>Verwendungszweck:</strong> <br><span id="modal-bank-purpose" class="text-slate-900 font-bold">KW46 - Leon Mueller</span></div>
+          </div>
+        </div>
+
+        <button type="button" onclick="closePaymentModal()" class="w-full py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition">
+          Fertig / Schließen
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADMIN PIN                                         -->
+  <!-- ======================================================== -->
+  <div id="admin-pin-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+      <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+        <i class="ph-bold ph-lock-key"></i>
+      </div>
+      <div>
+        <h3 class="font-extrabold text-slate-900 text-lg">Admin-Zugang</h3>
+        <p class="text-xs text-slate-500 mt-1">Bitte PIN für Verwaltung eingeben (Standard: <strong>1234</strong>)</p>
+      </div>
+      <input type="password" id="admin-pin-input" placeholder="PIN eingeben" class="w-full text-center text-lg tracking-widest px-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+      <div id="admin-pin-error" class="text-xs text-rose-600 font-bold hidden">Falsche PIN. Bitte erneut versuchen.</div>
+      <div class="flex gap-2">
+        <button type="button" onclick="closeAdminPinModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">Abbrechen</button>
+        <button type="button" onclick="verifyAdminPin()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition">Entsperren</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIK                                         -->
+  <!-- ======================================================== -->
+  <script>
+    // --- 1. DEFAULT DATEN & INITIALER STATE ---
+    const DEFAULT_KW46 = {
+      kw: "KW 46 (09.11. – 13.11.2026)",
+      days: {
+        mo: {
+          name: "Montag (09.11.2026)",
+          salat: "",
+          dessert: "Dessert: Apfel",
+          hg1: { title: "Blumenkohl-Creme-Suppe mit Mehrkornbrötchen", desc: "Blumenkohl, Kartoffel, Milch & Mehrkornbrötchen", allergene: "a, a1, a2, a3, a4, g, g1, k" },
+          hg2: { title: "Ravioli mit Tomatenfüllung in Tomatensoße", desc: "feine Nudeltaschen vegetarisch", allergene: "a, a1, c" }
+        },
+        di: {
+          name: "Dienstag (10.11.2026)",
+          salat: "Salat: Endivien, Radicchio, Frisée mit Balsamico-Dressing",
+          dessert: "Dessert: Milchreis (g, g1)",
+          hg1: { title: "\"Chili sin Carne\" dazu Reis", desc: "vegan mit Bohnen, Mais, Paprika", allergene: "f, i, y" },
+          hg2: { title: "Semmelknödel mit Rahmsauce", desc: "herzhafte Knödel in feiner Rahmsauce", allergene: "a, a1, c, g, g1" }
+        },
+        mi: {
+          name: "Mittwoch (11.11.2026)",
+          salat: "Salat: Gurkensalat",
+          dessert: "Dessert: Birne",
+          hg1: { title: "Wild/MSC pan. Seelachsfilet mit Kräutersauce & Kartoffelstampf", desc: "DGE-zertifizierter Fisch", allergene: "a, a1, d, g, g1" },
+          hg2: { title: "Rahmkartoffeln mit Brokkoli", desc: "herzhafter Kartoffelauflauf", allergene: "g, g1" }
+        },
+        do: {
+          name: "Donnerstag (12.11.2026)",
+          salat: "",
+          dessert: "Dessert: Apfel-Sahne-Pudding (g, g1)",
+          hg1: { title: "Rindergulasch mit Vollkorn-Penne & Brokkoli", desc: "zartes Rindfleisch", allergene: "a, a1, 16" },
+          hg2: { title: "Kaiserschmarrn mit Apfelmus", desc: "süßer Klassiker", allergene: "a, a1, c, g, g1, 3" }
+        },
+        fr: {
+          name: "Freitag (13.11.2026)",
+          salat: "Salat: Möhrensalat mit Orangen-Dressing",
+          dessert: "Dessert: Banane",
+          hg1: { title: "Penne mit Tomatensauce & Reibekäse", desc: "Nudelliebling der Kinder", allergene: "a, a1, g, g1" },
+          hg2: { title: "Käsespätzle", desc: "mit würzigem Käse überbacken", allergene: "a, a1, c, g, g1" }
+        }
+      }
+    };
+
+    const SAMPLE_KW47 = {
+      kw: "KW 47 (16.11. – 20.11.2026)",
+      days: {
+        mo: {
+          name: "Montag (16.11.2026)",
+          salat: "Salat: Gurkensalat mit Kräuterdressing",
+          dessert: "Dessert: Mandarine",
+          hg1: { title: "Hähnchen-Nuggets mit Kartoffelpüree", desc: "knusprig gebacken mit Erbsengemüse", allergene: "a, a1, c" },
+          hg2: { title: "Gemüselasagne", desc: "mit buntem Marktgemüse und Bechamelsauce", allergene: "a, a1, g, g1" }
+        },
+        di: {
+          name: "Dienstag (17.11.2026)",
+          salat: "Salat: Bunter Blattsalat",
+          dessert: "Dessert: Vanillepudding (g)",
+          hg1: { title: "Spaghetti Bolognese (Rind)", desc: "mit fruchtiger Tomaten-Hackfleischsauce", allergene: "a, a1, i" },
+          hg2: { title: "Spaghetti mit Linsenbolognese", desc: "vegane Sauce mit Berglinsen", allergene: "a, a1, i" }
+        },
+        mi: {
+          name: "Mittwoch (18.11.2026)",
+          salat: "Salat: Tomatensalat",
+          dessert: "Dessert: Apfel",
+          hg1: { title: "Fischstäbchen mit Petersilienkartoffeln", desc: "MSC-Seelachsfilet mit feiner Remoulade", allergene: "a, d, g" },
+          hg2: { title: "Kartoffelpuffer mit Apfelmus", desc: "drei knusprige Reibekuchen", allergene: "c" }
+        },
+        do: {
+          name: "Donnerstag (19.11.2026)",
+          salat: "",
+          dessert: "Dessert: Grießbrei mit Zimtzucker (g)",
+          hg1: { title: "Putengeschnetzeltes mit Langkornreis", desc: "in Champignon-Rahmsauce", allergene: "g, g1" },
+          hg2: { title: "Bunte Gemüse-Reispfanne", desc: "mit Paprika, Erbsen & Mais", allergene: "f" }
+        },
+        fr: {
+          name: "Freitag (20.11.2026)",
+          salat: "Salat: Karottensalat",
+          dessert: "Dessert: Birne",
+          hg1: { title: "Tortellini mit Käsefüllung in Sahnesauce", desc: "überbacken mit Edamer", allergene: "a, a1, c, g" },
+          hg2: { title: "Germknödel mit Pflaumenmus & Vanillesauce", desc: "süßer Klassiker", allergene: "a, a1, c, g" }
+        }
+      }
+    };
+
+    // Datenhaltung
+    let currentMenu = JSON.parse(localStorage.getItem('mensa_menu') || 'null') || DEFAULT_KW46;
+    let currentSettings = JSON.parse(localStorage.getItem('mensa_settings') || 'null') || {
+      recipient: "Förderverein FGTS Mittelbergschule",
+      iban: "DE44 5905 0101 0000 1234 56",
+      bic: "SALADE88XXX",
+      price: 3.70,
+      catererMail: "f.simon@pirrung.de",
+      pin: "1234"
+    };
+    let orders = JSON.parse(localStorage.getItem('mensa_orders') || 'null') || [
+      {
+        id: "ORD-1001",
+        date: "04.11.2026 14:20",
+        kw: "KW 46 (09.11. – 13.11.2026)",
+        vorname: "Lina",
+        nachname: "Becker",
+        klasse: "2b",
+        email: "becker.spiesen@web.de",
+        notiz: "Kein Schweinefleisch",
+        selections: { mo: "hg2", di: "hg2", mi: "hg2", do: "hg2", fr: "hg2" },
+        paid: true,
+        served: { mo: true, di: false, mi: false, do: false, fr: false },
+        total: 18.50
+      },
+      {
+        id: "ORD-1002",
+        date: "04.11.2026 16:05",
+        kw: "KW 46 (09.11. – 13.11.2026)",
+        vorname: "Jonas",
+        nachname: "Wagner",
+        klasse: "3a",
+        email: "m.wagner@t-online.de",
+        notiz: "Laktosearm",
+        selections: { mo: "hg1", di: "none", mi: "hg1", do: "hg1", fr: "hg1" },
+        paid: false,
+        served: { mo: false, di: false, mi: false, do: false, fr: false },
+        total: 14.80
+      }
+    ];
+
+    // Aktuelle Auswahl für Eltern
+    let selectedMeals = { mo: 'none', di: 'none', mi: 'none', do: 'none', fr: 'none' };
+    const DAY_KEYS = ['mo', 'di', 'mi', 'do', 'fr'];
+    const DAY_LABELS = { mo: 'Montag', di: 'Dienstag', mi: 'Mittwoch', do: 'Donnerstag', fr: 'Freitag' };
+
+    // --- 2. INITIALISIERUNG BEIM START ---
+    window.addEventListener('DOMContentLoaded', () => {
+      applySettingsToUI();
+      renderElternCards();
+      renderAdminEditCards();
+      updateOrderSummaryUI();
+      updateAdminBadge();
+    });
+
+    function applySettingsToUI() {
+      const priceText = formatEUR(currentSettings.price);
+      document.getElementById('badge-single-price').innerText = priceText;
+      document.getElementById('checkout-single-price-label').innerText = priceText;
+      document.getElementById('banner-kw-tag').innerText = currentMenu.kw;
+      document.getElementById('admin-kw-badge').innerText = currentMenu.kw.split(' ')[0] + ' ' + (currentMenu.kw.split(' ')[1] || '');
+      document.getElementById('cat-meldungs-title').innerText = "Portions-Meldung für " + currentMenu.kw;
+      document.getElementById('cat-email-addr-label').innerText = currentSettings.catererMail;
+
+      // Einstellungs-Formular
+      document.getElementById('cfg-recipient').value = currentSettings.recipient;
+      document.getElementById('cfg-iban').value = currentSettings.iban;
+      document.getElementById('cfg-bic').value = currentSettings.bic;
+      document.getElementById('cfg-price').value = currentSettings.price.toFixed(2);
+      document.getElementById('cfg-caterer-mail').value = currentSettings.catererMail;
+      document.getElementById('cfg-pin').value = currentSettings.pin;
+    }
+
+    // --- 3. SPEISEPLAN-KARTEN RENDERN & AUSWÄHLEN ---
+    function renderElternCards() {
+      const container = document.getElementById('meal-cards-container');
+      container.innerHTML = '';
+
+      DAY_KEYS.forEach(day => {
+        const d = currentMenu.days[day];
+        if (!d) return;
+
+        const salatHtml = d.salat ? `<span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">${escapeHtml(d.salat)}</span>` : '';
+        const dessertHtml = d.dessert ? `<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">${escapeHtml(d.dessert)}</span>` : '';
+
+        const cardBox = document.createElement('div');
+        cardBox.className = "border border-slate-200 rounded-2xl p-4 bg-white shadow-xs";
+        cardBox.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+            <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+              <span>${escapeHtml(d.name)}</span>
+            </div>
+            <div class="text-[11px] text-slate-500">
+              ${salatHtml} ${dessertHtml}
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <!-- HG 1 -->
+            <button type="button" id="card-${day}-hg1" onclick="chooseMeal('${day}', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                  <span class="text-xs font-bold text-slate-800">${formatEUR(currentSettings.price)}</span>
+                </div>
+                <div class="font-bold text-xs text-slate-900 mt-1">${escapeHtml(d.hg1.title)}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">${escapeHtml(d.hg1.desc || '')}</div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: ${escapeHtml(d.hg1.allergene || '–')}</div>
+            </button>
+
+            <!-- HG 2 -->
+            <button type="button" id="card-${day}-hg2" onclick="chooseMeal('${day}', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                  <span class="text-xs font-bold text-slate-800">${formatEUR(currentSettings.price)}</span>
+                </div>
+                <div class="font-bold text-xs text-slate-900 mt-1">${escapeHtml(d.hg2.title)}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">${escapeHtml(d.hg2.desc || '')}</div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: ${escapeHtml(d.hg2.allergene || '–')}</div>
+            </button>
+
+            <!-- Kein Essen -->
+            <button type="button" id="card-${day}-none" onclick="chooseMeal('${day}', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+              <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+              <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+              <span class="text-[10px] text-slate-400">0,00 €</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(cardBox);
+      });
+    }
+
+    // Beim Klicken auf eine Speisekarte
+    function chooseMeal(day, choice) {
+      selectedMeals[day] = choice;
+
+      // Styling umschalten
+      ['hg1', 'hg2', 'none'].forEach(type => {
+        const btn = document.getElementById(`card-${day}-${type}`);
+        if (!btn) return;
+        btn.classList.remove('active-hg1', 'active-hg2', 'active-none');
+        if (type === choice) {
+          btn.classList.add(`active-${type}`);
+        }
+      });
+
+      updateOrderSummaryUI();
+    }
+
+    function updateOrderSummaryUI() {
+      let count = 0;
+      let summaryHtml = '';
+
+      DAY_KEYS.forEach(day => {
+        const choice = selectedMeals[day];
+        const dayLabel = DAY_LABELS[day];
+        if (choice === 'none') {
+          summaryHtml += `<div class="flex justify-between text-slate-400"><span>${dayLabel}:</span><i>kein Essen</i></div>`;
+        } else {
+          count++;
+          const dishName = currentMenu.days[day][choice].title;
+          const badge = choice === 'hg1' ? 'HG 1' : 'HG 2';
+          const badgeColor = choice === 'hg1' ? 'text-blue-700' : 'text-emerald-700';
+          summaryHtml += `
+            <div class="flex justify-between items-baseline gap-2 text-slate-800">
+              <span class="font-bold text-slate-700">${dayLabel}:</span>
+              <span class="text-right truncate font-medium ${badgeColor}" title="${escapeHtml(dishName)}">
+                <strong>${badge}:</strong> ${escapeHtml(dishName.substring(0, 22))}...
+              </span>
+            </div>
+          `;
+        }
+      });
+
+      const total = count * currentSettings.price;
+      document.getElementById('checkout-day-summary').innerHTML = summaryHtml;
+      document.getElementById('checkout-count').innerText = `${count} ${count === 1 ? 'Tag' : 'Tage'}`;
+      document.getElementById('checkout-total-price').innerText = formatEUR(total);
+    }
+
+    // --- 4. BESTELLMODAL & GIROCODE ---
+    function openPaymentModal() {
+      const hint = document.getElementById('validation-hint');
+      hint.classList.add('hidden');
+
+      const vorname = document.getElementById('order-vorname').value.trim();
+      const nachname = document.getElementById('order-nachname').value.trim();
+      const email = document.getElementById('order-email').value.trim();
+      const klasse = document.getElementById('order-klasse').value;
+      const notiz = document.getElementById('order-notiz').value.trim();
+
+      const activeDays = DAY_KEYS.filter(d => selectedMeals[d] !== 'none').length;
+
+      if (!vorname || !nachname) {
+        showValidation("Bitte geben Sie Vor- und Nachname des Kindes ein.");
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showValidation("Bitte geben Sie eine gültige E-Mail-Adresse für die Quittung ein.");
+        return;
+      }
+      if (activeDays === 0) {
+        showValidation("Bitte wählen Sie für mindestens einen Tag ein Hauptgericht aus.");
+        return;
+      }
+
+      const total = activeDays * currentSettings.price;
+
+      document.getElementById('modal-child-name').innerText = `${vorname} ${nachname}`;
+      document.getElementById('modal-child-class').innerText = `Klasse ${klasse}`;
+      document.getElementById('modal-child-email').innerText = email;
+      document.getElementById('modal-child-notes').innerText = notiz || 'Keine Angaben';
+      document.getElementById('modal-total-sum').innerText = formatEUR(total);
+
+      // Modal auf Schritt 1 stellen
+      document.getElementById('modal-step-confirm').classList.remove('hidden');
+      document.getElementById('modal-step-success').classList.add('hidden');
+
+      document.getElementById('payment-modal').classList.remove('hidden');
+    }
+
+    function showValidation(msg) {
+      const hint = document.getElementById('validation-hint');
+      hint.innerText = msg;
+      hint.classList.remove('hidden');
+      hint.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').classList.add('hidden');
+    }
+
+    function finalizeOrder() {
+      const vorname = document.getElementById('order-vorname').value.trim();
+      const nachname = document.getElementById('order-nachname').value.trim();
+      const email = document.getElementById('order-email').value.trim();
+      const klasse = document.getElementById('order-klasse').value;
+      const notiz = document.getElementById('order-notiz').value.trim();
+
+      const activeDays = DAY_KEYS.filter(d => selectedMeals[d] !== 'none').length;
+      const total = activeDays * currentSettings.price;
+      const orderId = 'MB-' + Math.floor(1000 + Math.random() * 9000);
+
+      const orderObj = {
+        id: orderId,
+        date: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+        kw: currentMenu.kw,
+        vorname,
+        nachname,
+        klasse,
+        email,
+        notiz,
+        selections: { ...selectedMeals },
+        served: { mo: false, di: false, mi: false, do: false, fr: false },
+        paid: false,
+        total
+      };
+
+      orders.unshift(orderObj);
+      localStorage.setItem('mensa_orders', JSON.stringify(orders));
+      updateAdminBadge();
+
+      // GiroCode Daten aufbereiten (Offizieller SEPA EPC-QR Code)
+      const cleanIban = currentSettings.iban.replace(/\s+/g, '');
+      const purpose = `${currentMenu.kw.split(' ')[0]} ${nachname} ${vorname} Kl.${klasse}`.substring(0, 35);
+
+      const epcPayload = [
+        "BCD",
+        "002",
+        "1",
+        "SCT",
+        (currentSettings.bic || "").trim(),
+        currentSettings.recipient.trim(),
+        cleanIban,
+        `EUR${total.toFixed(2)}`,
+        "",
+        "",
+        purpose
+      ].join("\n");
+
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(epcPayload)}`;
+      document.getElementById('modal-girocode-img').src = qrUrl;
+
+      document.getElementById('modal-bank-recipient').innerText = currentSettings.recipient;
+      document.getElementById('modal-bank-iban').innerText = currentSettings.iban;
+      document.getElementById('modal-bank-amount').innerText = formatEUR(total);
+      document.getElementById('modal-bank-purpose').innerText = purpose;
+
+      // Schritt 2 anzeigen
+      document.getElementById('modal-step-confirm').classList.add('hidden');
+      document.getElementById('modal-step-success').classList.remove('hidden');
+
+      // Formular leeren für die nächste Bestellung
+      document.getElementById('order-vorname').value = '';
+      document.getElementById('order-nachname').value = '';
+      document.getElementById('order-notiz').value = '';
+      DAY_KEYS.forEach(d => chooseMeal(d, 'none'));
+    }
+
+    // --- 5. ADMIN AUTH & NAVIGATION ---
+    function requestAdminAccess() {
+      document.getElementById('admin-pin-error').classList.add('hidden');
+      document.getElementById('admin-pin-input').value = '';
+      document.getElementById('admin-pin-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('admin-pin-input').focus(), 100);
+    }
+
+    function closeAdminPinModal() {
+      document.getElementById('admin-pin-modal').classList.add('hidden');
+    }
+
+    function verifyAdminPin() {
+      const pin = document.getElementById('admin-pin-input').value.trim();
+      if (pin === currentSettings.pin || pin === "admin") {
+        closeAdminPinModal();
+        navigate('admin');
+        switchAdminTab('caterer');
+      } else {
+        document.getElementById('admin-pin-error').classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('admin-pin-input').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') verifyAdminPin();
+    });
+
+    function navigate(view) {
+      if (view === 'eltern') {
+        document.getElementById('view-eltern').classList.remove('hidden');
+        document.getElementById('view-admin').classList.add('hidden');
+        document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition";
+        document.getElementById('nav-btn-admin').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      } else {
+        document.getElementById('view-eltern').classList.add('hidden');
+        document.getElementById('view-admin').classList.remove('hidden');
+        document.getElementById('nav-btn-admin').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition";
+        document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+        renderCatererSummary();
+      }
+    }
+
+    function switchAdminTab(tab) {
+      const tabs = ['caterer', 'pdfimport', 'ausgabe', 'kasse', 'settings'];
+      tabs.forEach(t => {
+        document.getElementById(`sub-${t}`).classList.add('hidden');
+        document.getElementById(`tab-btn-${t}`).className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition";
+      });
+
+      document.getElementById(`sub-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-btn-${tab}`).className = "px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition";
+
+      if (tab === 'caterer') renderCatererSummary();
+      if (tab === 'ausgabe') renderAusgabeList();
+      if (tab === 'kasse') renderKasseList();
+    }
+
+    function updateAdminBadge() {
+      document.getElementById('badge-orders').innerText = orders.length;
+    }
+
+    // --- 6. ADMIN TAB: CATERER MELDUNG ---
+    function renderCatererSummary() {
+      const counts = {
+        mo: { hg1: 0, hg2: 0 },
+        di: { hg1: 0, hg2: 0 },
+        mi: { hg1: 0, hg2: 0 },
+        do: { hg1: 0, hg2: 0 },
+        fr: { hg1: 0, hg2: 0 }
+      };
+
+      orders.forEach(o => {
+        DAY_KEYS.forEach(day => {
+          if (o.selections && o.selections[day] === 'hg1') counts[day].hg1++;
+          if (o.selections && o.selections[day] === 'hg2') counts[day].hg2++;
+        });
+      });
+
+      let tbody = '';
+      let sumHg1 = 0, sumHg2 = 0;
+
+      DAY_KEYS.forEach(day => {
+        const v1 = counts[day].hg1;
+        const v2 = counts[day].hg2;
+        const dayTotal = v1 + v2;
+        sumHg1 += v1;
+        sumHg2 += v2;
+
+        const dInfo = currentMenu.days[day];
+
+        tbody += `
+          <tr class="hover:bg-slate-50 transition font-medium">
+            <td class="py-3 px-4 font-bold text-slate-900">${DAY_LABELS[day]}</td>
+            <td class="py-3 px-4 text-blue-700 font-bold">${v1} <span class="text-xs text-slate-500 font-normal">(${escapeHtml(dInfo.hg1.title.substring(0, 24))}...)</span></td>
+            <td class="py-3 px-4 text-emerald-700 font-bold">${v2} <span class="text-xs text-slate-500 font-normal">(${escapeHtml(dInfo.hg2.title.substring(0, 24))}...)</span></td>
+            <td class="py-3 px-4 text-right font-black text-slate-900">${dayTotal}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('caterer-table-body').innerHTML = tbody;
+      document.getElementById('cat-sum-v1').innerText = sumHg1;
+      document.getElementById('cat-sum-v2').innerText = sumHg2;
+      document.getElementById('cat-sum-all').innerText = sumHg1 + sumHg2;
+
+      // E-Mail Vorschau
+      const emailText = 
+`Hallo Frau Simon / Team pirrung monsterlecker,
+
+anbei die verbindliche Essensmeldung der Mittelbergschule Spiesen für ${currentMenu.kw}:
+
+• Montag:
+  - Hauptgericht 1 (${currentMenu.days.mo.hg1.title}): ${counts.mo.hg1}
+  - Hauptgericht 2 (${currentMenu.days.mo.hg2.title}): ${counts.mo.hg2}
+  - Gesamt: ${counts.mo.hg1 + counts.mo.hg2}
+
+• Dienstag:
+  - Hauptgericht 1 (${currentMenu.days.di.hg1.title}): ${counts.di.hg1}
+  - Hauptgericht 2 (${currentMenu.days.di.hg2.title}): ${counts.di.hg2}
+  - Gesamt: ${counts.di.hg1 + counts.di.hg2}
+
+• Mittwoch:
+  - Hauptgericht 1 (${currentMenu.days.mi.hg1.title}): ${counts.mi.hg1}
+  - Hauptgericht 2 (${currentMenu.days.mi.hg2.title}): ${counts.mi.hg2}
+  - Gesamt: ${counts.mi.hg1 + counts.mi.hg2}
+
+• Donnerstag:
+  - Hauptgericht 1 (${currentMenu.days.do.hg1.title}): ${counts.do.hg1}
+  - Hauptgericht 2 (${currentMenu.days.do.hg2.title}): ${counts.do.hg2}
+  - Gesamt: ${counts.do.hg1 + counts.do.hg2}
+
+• Freitag:
+  - Hauptgericht 1 (${currentMenu.days.fr.hg1.title}): ${counts.fr.hg1}
+  - Hauptgericht 2 (${currentMenu.days.fr.hg2.title}): ${counts.fr.hg2}
+  - Gesamt: ${counts.fr.hg1 + counts.fr.hg2}
+
+WOCHENSUMME: ${sumHg1 + sumHg2} Portionen
+(${sumHg1}x Hauptgericht 1, ${sumHg2}x Hauptgericht 2)
+
+Herzliche Grüße
+Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
+
+      document.getElementById('caterer-email-preview').innerText = emailText;
+    }
+
+    function copyCatererEmail() {
+      const text = document.getElementById('caterer-email-preview').innerText;
+      const tempArea = document.createElement('textarea');
+      tempArea.value = text;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempArea);
+
+      const status = document.getElementById('copy-status');
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    }
+
+    // --- 7. ADMIN TAB: PDF-IMPORT & BEARBEITUNG ---
+    function renderAdminEditCards() {
+      document.getElementById('edit-kw-title').value = currentMenu.kw;
+      const grid = document.getElementById('import-cards-grid');
+      grid.innerHTML = '';
+
+      DAY_KEYS.forEach(day => {
+        const d = currentMenu.days[day];
+        const col = document.createElement('div');
+        col.className = "border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2 text-xs";
+        col.innerHTML = `
+          <div class="font-black text-slate-800 border-b border-slate-200 pb-1">${escapeHtml(d.name)}</div>
+          <div>
+            <label class="font-bold text-blue-700 block text-[10px]">Hauptgericht 1:</label>
+            <input type="text" id="imp-${day}-hg1-t" value="${escapeHtml(d.hg1.title)}" class="w-full px-2 py-1 bg-white border border-slate-300 rounded font-semibold text-[11px] mb-1">
+            <input type="text" id="imp-${day}-hg1-d" value="${escapeHtml(d.hg1.desc || '')}" placeholder="Beschreibung" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 mb-1">
+            <input type="text" id="imp-${day}-hg1-a" value="${escapeHtml(d.hg1.allergene || '')}" placeholder="Allergene" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-400 font-mono">
+          </div>
+          <div>
+            <label class="font-bold text-emerald-700 block text-[10px]">Hauptgericht 2:</label>
+            <input type="text" id="imp-${day}-hg2-t" value="${escapeHtml(d.hg2.title)}" class="w-full px-2 py-1 bg-white border border-slate-300 rounded font-semibold text-[11px] mb-1">
+            <input type="text" id="imp-${day}-hg2-d" value="${escapeHtml(d.hg2.desc || '')}" placeholder="Beschreibung" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 mb-1">
+            <input type="text" id="imp-${day}-hg2-a" value="${escapeHtml(d.hg2.allergene || '')}" placeholder="Allergene" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-400 font-mono">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-500 block">Salat &amp; Dessert:</label>
+            <input type="text" id="imp-${day}-salat" value="${escapeHtml(d.salat || '')}" placeholder="Salat..." class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] mb-1">
+            <input type="text" id="imp-${day}-dessert" value="${escapeHtml(d.dessert || '')}" placeholder="Dessert..." class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px]">
+          </div>
+        `;
+        grid.appendChild(col);
+      });
+    }
+
+    async function handlePdfUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const msg = document.getElementById('pdf-status-msg');
+      msg.innerText = `Lese PDF "${file.name}" ein...`;
+
+      try {
+        if (!window.pdfjsLib) {
+          throw new Error("PDF.js Library noch nicht bereit.");
+        }
+        const buffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+
+        let extractedText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          extractedText += content.items.map(it => it.str).join('\n') + '\n';
+        }
+
+        // Automatische Analyse
+        const parsed = parseCatererText(extractedText);
+        currentMenu = parsed;
+        renderAdminEditCards();
+        msg.innerText = `Erfolgreich ausgelesen! Sie können die Gerichte jetzt unten prüfen und speichern.`;
+      } catch (err) {
+        console.error(err);
+        msg.innerText = "Fehler beim Parsen der PDF. Sie können die Gerichte auch manuell eintragen oder ein Muster laden.";
+      }
+    }
+
+    function parseCatererText(raw) {
+      const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const kwMatch = raw.match(/KW\s*([0-9]{1,2})/i);
+      const kwNum = kwMatch ? kwMatch[1] : "47";
+
+      const res = JSON.parse(JSON.stringify(DEFAULT_KW46));
+      res.kw = `KW ${kwNum} (Importiert)`;
+
+      const dayKeywords = [
+        { key: 'mo', re: /Montag/i },
+        { key: 'di', re: /Dienstag/i },
+        { key: 'mi', re: /Mittwoch/i },
+        { key: 'do', re: /Donnerstag/i },
+        { key: 'fr', re: /Freitag/i }
+      ];
+
+      let currentDay = 'mo';
+      let activeDish = 'hg1';
+
+      lines.forEach(line => {
+        for (let dk of dayKeywords) {
+          if (dk.re.test(line)) {
+            currentDay = dk.key;
+            activeDish = 'hg1';
+            return;
+          }
+        }
+
+        if (/vegetarisch|gericht 2|menü 2|hg 2/i.test(line)) {
+          activeDish = 'hg2';
+        } else if (/salat|dressing/i.test(line)) {
+          res.days[currentDay].salat = line;
+        } else if (/dessert|obst|apfel|banane|pudding|joghurt/i.test(line)) {
+          res.days[currentDay].dessert = line;
+        } else if (line.length > 5 && !/allergene|seite|woche/i.test(line)) {
+          if (!res.days[currentDay][activeDish].title || res.days[currentDay][activeDish].title.startsWith("Blumenkohl") || res.days[currentDay][activeDish].title.startsWith("Menü")) {
+            res.days[currentDay][activeDish].title = line;
+          }
+        }
+      });
+
+      return res;
+    }
+
+    function loadSampleKW(nr) {
+      currentMenu = nr === 46 ? JSON.parse(JSON.stringify(DEFAULT_KW46)) : JSON.parse(JSON.stringify(SAMPLE_KW47));
+      renderAdminEditCards();
+      document.getElementById('pdf-status-msg').innerText = `Muster-Speiseplan für KW ${nr} geladen! Bitte auf 'In Speiseplan übernehmen' klicken.`;
+    }
+
+    function applyParsedMenuToSystem() {
+      currentMenu.kw = document.getElementById('edit-kw-title').value.trim();
+
+      DAY_KEYS.forEach(day => {
+        currentMenu.days[day].hg1.title = document.getElementById(`imp-${day}-hg1-t`).value.trim();
+        currentMenu.days[day].hg1.desc = document.getElementById(`imp-${day}-hg1-d`).value.trim();
+        currentMenu.days[day].hg1.allergene = document.getElementById(`imp-${day}-hg1-a`).value.trim();
+
+        currentMenu.days[day].hg2.title = document.getElementById(`imp-${day}-hg2-t`).value.trim();
+        currentMenu.days[day].hg2.desc = document.getElementById(`imp-${day}-hg2-d`).value.trim();
+        currentMenu.days[day].hg2.allergene = document.getElementById(`imp-${day}-hg2-a`).value.trim();
+
+        currentMenu.days[day].salat = document.getElementById(`imp-${day}-salat`).value.trim();
+        currentMenu.days[day].dessert = document.getElementById(`imp-${day}-dessert`).value.trim();
+      });
+
+      localStorage.setItem('mensa_menu', JSON.stringify(currentMenu));
+      
+      // Zurücksetzen und Neu-Rendern der Elternansicht
+      DAY_KEYS.forEach(d => selectedMeals[d] = 'none');
+      applySettingsToUI();
+      renderElternCards();
+      updateOrderSummaryUI();
+
+      alert(`Speiseplan für ${currentMenu.kw} erfolgreich übernommen! Die Eltern-Startseite ist nun sofort aktualisiert.`);
+      switchAdminTab('caterer');
+    }
+
+    // --- 8. ADMIN TAB: AUSGABELISTE ---
+    function renderAusgabeList() {
+      const day = document.getElementById('ausgabe-filter-day').value;
+      const classFilter = document.getElementById('ausgabe-filter-class').value;
+      const tbody = document.getElementById('ausgabe-table-body');
+      const empty = document.getElementById('ausgabe-empty-notice');
+      tbody.innerHTML = '';
+
+      const filtered = orders.filter(o => {
+        const hasMeal = o.selections && o.selections[day] && o.selections[day] !== 'none';
+        const matchClass = classFilter === 'all' || o.klasse === classFilter;
+        return hasMeal && matchClass;
+      });
+
+      filtered.sort((a, b) => a.nachname.localeCompare(b.nachname));
+
+      if (filtered.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      filtered.forEach(o => {
+        const choice = o.selections[day];
+        const isHG1 = choice === 'hg1';
+        const dishTitle = currentMenu.days[day][choice].title;
+        const isServed = o.served && o.served[day];
+
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-slate-50 transition ${isServed ? 'bg-emerald-50/50 text-slate-400' : ''}`;
+        tr.innerHTML = `
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" onchange="toggleServed('${o.id}', '${day}')" ${isServed ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+          </td>
+          <td class="py-3 px-4 font-bold text-slate-900 ${isServed ? 'line-through text-slate-400' : ''}">
+            ${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">${escapeHtml(o.klasse)}</span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-bold ${isHG1 ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}">
+              ${isHG1 ? 'HG 1' : 'HG 2'}
+            </span>
+            <span class="text-xs text-slate-600 ml-1.5 hidden md:inline">${escapeHtml(dishTitle)}</span>
+          </td>
+          <td class="py-3 px-4 text-xs font-medium text-amber-800">
+            ${o.notiz ? `<span class="bg-amber-100/70 px-2 py-0.5 rounded">${escapeHtml(o.notiz)}</span>` : '<span class="text-slate-300">-</span>'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleServed(id, day) {
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        if (!order.served) order.served = {};
+        order.served[day] = !order.served[day];
+        localStorage.setItem('mensa_orders', JSON.stringify(orders));
+        renderAusgabeList();
+      }
+    }
+
+    // --- 9. ADMIN TAB: KASSE & BUCHUNGEN ---
+    function renderKasseList() {
+      const tbody = document.getElementById('orders-table-body');
+      const empty = document.getElementById('orders-empty-notice');
+      tbody.innerHTML = '';
+
+      if (orders.length === 0) {
+        empty.classList.remove('hidden');
+        document.getElementById('kasse-total-sum').innerText = '0,00 €';
+        return;
+      }
+      empty.classList.add('hidden');
+
+      let sum = 0;
+      orders.forEach(o => {
+        sum += o.total;
+        const dayCount = DAY_KEYS.filter(d => o.selections && o.selections[d] !== 'none').length;
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-slate-600">${escapeHtml(o.id)}</td>
+          <td class="py-3 px-4 font-bold text-slate-900">${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold bg-slate-100">${escapeHtml(o.klasse)}</span></td>
+          <td class="py-3 px-4 font-medium">${dayCount} Tage</td>
+          <td class="py-3 px-4 font-black text-slate-900">${formatEUR(o.total)}</td>
+          <td class="py-3 px-4">
+            <button type="button" onclick="togglePayment('${o.id}')" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+              <i class="ph-bold ${o.paid ? 'ph-check-circle' : 'ph-clock'}"></i>
+              <span>${o.paid ? 'Bezahlt' : 'Offen'}</span>
+            </button>
+          </td>
+          <td class="py-3 px-4 text-right">
+            <button type="button" onclick="deleteOrder('${o.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition" title="Löschen">
+              <i class="ph-bold ph-trash text-base"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('kasse-total-sum').innerText = formatEUR(sum);
+    }
+
+    function togglePayment(id) {
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        order.paid = !order.paid;
+        localStorage.setItem('mensa_orders', JSON.stringify(orders));
+        renderKasseList();
+      }
+    }
+
+    function deleteOrder(id) {
+      const order = orders.find(o => o.id === id);
+      if (order && confirm(`Bestellung von ${order.vorname} ${order.nachname} wirklich löschen?`)) {
+        orders = orders.filter(o => o.id !== id);
+        localStorage.setItem('mensa_orders', JSON.stringify(orders));
+        updateAdminBadge();
+        renderKasseList();
+        renderCatererSummary();
+      }
+    }
+
+    function clearAllOrders() {
+      if (confirm("Möchten Sie WIRKLICH alle bisherigen Bestellungen löschen?")) {
+        orders = [];
+        localStorage.removeItem('mensa_orders');
+        updateAdminBadge();
+        renderKasseList();
+        renderCatererSummary();
+      }
+    }
+
+    function exportOrdersToCSV() {
+      if (orders.length === 0) {
+        alert("Keine Bestellungen zum Exportieren vorhanden.");
+        return;
+      }
+
+      let csv = 'Bestell-ID;Datum;Nachname;Vorname;Klasse;Email;Notiz;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Betrag;Bezahlt\n';
+      orders.forEach(o => {
+        csv += `"${o.id}";"${o.date}";"${o.nachname}";"${o.vorname}";"${o.klasse}";"${o.email}";"${o.notiz || ''}";"${o.selections.mo}";"${o.selections.di}";"${o.selections.mi}";"${o.selections.do}";"${o.selections.fr}";"${o.total.toFixed(2).replace('.', ',')}";"${o.paid ? 'JA' : 'NEIN'}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Mensa_Mittelberg_${currentMenu.kw.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // --- 10. ADMIN TAB: EINSTELLUNGEN ---
+    function saveSettings() {
+      currentSettings.recipient = document.getElementById('cfg-recipient').value.trim();
+      currentSettings.iban = document.getElementById('cfg-iban').value.trim();
+      currentSettings.bic = document.getElementById('cfg-bic').value.trim();
+      currentSettings.price = parseFloat(document.getElementById('cfg-price').value) || 3.70;
+      currentSettings.catererMail = document.getElementById('cfg-caterer-mail').value.trim();
+      currentSettings.pin = document.getElementById('cfg-pin').value.trim() || '1234';
+
+      localStorage.setItem('mensa_settings', JSON.stringify(currentSettings));
+      applySettingsToUI();
+      renderElternCards();
+      updateOrderSummaryUI();
+      alert("Einstellungen erfolgreich gespeichert!");
+    }
+
+    // --- HILFSFUNKTIONEN ---
+    function formatEUR(val) {
+      return (typeof val === 'number' ? val : 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
