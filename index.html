@@ -143,7 +143,6 @@
               <span class="text-xs text-slate-500 font-normal">Tage frei wählbar</span>
             </div>
             
-            <!-- HIER WERDEN DIE TAGESKARTEN GELADEN -->
             <div id="parent-days-list" class="space-y-4"></div>
           </div>
         </div>
@@ -168,9 +167,8 @@
               <span class="text-2xl font-black text-emerald-700" id="checkout-total-price">0,00 €</span>
             </div>
 
-            <!-- NUR NOCH DER GEBÜHRENFREIE BUTTON -->
             <div class="pt-2 space-y-2">
-              <button onclick="openPaymentModal()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-800 cursor-pointer">
+              <button type="button" onclick="openPaymentModal()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-800 cursor-pointer">
                 <i class="ph-bold ph-qr-code text-xl text-emerald-200"></i>
                 <div class="text-left leading-tight">
                   <div class="font-black text-sm">Jetzt verbindlich bestellen</div>
@@ -199,19 +197,19 @@
         </div>
 
         <div class="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs font-bold">
-          <button onclick="switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
+          <button type="button" onclick="switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
             <i class="ph-bold ph-truck text-emerald-600"></i> Caterer-Meldung
           </button>
-          <button onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <button type="button" onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <i class="ph-bold ph-clipboard-text text-sky-600"></i> Ausgabeliste
           </button>
-          <button onclick="switchAdminTab('speiseplan')" id="tab-btn-speiseplan" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <button type="button" onclick="switchAdminTab('speiseplan')" id="tab-btn-speiseplan" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <i class="ph-bold ph-pencil-simple text-amber-600"></i> Speiseplan-Editor
           </button>
-          <button onclick="switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <button type="button" onclick="switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <i class="ph-bold ph-list-dashes text-indigo-600"></i> Buchungen & Kasse
           </button>
-          <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <button type="button" onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <i class="ph-bold ph-gear text-slate-500"></i> Einstellungen (Bank & Schule)
           </button>
         </div>
@@ -223,13 +221,13 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
               <h2 class="text-base font-extrabold text-slate-900">Portions-Meldung für <span id="caterer-title-kw">KW 46</span></h2>
-              <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden</span>[cite: 1]
+              <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden[cite: 1]</span>
             </div>
             <div class="flex gap-2">
-              <button onclick="copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5">
+              <button type="button" onclick="copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5">
                 <i class="ph-bold ph-copy"></i> Fertige E-Mail kopieren
               </button>
-              <button onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5">
+              <button type="button" onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5">
                 <i class="ph-bold ph-printer"></i> Drucken
               </button>
             </div>
@@ -280,7 +278,7 @@
                 <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option>
                 <option value="4a">Klasse 4a</option><option value="4b">Klasse 4b</option><option value="4c">Klasse 4c</option>
               </select>
-              <button onclick="window.print()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1">
+              <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1">
                 <i class="ph-bold ph-printer"></i> Drucken
               </button>
             </div>
@@ -313,10 +311,10 @@
               <p class="text-xs text-slate-500">Alle Gerichte aus der Caterer-PDF für KW 46 sind aktiv hinterlegt[cite: 1].</p>
             </div>
             <div class="flex gap-2">
-              <button onclick="resetToKW46()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1">
+              <button type="button" onclick="resetToKW46()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1">
                 <i class="ph-bold ph-arrow-counter-clockwise"></i> Auf KW 46 zurücksetzen
               </button>
-              <button onclick="saveMealPlanInputs()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+              <button type="button" onclick="saveMealPlanInputs()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
                 <i class="ph-bold ph-floppy-disk"></i> Plan speichern & freigeben
               </button>
             </div>
@@ -343,10 +341,10 @@
           <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <h2 class="text-base font-extrabold text-slate-900">Alle erfassten Buchungen</h2>
             <div class="flex gap-2">
-              <button onclick="openManualBookingModal()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5">
+              <button type="button" onclick="openManualBookingModal()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5">
                 <i class="ph-bold ph-plus-circle"></i> + Manuelle Nachbuchung (Bar/BuT)
               </button>
-              <button onclick="exportOrdersToCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5">
+              <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5">
                 <i class="ph-bold ph-microsoft-excel-logo text-emerald-600"></i> CSV Export
               </button>
             </div>
@@ -355,374 +353,4 @@
             <table class="w-full text-left text-sm">
               <thead>
                 <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
-                  <th class="py-3 px-3">ID</th>
-                  <th class="py-3 px-4 font-bold">Kind</th>
-                  <th class="py-3 px-2 font-bold">Klasse</th>
-                  <th class="py-3 px-2 text-center">Mo</th>
-                  <th class="py-3 px-2 text-center">Di</th>
-                  <th class="py-3 px-2 text-center">Mi</th>
-                  <th class="py-3 px-2 text-center">Do</th>
-                  <th class="py-3 px-2 text-center">Fr</th>
-                  <th class="py-3 px-3 text-right font-bold">Betrag</th>
-                  <th class="py-3 px-3 text-center">Zahlweg</th>
-                  <th class="py-3 px-3 text-center">Aktion</th>
-                </tr>
-              </thead>
-              <tbody id="orders-log-tbody" class="divide-y divide-slate-100 text-xs"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB SETTINGS: BANKVERBINDUNG FÜR GIROCODE & SCHULE -->
-      <div id="sub-settings" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4 max-w-2xl">
-          <h2 class="text-base font-extrabold text-slate-900 pb-2 border-b border-slate-100">Grundeinstellungen & Bankdaten (GiroCode)</h2>
-          <div class="space-y-4 text-xs">
-            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-950 leading-relaxed">
-              <strong>Bankverbindung der Schule / des Fördervereins:</strong> Diese Daten werden auf dem Überweisungsträger und im QR-Code (GiroCode) für die Eltern eingeblendet.
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Kontoinhaber (Schule / Förderverein)</label>
-                <input type="text" id="setting-bank-owner" value="Mittelbergschule Spiesen Nachmittagsbetreuung" class="w-full px-3 py-2 border rounded-xl">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">IBAN des Schulkontos</label>
-                <input type="text" id="setting-bank-iban" value="DE00 0000 0000 0000 0000 00" class="w-full px-3 py-2 border rounded-xl font-mono">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">BIC (optional)</label>
-                <input type="text" id="setting-bank-bic" value="GENODE61SA1" class="w-full px-3 py-2 border rounded-xl font-mono">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Preis pro Mittagessen (€)</label>
-                <input type="number" step="0.10" id="setting-meal-price" value="3.70" class="w-full px-3 py-2 border rounded-xl">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Caterer E-Mail-Adresse</label>
-                <input type="email" id="setting-caterer-email" value="f.simon@pirrung.de" class="w-full px-3 py-2 border rounded-xl">[cite: 1]
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Admin-PIN (Standard: 1234)</label>
-                <input type="password" id="setting-admin-pin" value="1234" class="w-full px-3 py-2 border rounded-xl font-mono">
-              </div>
-            </div>
-
-            <button onclick="saveGeneralSettings()" class="mt-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-sm cursor-pointer">Einstellungen & Bankdaten speichern</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- MODAL: ZAHLUNGSDIALOG MIT GIROCODE -->
-  <div id="modal-paypal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-      
-      <!-- SCHRITT 1: ZAHLEN / QR-CODE SCANNEN -->
-      <div id="paypal-confirm-view" class="space-y-4">
-        <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
-          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
-            <i class="ph-bold ph-bank"></i>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-slate-900 text-base">Bestellung & Banküberweisung</h3>
-            <p class="text-xs text-slate-500">100% gebührenfrei direkt auf das Schulkonto</p>
-          </div>
-        </div>
-
-        <div class="bg-slate-50 rounded-xl p-3 text-xs space-y-1.5 border border-slate-200">
-          <div class="flex justify-between"><span class="text-slate-500">Kind:</span><span class="font-bold text-slate-900" id="modal-name">-</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Klasse:</span><span class="font-bold text-slate-900" id="modal-klasse">-</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Tage:</span><span class="font-bold text-slate-900" id="modal-days-count">-</span></div>
-          <div class="border-t border-slate-200 pt-1.5 flex justify-between text-sm font-bold">
-            <span class="text-slate-800">Gesamtbetrag (3,70 €/Essen):</span>
-            <span class="text-emerald-700 text-base font-black" id="modal-total-sum">0,00 €</span>
-          </div>
-        </div>
-
-        <!-- GIROCODE ANZEIGEBOX -->
-        <div id="girocode-box" class="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl text-center space-y-2">
-          <div class="text-[11px] font-bold text-emerald-950">Mit Bank-App (Sparkasse, VR-Bank etc.) scannen:</div>
-          <div class="flex justify-center p-2 bg-white rounded-lg border border-emerald-200 inline-block mx-auto shadow-2xs">
-            <img id="girocode-img" src="" alt="GiroCode" class="w-36 h-36 mx-auto block">
-          </div>
-          
-          <div class="text-left text-[11px] text-slate-600 bg-white p-2.5 rounded-lg border border-emerald-100 space-y-1 font-mono">
-            <div><span class="text-slate-400">Empfänger:</span> <strong id="modal-bank-owner" class="text-slate-800">Mittelbergschule</strong></div>
-            <div><span class="text-slate-400">IBAN:</span> <strong id="modal-bank-iban" class="text-slate-800 select-all">DE00...</strong></div>
-            <div><span class="text-slate-400">Verwendungszweck:</span> <strong id="modal-bank-purpose" class="text-emerald-700 select-all font-bold">MBS-...</strong></div>
-          </div>
-          <p class="text-[10px] text-slate-500">Sie können die Überweisung auch manuell mit den obigen Daten in Ihrem Online-Banking ausführen.</p>
-        </div>
-
-        <div class="flex gap-2">
-          <button onclick="executePayment()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
-            <i class="ph-bold ph-check"></i> Jetzt verbindlich abschließen
-          </button>
-          <button onclick="closePaypalModal()" class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-xs cursor-pointer">Abbrechen</button>
-        </div>
-      </div>
-
-      <!-- SCHRITT 2: QUITTUNG -->
-      <div id="paypal-success-view" class="hidden text-center py-4 space-y-3">
-        <i class="ph-bold ph-check-circle text-5xl text-emerald-600 mx-auto block"></i>
-        <div class="font-extrabold text-slate-900 text-lg">Buchung erfolgreich vermerkt!</div>
-        <p class="text-xs text-slate-500">Das Essen wurde direkt in der Betreuerliste hinterlegt. Bitte die Überweisung anweisen.</p>
-        
-        <div class="p-3 bg-slate-50 border rounded-xl text-left text-xs font-mono space-y-1">
-          <div>Buchungs-ID: <strong id="receipt-id">-</strong></div>
-          <div>Verwendungszweck: <strong id="receipt-purpose" class="text-emerald-700 font-bold">-</strong></div>
-        </div>
-
-        <button onclick="finishCheckout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-sm cursor-pointer">Fertig</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: MANUELLE NACHBUCHUNG -->
-  <div id="modal-manual-booking" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-      <h3 class="font-extrabold text-slate-900 text-base">Manuelle Nachbuchung (Bar / Notfall)</h3>
-      <div class="grid grid-cols-2 gap-3 text-xs">
-        <div>
-          <label class="block font-semibold mb-1">Vorname *</label>
-          <input type="text" id="manual-vorname" class="w-full px-3 py-2 border rounded-xl">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Nachname *</label>
-          <input type="text" id="manual-nachname" class="w-full px-3 py-2 border rounded-xl">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Klasse *</label>
-          <select id="manual-klasse" class="w-full px-3 py-2 border rounded-xl">
-            <option value="1a">1a</option><option value="1b">1b</option><option value="1c">1c</option>
-            <option value="2a">2a</option><option value="2b">2b</option><option value="2c">2c</option>
-            <option value="3a">3a</option><option value="3b">3b</option>
-            <option value="4a">4a</option><option value="4b">4b</option><option value="4c">4c</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Zahlungsvermerk</label>
-          <select id="manual-status" class="w-full px-3 py-2 border rounded-xl">
-            <option value="Bar bezahlt">Bar im Sekretariat bezahlt</option>
-            <option value="BuT-Gutschein">Bildungspaket (BuT)</option>
-          </select>
-        </div>
-      </div>
-      <div class="text-xs space-y-2 border-t pt-3">
-        <label class="font-bold block">Auswahl Hauptgericht 1 / 2:</label>
-        <div class="grid grid-cols-5 gap-1.5 text-center">
-          <div><div class="font-bold text-[10px]">Mo</div><select id="manual-mo" class="w-full p-1 border rounded text-[10px]"><option value="hg1">HG 1</option><option value="hg2">HG 2</option><option value="none" selected>-</option></select></div>
-          <div><div class="font-bold text-[10px]">Di</div><select id="manual-di" class="w-full p-1 border rounded text-[10px]"><option value="hg1">HG 1</option><option value="hg2">HG 2</option><option value="none" selected>-</option></select></div>
-          <div><div class="font-bold text-[10px]">Mi</div><select id="manual-mi" class="w-full p-1 border rounded text-[10px]"><option value="hg1">HG 1</option><option value="hg2">HG 2</option><option value="none" selected>-</option></select></div>
-          <div><div class="font-bold text-[10px]">Do</div><select id="manual-do" class="w-full p-1 border rounded text-[10px]"><option value="hg1">HG 1</option><option value="hg2">HG 2</option><option value="none" selected>-</option></select></div>
-          <div><div class="font-bold text-[10px]">Fr</div><select id="manual-fr" class="w-full p-1 border rounded text-[10px]"><option value="hg1">HG 1</option><option value="hg2">HG 2</option><option value="none" selected>-</option></select></div>
-        </div>
-      </div>
-      <div class="flex gap-2 pt-2">
-        <button onclick="saveManualBooking()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Speichern</button>
-        <button onclick="closeManualBookingModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 rounded-xl text-xs cursor-pointer">Abbrechen</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: PIN -->
-  <div id="modal-pin" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center">
-      <h3 class="font-extrabold text-slate-900 text-base mb-1">Admin / Betreuer Login</h3>
-      <p class="text-xs text-slate-500 mb-4">Standard-PIN: <strong>1234</strong></p>
-      <input type="password" id="input-admin-pin" placeholder="PIN" class="w-full text-center tracking-widest text-lg font-mono px-3 py-2 border border-slate-300 rounded-xl mb-4">
-      <div class="flex gap-2">
-        <button onclick="verifyAdminPin()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Anmelden</button>
-        <button onclick="closePinModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 rounded-xl text-xs cursor-pointer">Abbrechen</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZyzV1FfeV_5V6VIaeFDluPOSpKjVMsJE",
-      authDomain: "mensa-mittelbergschule.firebaseapp.com",
-      projectId: "mensa-mittelbergschule",
-      storageBucket: "mensa-mittelbergschule.firebasestorage.app",
-      messagingSenderId: "66867389897",
-      appId: "1:66867389897:web:5d6730d8e24ce3a2293418"
-    };
-
-    let db = null;
-    let auth = null;
-
-    let appSettings = {
-      price: 3.70,
-      catererEmail: "f.simon@pirrung.de",
-      signature: "Nachmittagsbetreuung der Mittelbergschule Spiesen",
-      adminPin: "1234",
-      pdfUrl: "https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf",
-      bankOwner: "Mittelbergschule Spiesen Nachmittagsbetreuung",
-      bankIban: "DE00 0000 0000 0000 0000 00",
-      bankBic: "GENODE61SA1"
-    };
-
-    const defaultKW46Plan = {
-      kw: 46,
-      period: "09.11.2026 – 13.11.2026",
-      caterer: "pirrung monsterlecker - St. Ingbert",
-      pdfUrl: "https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf",
-      days: [
-        {
-          id: 'mo',
-          name: 'Montag',
-          date: '09.11.2026',
-          salat: '–',
-          hg1: { name: 'Blumenkohl-Creme-Suppe mit Mehrkornbrötchen', desc: 'Blumenkohl, Kartoffel, Milch & Mehrkornbrötchen', allergens: 'a, a1, a2, a3, a4, g, g1, k' },
-          hg2: { name: 'Ravioli mit Tomatenfüllung in Tomatensoße', desc: 'feine gefüllte Pasta vegetarisch', allergens: 'a, a1, c' },
-          dessert: 'Apfel'
-        },
-        {
-          id: 'di',
-          name: 'Dienstag',
-          date: '10.11.2026',
-          salat: 'Endivien, Radicchio, Frisée mit Balsamico-Dressing',
-          hg1: { name: '"Chili sin Carne" dazu Reis', desc: 'vegan mit Bohnen, Mais, Paprika', allergens: 'f, i, y' },
-          hg2: { name: 'Semmelknödel mit Rahmsauce', desc: 'herzhafte Knödel in feiner Rahmsauce', allergens: 'a, a1, c, g, g1' },
-          dessert: 'Milchreis (g, g1)'
-        },
-        {
-          id: 'mi',
-          name: 'Mittwoch',
-          date: '11.11.2026',
-          salat: 'Gurkensalat',
-          hg1: { name: 'Wild/MSC paniertes Seelachsfilet mit Kräutersauce & Kartoffelstampf', desc: 'DGE-zertifizierter Fisch', allergens: 'a, a1, d, g, g1' },
-          hg2: { name: 'Rahmkartoffeln mit Brokkoli', desc: 'herzhafter Kartoffelauflauf', allergens: 'g, g1' },
-          dessert: 'Birne'
-        },
-        {
-          id: 'do',
-          name: 'Donnerstag',
-          date: '12.11.2026',
-          salat: '–',
-          hg1: { name: 'Rindergulasch mit Vollkorn-Penne & Brokkoligemüse', desc: 'zartes Rindfleisch', allergens: 'a, a1, 16' },
-          hg2: { name: 'Kaiserschmarrn mit Apfelmus', desc: 'süßer Klassiker', allergens: 'a, a1, c, g, g1, 3' },
-          dessert: 'Apfel-Sahne-Pudding (g, g1)'
-        },
-        {
-          id: 'fr',
-          name: 'Freitag',
-          date: '13.11.2026',
-          salat: 'Möhrensalat mit Orangen-Dressing',
-          hg1: { name: 'Penne mit Tomatensauce & Reibekäse', desc: 'Nudelliebling der Kinder', allergens: 'a, a1, g, g1' },
-          hg2: { name: 'Käsespätzle', desc: 'mit würzigem Käse überbacken', allergens: 'a, a1, c, g, g1' },
-          dessert: 'Banane'
-        }
-      ]
-    };
-
-    let menuPlan = JSON.parse(JSON.stringify(defaultKW46Plan));
-    let orders = [];
-    let currentSelection = { mo: 'none', di: 'none', mi: 'none', do: 'none', fr: 'none' };
-    let currentPendingBookingId = '';
-
-    // SOFORT RENDERN BEIM LADEN DER SEITE
-    window.addEventListener("DOMContentLoaded", () => {
-      loadLocalStorageFallback();
-      renderParentDays();
-      updateCheckoutCalculation();
-      initFirebase();
-    });
-
-    async function initFirebase() {
-      try {
-        if (typeof firebase !== 'undefined' && firebase.apps) {
-          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-          db = firebase.firestore();
-          auth = firebase.auth();
-          await auth.signInAnonymously();
-          setupRealtimeListeners();
-        }
-      } catch (err) {
-        console.warn("Offline-Modus aktiv:", err);
-      }
-    }
-
-    function setupRealtimeListeners() {
-      if (!db) return;
-      db.collection('orders').onSnapshot((snap) => {
-        orders = [];
-        snap.forEach(d => orders.push({ id: d.id, ...d.data() }));
-        localStorage.setItem('mbs_orders', JSON.stringify(orders));
-        updateHeaderBadges();
-        renderCatererTable();
-        renderAusgabeList();
-        renderKassenLog();
-      });
-
-      db.collection('config').doc('menuPlan').onSnapshot((doc) => {
-        if (doc.exists) {
-          const remotePlan = doc.data();
-          if (remotePlan && remotePlan.days && remotePlan.days[0].hg1) {
-            menuPlan = remotePlan;
-            localStorage.setItem('mbs_menu', JSON.stringify(menuPlan));
-            applySettingsToUI();
-            renderParentDays();
-          }
-        }
-      });
-    }
-
-    function loadLocalStorageFallback() {
-      try {
-        const storedOrders = localStorage.getItem('mbs_orders');
-        if (storedOrders) orders = JSON.parse(storedOrders);
-
-        const storedMenu = localStorage.getItem('mbs_menu');
-        if (storedMenu) {
-          const parsed = JSON.parse(storedMenu);
-          if (parsed && parsed.days && parsed.days[0].hg1) menuPlan = parsed;
-        }
-        const storedSettings = localStorage.getItem('mbs_settings');
-        if (storedSettings) appSettings = { ...appSettings, ...JSON.parse(storedSettings) };
-      } catch (e) {}
-      applySettingsToUI();
-    }
-
-    function applySettingsToUI() {
-      const p = appSettings.price.toFixed(2).replace('.', ',') + ' €';
-      const dispHeader = document.getElementById('display-price-header');
-      const chkPrice = document.getElementById('checkout-single-price');
-      const bKwTag = document.getElementById('banner-kw-tag');
-      const admBadge = document.getElementById('admin-kw-badge');
-      const catKw = document.getElementById('caterer-title-kw');
-      const editKw = document.getElementById('edit-kw-number');
-      const btnPdf = document.getElementById('btn-pdf-link');
-      const editPdf = document.getElementById('edit-pdf-url');
-
-      if (dispHeader) dispHeader.innerText = p;
-      if (chkPrice) chkPrice.innerText = p;
-      if (bKwTag) bKwTag.innerText = `KW ${menuPlan.kw} (${menuPlan.period || '09.11. – 13.11.2026'})`;
-      if (admBadge) admBadge.innerText = `KW ${menuPlan.kw}`;
-      if (catKw) catKw.innerText = `KW ${menuPlan.kw}`;
-      if (editKw) editKw.value = menuPlan.kw;
-
-      const pdfUrl = menuPlan.pdfUrl || appSettings.pdfUrl;
-      if (btnPdf) btnPdf.href = pdfUrl;
-      if (editPdf) editPdf.value = pdfUrl;
-
-      if (document.getElementById('setting-bank-owner')) document.getElementById('setting-bank-owner').value = appSettings.bankOwner;
-      if (document.getElementById('setting-bank-iban')) document.getElementById('setting-bank-iban').value = appSettings.bankIban;
-      if (document.getElementById('setting-bank-bic')) document.getElementById('setting-bank-bic').value = appSettings.bankBic;
-    }
-
-    function updateHeaderBadges() {
-      const b = document.getElementById('badge-orders');
-      if (b) b.innerText = orders.length;
-    }
-
-    function navigate
+                  <th class="py-3 px-3
