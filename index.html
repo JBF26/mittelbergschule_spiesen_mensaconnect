@@ -14,11 +14,6 @@
     }
     .print-only { display: none; }
   </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
@@ -36,25 +31,24 @@
             Mittelbergschule Spiesen
           </div>
           <p class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
-            <span id="cloud-indicator" class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span id="cloud-status-label">Nachmittagsbetreuung • Mittagstisch</span>
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span>Nachmittagsbetreuung • Mittagstisch</span>
           </p>
         </div>
       </div>
 
-      <!-- Navigation & Rollen -->
       <div class="flex items-center gap-2">
-        <a id="btn-pdf-link" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
+        <a href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
           <i class="ph-bold ph-file-pdf text-rose-600 text-base"></i>
           <span>Original-Speiseplan (PDF)</span>
         </a>
 
         <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs md:text-sm font-bold">
-          <button id="nav-btn-eltern" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition">
+          <button id="nav-btn-eltern" type="button" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm transition">
             <i class="ph-bold ph-shopping-cart-simple text-emerald-600"></i>
             <span>Bestellung</span>
           </button>
-          <button id="nav-btn-admin" onclick="requestAdminAccess()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+          <button id="nav-btn-admin" type="button" onclick="requestAdminAccess()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
             <i class="ph-bold ph-lock-key text-slate-500"></i>
             <span>Admin</span>
             <span id="badge-orders" class="ml-1 bg-emerald-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-mono">0</span>
@@ -75,22 +69,22 @@
         <div>
           <div class="flex items-center gap-2 mb-2">
             <span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2 py-0.5 rounded uppercase">Wichtige Frist</span>
-            <span id="banner-kw-tag" class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46 (09.11. – 13.11.2026)</span>
+            <span class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46 (09.11. – 13.11.2026)</span>
           </div>
           <h1 class="text-xl md:text-2xl font-black text-white">Mittagessen verbindlich vorbestellen</h1>
           <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-2xl">
-            Caterer: <strong>pirrung monsterlecker</strong>. Bestellungen müssen bis spätestens <strong class="text-amber-300 underline" id="banner-deadline-text">Mittwoch um 18:00 Uhr</strong> abgeschlossen sein[cite: 1].
+            Caterer: <strong>pirrung monsterlecker</strong>. Bestellungen müssen bis spätestens <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong> abgeschlossen sein[cite: 1].
           </p>
         </div>
         <div class="bg-white/10 border border-white/20 rounded-2xl p-3 text-center min-w-[130px] self-start md:self-auto">
           <div class="text-[10px] uppercase font-bold text-slate-300">Preis pro Essen</div>
-          <div class="text-2xl font-black text-amber-300" id="display-price-header">3,70 €</div>
+          <div class="text-2xl font-black text-amber-300">3,70 €</div>
           <div class="text-[10px] text-emerald-200">inkl. Salat & Dessert</div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Links: Formular & Speisenauswahl -->
+        <!-- Links: Formular & Speiseplan -->
         <div class="lg:col-span-2 space-y-6">
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center gap-2 pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
@@ -133,7 +127,7 @@
             </div>
           </div>
 
-          <!-- Speiseplan Mo - Fr -->
+          <!-- Speiseplan Mo - Fr FEST IM HTML -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <div class="flex items-center gap-2">
@@ -143,7 +137,235 @@
               <span class="text-xs text-slate-500 font-normal">Tage frei wählbar</span>
             </div>
             
-            <div id="parent-days-list" class="space-y-4"></div>
+            <div class="space-y-4">
+              <!-- MONTAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Montag (09.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Apfel[cite: 1]</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <label id="card-mo-hg1" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-mo" value="hg1" class="hidden" onchange="pickMeal('mo', 'hg1')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Blumenkohl-Creme-Suppe mit Mehrkornbrötchen[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Blumenkohl, Kartoffel, Milch & Mehrkornbrötchen[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, a2, a3, a4, g, g1, k[cite: 1]</div>
+                  </label>
+                  <label id="card-mo-hg2" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-mo" value="hg2" class="hidden" onchange="pickMeal('mo', 'hg2')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Ravioli mit Tomatenfüllung in Tomatensoße[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">feine Nudeltaschen vegetarisch[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c[cite: 1]</div>
+                  </label>
+                  <label id="card-mo-none" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col items-center justify-center text-center border-slate-400 bg-slate-100">
+                    <input type="radio" name="choice-mo" value="none" class="hidden" onchange="pickMeal('mo', 'none')" checked>
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- DIENSTAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Dienstag (10.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Endivien, Radicchio, Frisée mit Balsamico-Dressing[cite: 1]</span>
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Milchreis (g, g1)[cite: 1]</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <label id="card-di-hg1" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-di" value="hg1" class="hidden" onchange="pickMeal('di', 'hg1')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">"Chili sin Carne" dazu Reis[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">vegan mit Bohnen, Mais, Paprika[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: f, i, y[cite: 1]</div>
+                  </label>
+                  <label id="card-di-hg2" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-di" value="hg2" class="hidden" onchange="pickMeal('di', 'hg2')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Semmelknödel mit Rahmsauce[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">herzhafte Knödel in feiner Rahmsauce[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1[cite: 1]</div>
+                  </label>
+                  <label id="card-di-none" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col items-center justify-center text-center border-slate-400 bg-slate-100">
+                    <input type="radio" name="choice-di" value="none" class="hidden" onchange="pickMeal('di', 'none')" checked>
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- MITTWOCH -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Mittwoch (11.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Gurkensalat[cite: 1]</span>
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Birne[cite: 1]</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <label id="card-mi-hg1" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-mi" value="hg1" class="hidden" onchange="pickMeal('mi', 'hg1')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Wild/MSC pan. Seelachsfilet mit Kräutersauce & Kartoffelstampf[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">DGE-zertifizierter Fisch[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, d, g, g1[cite: 1]</div>
+                  </label>
+                  <label id="card-mi-hg2" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-mi" value="hg2" class="hidden" onchange="pickMeal('mi', 'hg2')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Rahmkartoffeln mit Brokkoli[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">herzhafter Kartoffelauflauf[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: g, g1[cite: 1]</div>
+                  </label>
+                  <label id="card-mi-none" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col items-center justify-center text-center border-slate-400 bg-slate-100">
+                    <input type="radio" name="choice-mi" value="none" class="hidden" onchange="pickMeal('mi', 'none')" checked>
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- DONNERSTAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Donnerstag (12.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Apfel-Sahne-Pudding (g, g1)[cite: 1]</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <label id="card-do-hg1" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-do" value="hg1" class="hidden" onchange="pickMeal('do', 'hg1')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Rindergulasch mit Vollkorn-Penne & Brokkoli[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">zartes Rindfleisch[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, 16[cite: 1]</div>
+                  </label>
+                  <label id="card-do-hg2" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-do" value="hg2" class="hidden" onchange="pickMeal('do', 'hg2')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Kaiserschmarrn mit Apfelmus[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">süßer Klassiker[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1, 3[cite: 1]</div>
+                  </label>
+                  <label id="card-do-none" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col items-center justify-center text-center border-slate-400 bg-slate-100">
+                    <input type="radio" name="choice-do" value="none" class="hidden" onchange="pickMeal('do', 'none')" checked>
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- FREITAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Freitag (13.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Möhrensalat mit Orangen-Dressing[cite: 1]</span>
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Banane[cite: 1]</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <label id="card-fr-hg1" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-fr" value="hg1" class="hidden" onchange="pickMeal('fr', 'hg1')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Penne mit Tomatensauce & Reibekäse[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Nudelliebling der Kinder[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, g, g1[cite: 1]</div>
+                  </label>
+                  <label id="card-fr-hg2" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col justify-between border-slate-200 hover:border-slate-300 bg-white">
+                    <div>
+                      <input type="radio" name="choice-fr" value="hg2" class="hidden" onchange="pickMeal('fr', 'hg2')">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Käsespätzle[cite: 1]</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">mit würzigem Käse überbacken[cite: 1]</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1[cite: 1]</div>
+                  </label>
+                  <label id="card-fr-none" class="p-3 rounded-xl border-2 cursor-pointer transition select-none flex flex-col items-center justify-center text-center border-slate-400 bg-slate-100">
+                    <input type="radio" name="choice-fr" value="none" class="hidden" onchange="pickMeal('fr', 'none')" checked>
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -153,14 +375,20 @@
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2 pb-2 border-b border-slate-100">
               <i class="ph-bold ph-receipt text-emerald-600"></i> Bestellübersicht
             </h3>
-            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3"></div>
+            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3">
+              <div class="flex justify-between text-slate-400"><span>Montag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Dienstag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Mittwoch:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Donnerstag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Freitag:</span><i>kein Essen</i></div>
+            </div>
             <div class="flex justify-between text-xs text-slate-600">
               <span>Bestellte Essen:</span>
               <span class="font-bold text-slate-900" id="checkout-count">0 Tage</span>
             </div>
             <div class="flex justify-between text-xs text-slate-600">
               <span>Einzelpreis:</span>
-              <span class="font-medium text-slate-900" id="checkout-single-price">3,70 €</span>
+              <span class="font-medium text-slate-900">3,70 €</span>
             </div>
             <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
               <span class="text-sm font-bold text-slate-900">Gesamtbetrag:</span>
@@ -185,15 +413,15 @@
       </div>
     </div>
 
-    <!-- ADMIN & BETREUER BEREICH -->
+    <!-- ADMIN BEREICH -->
     <div id="view-admin" class="hidden space-y-6">
       <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg md:text-xl font-black text-slate-900">Verwaltung Mittelbergschule</h1>
-            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold" id="admin-kw-badge">KW 46</span>
+            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold">KW 46</span>
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">Meldung an Caterer, Kasse & Ausgabeliste</p>
+          <p class="text-xs text-slate-500 mt-0.5">Meldung an Caterer & Ausgabeliste</p>
         </div>
 
         <div class="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs font-bold">
@@ -202,9 +430,6 @@
           </button>
           <button type="button" onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <i class="ph-bold ph-clipboard-text text-sky-600"></i> Ausgabeliste
-          </button>
-          <button type="button" onclick="switchAdminTab('speiseplan')" id="tab-btn-speiseplan" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
-            <i class="ph-bold ph-pencil-simple text-amber-600"></i> Speiseplan-Editor
           </button>
           <button type="button" onclick="switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <i class="ph-bold ph-list-dashes text-indigo-600"></i> Buchungen & Kasse
@@ -220,7 +445,7 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
-              <h2 class="text-base font-extrabold text-slate-900">Portions-Meldung für <span id="caterer-title-kw">KW 46</span></h2>
+              <h2 class="text-base font-extrabold text-slate-900">Portions-Meldung für KW 46</h2>
               <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden[cite: 1]</span>
             </div>
             <div class="flex gap-2">
@@ -298,59 +523,4 @@
               <tbody id="ausgabe-table-body" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
-          <div id="ausgabe-empty-notice" class="hidden text-center py-6 text-slate-400 text-sm">Keine Buchungen vorhanden.</div>
-        </div>
-      </div>
-
-      <!-- TAB SPEISEPLAN-EDITOR -->
-      <div id="sub-speiseplan" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-            <div>
-              <h2 class="text-base font-extrabold text-slate-900">Speiseplan pflegen & bearbeiten</h2>
-              <p class="text-xs text-slate-500">Alle Gerichte aus der Caterer-PDF für KW 46 sind aktiv hinterlegt[cite: 1].</p>
-            </div>
-            <div class="flex gap-2">
-              <button type="button" onclick="resetToKW46()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1">
-                <i class="ph-bold ph-arrow-counter-clockwise"></i> Auf KW 46 zurücksetzen
-              </button>
-              <button type="button" onclick="saveMealPlanInputs()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
-                <i class="ph-bold ph-floppy-disk"></i> Plan speichern & freigeben
-              </button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">Kalenderwoche (KW)</label>
-              <input type="number" id="edit-kw-number" value="46" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white">
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block font-bold text-slate-700 mb-1">Link zur Original-PDF (Schul-Website / Caterer)</label>
-              <input type="url" id="edit-pdf-url" value="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white">
-            </div>
-          </div>
-
-          <div id="editor-days-grid" class="space-y-4"></div>
-        </div>
-      </div>
-
-      <!-- TAB KASSE -->
-      <div id="sub-kasse" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
-            <h2 class="text-base font-extrabold text-slate-900">Alle erfassten Buchungen</h2>
-            <div class="flex gap-2">
-              <button type="button" onclick="openManualBookingModal()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5">
-                <i class="ph-bold ph-plus-circle"></i> + Manuelle Nachbuchung (Bar/BuT)
-              </button>
-              <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5">
-                <i class="ph-bold ph-microsoft-excel-logo text-emerald-600"></i> CSV Export
-              </button>
-            </div>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead>
-                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
-                  <th class="py-3 px-3
+          <div id="ausgabe-empty-notice" class="hidden text-center py-6 text-slate-4
