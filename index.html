@@ -866,6 +866,38 @@
       appId: "1:66867389897:web:5d6730d8e24ce3a2293418"
     };
 
+    let db = null;
+    try {
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+        console.log("Firebase erfolgreich gestartet!");
+      }
+    } catch (err) {
+      console.warn("Firebase-Start fehlgeschlagen, arbeite lokal weiter:", err);
+    }
+
+    // 2. Standard-Speiseplan der Woche
+    const defaultPlan = [
+      { day: "Montag", date: "Mo", v1: "Hähnchen-Nuggets mit Kartoffelpüree & Erbsen", v2: "Gemüse-Nuggets mit Kartoffelpüree & Erbsen" },
+      { day: "Dienstag", date: "Di", v1: "Spaghetti Bolognese (Rind) mit Reibekäse", v2: "Spaghetti mit fruchtiger Tomatensauce & Reibekäse" },
+      { day: "Mittwoch", date: "Mi", v1: "Paniertes Seelachsfilet mit Remoulade & Reis", v2: "Knusprige Gemüsetaler mit Dip & Duftreis" },
+      { day: "Donnerstag", date: "Do", v1: "Rinder-Frikadelle mit Rahmsauce & Spätzle", v2: "Vegetarische Frikadelle mit Rahmsauce & Spätzle" },
+      { day: "Freitag", date: "Fr", v1: "Süßer Milchreis mit Zimt-Zucker & Apfelmus", v2: "Bunter Gemüseeintopf mit Vollkornbrötchen" }
+    ];
+
+    let currentPlan = JSON.parse(localStorage.getItem('fgts_speiseplan')) || defaultPlan;
+    let orders = JSON.parse(localStorage.getItem('fgts_orders')) || [];
+    const MEAL_PRICE = 3.70;
+
+    // 3. Initialisierung beim Laden
+    document.addEventListener("DOMContentLoaded", () => {
+      renderDaysSelector();
+      updateTotal();
+    });
+
     // Firebase Initialisierung
     let db = null;
     try {
