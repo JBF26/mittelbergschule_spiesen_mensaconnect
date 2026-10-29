@@ -2,199 +2,304 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mittelbergschule Spiesen – MensaConnect</title>
+  <title>Mittelbergschule Spiesen – Mensa</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.5; padding-bottom: 60px; }
-
-    /* Header */
-    .header { background: #ffffff; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
-    .header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .main-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
-
-    /* Banner */
-    .banner { background: linear-gradient(135deg, #0f172a, #064e3b); color: #fff; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-    .price-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 12px 16px; text-align: center; }
-    .price-badge .num { font-size: 24px; font-weight: 900; color: #fde047; }
-
-    /* Layout Spalten */
-    .grid-wrap { display: flex; gap: 24px; align-items: flex-start; }
-    .left-col { flex: 2; min-width: 0; }
-    .right-col { flex: 1; min-width: 320px; }
-    @media (max-width: 850px) {
-      .grid-wrap { flex-direction: column; }
-      .right-col { width: 100%; min-width: auto; }
-    }
-
-    /* Karten */
-    .card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-    .card-title { font-size: 15px; font-weight: 800; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-
-    /* Formular */
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-    .form-col-2 { grid-column: span 2; }
-    @media (max-width: 600px) { .form-col-2 { grid-column: span 1; } }
-    label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; }
-    input[type="text"], input[type="email"], input[type="number"], input[type="password"], select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #f8fafc; font-family: inherit; }
-    input:focus, select:focus { outline: none; border-color: #059669; background: #ffffff; }
-
-    /* Speiseplan */
-    .day-box { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 14px; background: #ffffff; }
-    .day-header { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid #f8fafc; padding-bottom: 6px; }
-    .meal-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-    @media (max-width: 700px) { .meal-options { grid-template-columns: 1fr; } }
-
-    .meal-btn { border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; text-align: left; cursor: pointer; font-family: inherit; }
-    .meal-btn.active-hg1 { border-color: #2563eb !important; background-color: #eff6ff !important; }
-    .meal-btn.active-hg2 { border-color: #059669 !important; background-color: #ecfdf5 !important; }
-    .meal-btn.active-none { border-color: #475569 !important; background-color: #f1f5f9 !important; }
-
-    .dish-tag { display: inline-block; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 6px; }
-    .tag-hg1 { background: #dbeafe; color: #1e40af; }
-    .tag-hg2 { background: #d1fae5; color: #065f46; }
-
-    /* Buttons */
-    .btn { padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
-    .btn-secondary:hover { background: #e2e8f0; }
-    .btn-pdf { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-    .btn-danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-    .btn-dark { background: #0f172a; color: #ffffff; }
-
-    /* Bezahlen Box */
-    .price-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #64748b; }
-    .price-total { display: flex; justify-content: space-between; border-top: 2px solid #e2e8f0; padding-top: 10px; margin-top: 10px; font-weight: 800; font-size: 18px; color: #065f46; }
-    .alert-err { background: #fee2e2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px; border-radius: 8px; font-size: 12px; margin-top: 12px; font-weight: 600; display: none; }
-
-    /* Tabellen */
-    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    th { background: #f8fafc; padding: 10px; border-bottom: 2px solid #e2e8f0; font-size: 11px; text-transform: uppercase; color: #64748b; }
-    td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+    body { font-family: sans-serif; background: #f1f5f9; padding: 20px; color: #0f172a; margin: 0; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 24px; border-radius: 12px; border: 1px solid #cbd5e1; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #059669; padding-bottom: 12px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .nav-btn { padding: 8px 14px; background: #e2e8f0; border: 1px solid #94a3b8; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .nav-btn:hover { background: #cbd5e1; }
+    .day-card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 12px; background: #f8fafc; }
+    .day-title { font-weight: bold; font-size: 15px; margin-bottom: 8px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+    .dish-label { display: block; padding: 8px; margin: 4px 0; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    .dish-label:hover { background: #f1f5f9; }
+    input[type="radio"] { margin-right: 8px; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+    .pay-btn-paypal { background: #ffc439; color: black; border: 1px solid #eab308; font-weight: bold; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; margin-top: 10px; }
+    .pay-btn-card { background: #0f172a; color: white; border: none; font-weight: bold; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; margin-top: 8px; }
+    .receipt-box { background: #ecfdf5; border: 2px solid #059669; padding: 16px; border-radius: 8px; margin-top: 16px; display: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+    th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+    th { background: #f1f5f9; }
   </style>
 </head>
 <body>
 
+<div class="container">
+  
   <!-- KOPFZEILE -->
-  <header class="header">
-    <div class="header-inner">
-      <div onclick="showPage('eltern')" style="cursor: pointer;">
-        <strong style="font-size: 17px; color: #0f172a;">Mittelbergschule Spiesen</strong>
-        <div style="font-size: 12px; color: #059669; font-weight: 700;">MensaConnect • Nachmittagsbetreuung (FGTS)</div>
+  <div class="header-bar">
+    <div>
+      <h2 style="margin: 0;">Mittelbergschule Spiesen</h2>
+      <small style="color: #059669; font-weight: bold;">MensaConnect • Nachmittagsbetreuung (FGTS)</small>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <a href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" style="padding: 8px 12px; background: #ffe4e6; color: #be123c; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; border: 1px solid #fecdd3;">📄 Original PDF</a>
+      <button class="nav-btn" onclick="zeigeAnsicht('eltern')">🛒 Bestellung</button>
+      <button class="nav-btn" onclick="zeigeAnsicht('admin')">🔒 Admin-Bereich</button>
+    </div>
+  </div>
+
+  <!-- BEREICH 1: ELTERN-BESTELLUNG -->
+  <div id="ansicht-eltern">
+    <div style="background: #064e3b; color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <strong>Speiseplan KW 46</strong> (09.11. – 13.11.2026)<br>
+        <small>Caterer: pirrung monsterlecker • Preis: 3,70 € pro Essen</small>
       </div>
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <a href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" class="btn btn-pdf">
-          📄 Original Speiseplan (PDF)
-        </a>
-        <button type="button" class="btn btn-secondary" onclick="showPage('eltern')">🛒 Bestellung</button>
-        <button type="button" class="btn btn-secondary" onclick="showPage('admin-login')">🔒 Admin (<span id="badge-count">0</span>)</button>
+      <div style="font-size: 20px; font-weight: bold; color: #fde047;" id="summe-anzeige">0,00 €</div>
+    </div>
+
+    <!-- Stammdaten Kind -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+      <div class="form-group">
+        <label>Vorname des Kindes *</label>
+        <input type="text" id="k-vorname" placeholder="z. B. Leon">
+      </div>
+      <div class="form-group">
+        <label>Nachname des Kindes *</label>
+        <input type="text" id="k-nachname" placeholder="z. B. Müller">
+      </div>
+      <div class="form-group">
+        <label>Klasse *</label>
+        <input type="text" id="k-klasse" value="2b">
+      </div>
+      <div class="form-group">
+        <label>E-Mail-Adresse für Beleg *</label>
+        <input type="email" id="k-email" placeholder="eltern@beispiel.de">
       </div>
     </div>
-  </header>
 
-  <main class="main-wrap">
+    <h3>Essensauswahl:</h3>
 
-    <!-- SEITE 1: BESTELLUNG (ELTERN) -->
-    <div id="page-eltern" style="display: block;">
-      <div class="banner">
-        <div>
-          <span style="background:#fde047; color:#0f172a; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:900;">KW 46</span>
-          <h1 style="font-size: 20px; font-weight: 900; margin: 6px 0;">Mittagessen vorbestellen & direkt online bezahlen</h1>
-          <p style="font-size: 13px; opacity: 0.9;">
-            Caterer: <strong>pirrung monsterlecker</strong>. Bestellschluss für die Folgewoche: <strong style="text-decoration: underline;">Mittwoch um 18:00 Uhr</strong>.
-          </p>
-        </div>
-        <div class="price-badge">
-          <div style="font-size: 10px; font-weight: 800; text-transform: uppercase;">Preis pro Essen</div>
-          <div class="num" id="banner-price">3,70 €</div>
-          <div style="font-size: 10px; opacity: 0.85;">inkl. Salat &amp; Dessert</div>
-        </div>
+    <!-- MONTAG -->
+    <div class="day-card">
+      <div class="day-title">Montag (09.11.2026) <small style="font-weight: normal; color: #64748b;">• Dessert: Apfel</small></div>
+      <label class="dish-label"><input type="radio" name="essen_mo" value="hg1" onchange="berechneSumme()"> <strong>Hauptgericht 1:</strong> Blumenkohl-Creme-Suppe mit Mehrkornbrötchen</label>
+      <label class="dish-label"><input type="radio" name="essen_mo" value="hg2" onchange="berechneSumme()"> <strong>Hauptgericht 2:</strong> Ravioli mit Tomatenfüllung (vegetarisch)</label>
+      <label class="dish-label"><input type="radio" name="essen_mo" value="kein" checked onchange="berechneSumme()"> Kein Essen an diesem Tag (0,00 €)</label>
+    </div>
+
+    <!-- DIENSTAG -->
+    <div class="day-card">
+      <div class="day-title">Dienstag (10.11.2026) <small style="font-weight: normal; color: #64748b;">• Salat & Milchreis</small></div>
+      <label class="dish-label"><input type="radio" name="essen_di" value="hg1" onchange="berechneSumme()"> <strong>Hauptgericht 1:</strong> "Chili sin Carne" dazu Reis</label>
+      <label class="dish-label"><input type="radio" name="essen_di" value="hg2" onchange="berechneSumme()"> <strong>Hauptgericht 2:</strong> Semmelknödel mit Rahmsauce</label>
+      <label class="dish-label"><input type="radio" name="essen_di" value="kein" checked onchange="berechneSumme()"> Kein Essen an diesem Tag (0,00 €)</label>
+    </div>
+
+    <!-- MITTWOCH -->
+    <div class="day-card">
+      <div class="day-title">Mittwoch (11.11.2026) <small style="font-weight: normal; color: #64748b;">• Gurkensalat & Birne</small></div>
+      <label class="dish-label"><input type="radio" name="essen_mi" value="hg1" onchange="berechneSumme()"> <strong>Hauptgericht 1:</strong> Seelachsfilet mit Kräutersauce & Püree</label>
+      <label class="dish-label"><input type="radio" name="essen_mi" value="hg2" onchange="berechneSumme()"> <strong>Hauptgericht 2:</strong> Rahmkartoffeln mit Brokkoli</label>
+      <label class="dish-label"><input type="radio" name="essen_mi" value="kein" checked onchange="berechneSumme()"> Kein Essen an diesem Tag (0,00 €)</label>
+    </div>
+
+    <!-- DONNERSTAG -->
+    <div class="day-card">
+      <div class="day-title">Donnerstag (12.11.2026) <small style="font-weight: normal; color: #64748b;">• Dessert: Apfel-Sahne-Pudding</small></div>
+      <label class="dish-label"><input type="radio" name="essen_do" value="hg1" onchange="berechneSumme()"> <strong>Hauptgericht 1:</strong> Rindergulasch mit Vollkorn-Penne & Brokkoli</label>
+      <label class="dish-label"><input type="radio" name="essen_do" value="hg2" onchange="berechneSumme()"> <strong>Hauptgericht 2:</strong> Kaiserschmarrn mit Apfelmus</label>
+      <label class="dish-label"><input type="radio" name="essen_do" value="kein" checked onchange="berechneSumme()"> Kein Essen an diesem Tag (0,00 €)</label>
+    </div>
+
+    <!-- FREITAG -->
+    <div class="day-card">
+      <div class="day-title">Freitag (13.11.2026) <small style="font-weight: normal; color: #64748b;">• Möhrensalat & Banane</small></div>
+      <label class="dish-label"><input type="radio" name="essen_fr" value="hg1" onchange="berechneSumme()"> <strong>Hauptgericht 1:</strong> Penne mit Tomatensauce & Reibekäse</label>
+      <label class="dish-label"><input type="radio" name="essen_fr" value="hg2" onchange="berechneSumme()"> <strong>Hauptgericht 2:</strong> Käsespätzle</label>
+      <label class="dish-label"><input type="radio" name="essen_fr" value="kein" checked onchange="berechneSumme()"> Kein Essen an diesem Tag (0,00 €)</label>
+    </div>
+
+    <!-- Bezahl-Buttons -->
+    <div id="bezahl-bereich">
+      <div id="fehler-meldung" style="color: red; font-weight: bold; margin-bottom: 8px; display: none;"></div>
+      <button class="pay-btn-paypal" onclick="zahlungAusfuehren('PayPal')">Jetzt mit PayPal bezahlen</button>
+      <button class="pay-btn-card" onclick="zahlungAusfuehren('Kreditkarte')">Jetzt mit Debit- / Kreditkarte bezahlen</button>
+    </div>
+
+    <!-- Bestätigungsquittung -->
+    <div class="receipt-box" id="beleg-bereich">
+      <h3 style="margin-top: 0; color: #065f46;">✅ Zahlung erfolgreich autorisiert!</h3>
+      <p style="margin: 4px 0;">Das Mittagessen wurde verbindlich gebucht und bezahlt.</p>
+      <div style="background: white; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 13px; margin: 10px 0;">
+        Bestellnummer: <strong id="beleg-nr">-</strong><br>
+        Betrag: <strong id="beleg-betrag">-</strong><br>
+        Methode: <span id="beleg-methode">-</span>
       </div>
+      <button class="nav-btn" style="background: #0f172a; color: white;" onclick="schliesseBeleg()">Fertig & Beleg schließen</button>
+    </div>
+  </div>
 
-      <div class="grid-wrap">
-        <!-- LINKE SPALTE: FORMULAR & SPEISEN -->
-        <div class="left-col">
-          <!-- 1. Kind Daten -->
-          <div class="card">
-            <div class="card-title"><span>1. Angaben zum Kind</span></div>
-            <div class="form-grid">
-              <div>
-                <label>Vorname *</label>
-                <input type="text" id="order-vorname" placeholder="z. B. Leon">
-              </div>
-              <div>
-                <label>Nachname *</label>
-                <input type="text" id="order-nachname" placeholder="z. B. Müller">
-              </div>
-              <div>
-                <label>Klasse *</label>
-                <select id="order-klasse">
-                  <option value="1a">Klasse 1a</option><option value="1b">Klasse 1b</option><option value="1c">Klasse 1c</option>
-                  <option value="2a">Klasse 2a</option><option value="2b" selected>Klasse 2b</option><option value="2c">Klasse 2c</option>
-                  <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option><option value="4a">Klasse 4a</option>
-                  <option value="4b">Klasse 4b</option><option value="4c">Klasse 4c</option>
-                </select>
-              </div>
-              <div>
-                <label>E-Mail für Beleg &amp; Bestätigung *</label>
-                <input type="email" id="order-email" placeholder="eltern@beispiel.de">
-              </div>
-              <div class="form-col-2">
-                <label>Hinweise (Allergien, kein Schweinefleisch)</label>
-                <input type="text" id="order-notiz" placeholder="z. B. Glutenfrei, Laktosearm...">
-              </div>
-            </div>
-          </div>
+  <!-- BEREICH 2: ADMIN BEREICH -->
+  <div id="ansicht-admin" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <h3 style="margin: 0;">Online-Bestellungen</h3>
+      <button class="nav-btn" style="color: red;" onclick="loescheAlleBestellungen()">Alle löschen</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Bestell-ID</th>
+          <th>Kind</th>
+          <th>Klasse</th>
+          <th>Tage</th>
+          <th>Betrag</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="admin-tabelle"></tbody>
+    </table>
+    <div id="admin-leer" style="text-align: center; color: #94a3b8; padding: 20px;">Bislang liegen keine Bestellungen vor.</div>
+    <div style="margin-top: 20px;">
+      <button class="nav-btn" onclick="zeigeAnsicht('eltern')">← Zurück zur Bestellung</button>
+    </div>
+  </div>
 
-          <!-- 2. Speiseplan Montag bis Freitag -->
-          <div class="card">
-            <div class="card-title">
-              <span>2. Menüauswahl: Montag bis Freitag</span>
-              <span style="font-weight: normal; font-size: 12px; color: #64748b;">Tage frei wählbar</span>
-            </div>
+</div>
 
-            <!-- MONTAG -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Montag (09.11.2026)</span>
-                <span style="font-size: 11px; font-weight: normal; color: #64748b;">Dessert: Apfel</span>
-              </div>
-              <div class="meal-options">
-                <button type="button" id="btn-mo-hg1" onclick="choose('mo', 'hg1')" class="meal-btn">
-                  <span class="dish-tag tag-hg1">Hauptgericht 1</span>
-                  <div style="font-weight: 700; font-size: 12px;">Blumenkohl-Creme-Suppe mit Mehrkornbrötchen</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">Milch &amp; Brötchen</div>
-                </button>
-                <button type="button" id="btn-mo-hg2" onclick="choose('mo', 'hg2')" class="meal-btn">
-                  <span class="dish-tag tag-hg2">Hauptgericht 2</span>
-                  <div style="font-weight: 700; font-size: 12px;">Ravioli mit Tomatenfüllung in Tomatensoße</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">vegetarisch</div>
-                </button>
-                <button type="button" id="btn-mo-none" onclick="choose('mo', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
+<script>
+  var PREIS = 3.70;
+  var bestellungen = [];
 
-            <!-- DIENSTAG -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Dienstag (10.11.2026)</span>
-                <span style="font-size: 11px; font-weight: normal; color: #64748b;">Salat &amp; Dessert: Milchreis</span>
-              </div>
-              <div class="meal-options">
-                <button type="button" id="btn-di-hg1" onclick="choose('di', 'hg1')" class="meal-btn">
-                  <span class="dish-tag tag-hg1">Hauptgericht 1</span>
-                  <div style="font-weight: 700; font-size: 12px;">"Chili sin Carne" dazu Reis</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">vegan mit Mais &amp; Bohnen</div>
-                </button>
-                <button type="button" id="btn-di-hg2" onclick="choose('di', 'hg2')" class="meal-btn">
-                  <span class="dish-tag tag-hg2">Hauptgericht 2</span>
-                  <div style="font-weight: 700; font-size: 12px;">Semmelknödel mit Rahmsauce</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">herzhafte Knödel</div>
-                </button>
-                <button type="button" id="btn-di-none" onclick="choose('di', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
+  // Vorhandene Bestellungen laden
+  try {
+    var geladen = localStorage.getItem('mensa_bestellungen');
+    if (geladen) bestellungen = JSON.parse(geladen);
+  } catch(e) {}
+
+  function berechneSumme() {
+    var tage = 0;
+    var wochentage = ['mo', 'di', 'mi', 'do', 'fr'];
+    for (var i = 0; i < wochentage.length; i++) {
+      var gewaehlt = document.querySelector('input[name="essen_' + wochentage[i] + '"]:checked');
+      if (gewaehlt && gewaehlt.value !== 'kein') {
+        tage++;
+      }
+    }
+    var gesamt = tage * PREIS;
+    document.getElementById('summe-anzeige').innerText = gesamt.toFixed(2).replace('.', ',') + ' €';
+    return { tage: tage, betrag: gesamt };
+  }
+
+  function zahlungAusfuehren(methode) {
+    var err = document.getElementById('fehler-meldung');
+    err.style.display = 'none';
+
+    var vorname = document.getElementById('k-vorname').value.trim();
+    var nachname = document.getElementById('k-nachname').value.trim();
+    var email = document.getElementById('k-email').value.trim();
+    var klasse = document.getElementById('k-klasse').value.trim();
+
+    var calc = berechneSumme();
+
+    if (!vorname || !nachname) {
+      err.innerText = "Bitte Vor- und Nachname des Kindes angeben.";
+      err.style.display = 'block';
+      return;
+    }
+    if (!email || email.indexOf('@') === -1) {
+      err.innerText = "Bitte eine gültige E-Mail-Adresse angeben.";
+      err.style.display = 'block';
+      return;
+    }
+    if (calc.tage === 0) {
+      err.innerText = "Bitte wählen Sie für mindestens einen Tag ein Hauptgericht aus.";
+      err.style.display = 'block';
+      return;
+    }
+
+    var bestellId = 'MB-' + Math.floor(1000 + Math.random() * 9000);
+
+    // Speichern
+    bestellungen.unshift({
+      id: bestellId,
+      kind: vorname + ' ' + nachname,
+      klasse: klasse,
+      tage: calc.tage,
+      betrag: calc.betrag.toFixed(2).replace('.', ',') + ' €',
+      methode: methode
+    });
+
+    try {
+      localStorage.setItem('mensa_bestellungen', JSON.stringify(bestellungen));
+    } catch(e) {}
+
+    // Beleg anzeigen
+    document.getElementById('beleg-nr').innerText = bestellId;
+    document.getElementById('beleg-betrag').innerText = calc.betrag.toFixed(2).replace('.', ',') + ' €';
+    document.getElementById('beleg-methode').innerText = methode;
+
+    document.getElementById('bezahl-bereich').style.display = 'none';
+    document.getElementById('beleg-bereich').style.display = 'block';
+  }
+
+  function schliesseBeleg() {
+    document.getElementById('beleg-bereich').style.display = 'none';
+    document.getElementById('bezahl-bereich').style.display = 'block';
+
+    // Auswahl zurücksetzen
+    var wochentage = ['mo', 'di', 'mi', 'do', 'fr'];
+    for (var i = 0; i < wochentage.length; i++) {
+      var keinRadio = document.querySelector('input[name="essen_' + wochentage[i] + '"][value="kein"]');
+      if (keinRadio) keinRadio.checked = true;
+    }
+    document.getElementById('k-vorname').value = '';
+    document.getElementById('k-nachname').value = '';
+    berechneSumme();
+  }
+
+  function zeigeAnsicht(ansicht) {
+    if (ansicht === 'admin') {
+      var pin = prompt("Bitte Admin-PIN eingeben (Standard: 1234):");
+      if (pin !== '1234' && pin !== 'admin') {
+        alert("Falsche PIN!");
+        return;
+      }
+      document.getElementById('ansicht-eltern').style.display = 'none';
+      document.getElementById('ansicht-admin').style.display = 'block';
+      aktualisiereAdminTabelle();
+    } else {
+      document.getElementById('ansicht-admin').style.display = 'none';
+      document.getElementById('ansicht-eltern').style.display = 'block';
+    }
+  }
+
+  function aktualisiereAdminTabelle() {
+    var tbody = document.getElementById('admin-tabelle');
+    var leer = document.getElementById('admin-leer');
+    tbody.innerHTML = '';
+
+    if (bestellungen.length === 0) {
+      leer.style.display = 'block';
+      return;
+    }
+    leer.style.display = 'none';
+
+    for (var i = 0; i < bestellungen.length; i++) {
+      var b = bestellungen[i];
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><strong>' + b.id + '</strong></td>' +
+                     '<td>' + b.kind + '</td>' +
+                     '<td>' + b.klasse + '</td>' +
+                     '<td>' + b.tage + ' Tage</td>' +
+                     '<td>' + b.betrag + '</td>' +
+                     '<td><span style="color: green; font-weight: bold;">Bezahlt (' + b.methode + ')</span></td>';
+      tbody.appendChild(tr);
+    }
+  }
+
+  function loescheAlleBestellungen() {
+    if (confirm("Wirklich alle Bestellungen löschen?")) {
+      bestellungen = [];
+      try { localStorage.removeItem('mensa_bestellungen'); } catch(e) {}
+      aktualisiereAdminTabelle();
+    }
+  }
+</script>
+
+</body>
+</html>
