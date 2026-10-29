@@ -8,13 +8,15 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.5; }
     
-    /* Layout */
-    .header { background: #fff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 30; }
+    .hidden { display: none !important; }
+
+    /* Layout & Header */
+    .header { background: #fff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 20; }
     .header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .main-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
     
     /* Banner */
-    .banner { background: linear-gradient(135deg, #0f172a, #064e3b); color: #fff; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .banner { background: linear-gradient(135deg, #0f172a, #064e3b); color: #fff; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
     .price-badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 12px; padding: 12px 16px; text-align: center; }
     .price-badge .num { font-size: 26px; font-weight: 900; color: #fde047; }
     
@@ -52,11 +54,13 @@
     .tag-hg2 { background: #d1fae5; color: #065f46; }
     
     /* Buttons */
-    .btn { padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; font-family: inherit; transition: 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+    .btn { padding: 9px 15px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; font-family: inherit; transition: 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
     .btn-primary { background: #059669; color: #fff; width: 100%; }
     .btn-primary:hover { background: #047857; }
     .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
     .btn-secondary:hover { background: #e2e8f0; }
+    .btn-pdf { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+    .btn-pdf:hover { background: #ffe4e6; }
     .btn-danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
     .btn-dark { background: #0f172a; color: #fff; }
     .btn-dark:hover { background: #1e293b; }
@@ -67,38 +71,34 @@
     .price-total { display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 10px; font-weight: 800; font-size: 18px; color: #065f46; }
     
     /* Modale Fenster */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
     .modal-card { background: #fff; border-radius: 20px; width: 100%; max-width: 480px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px; }
-    .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #94a3b8; font-weight: bold; }
-    .close-btn:hover { color: #334155; }
+    .close-btn { background: none; border: none; font-size: 26px; cursor: pointer; color: #94a3b8; font-weight: bold; line-height: 1; }
+    .close-btn:hover { color: #0f172a; }
     
     /* Tabellen */
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     th { background: #f8fafc; padding: 10px; border-bottom: 2px solid #e2e8f0; font-size: 11px; text-transform: uppercase; color: #64748b; }
     td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
     
-    .hidden { display: none !important; }
     .alert { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; font-weight: 600; }
     .alert-danger { background: #fee2e2; border: 1px solid #fecaca; color: #b91c1c; }
-    
-    @media print {
-      .no-print { display: none !important; }
-      body { background: #fff !important; }
-      .card { border: none !important; box-shadow: none !important; }
-    }
   </style>
 </head>
 <body>
 
   <!-- NAVIGATION -->
-  <header class="header no-print">
+  <header class="header">
     <div class="header-inner">
       <div style="cursor: pointer;" onclick="navigate('eltern')">
         <strong style="font-size: 17px; color: #0f172a;">Mittelbergschule Spiesen</strong>
         <div style="font-size: 12px; color: #059669; font-weight: 700;">MensaConnect • Nachmittagsbetreuung (FGTS)</div>
       </div>
       <div style="display: flex; gap: 8px; align-items: center;">
+        <a id="header-pdf-link" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-pdf">
+          📄 Speiseplan PDF
+        </a>
         <button type="button" class="btn btn-secondary" onclick="navigate('eltern')">🛒 Bestellung</button>
         <button type="button" class="btn btn-secondary" onclick="openAdminModal()">🔒 Admin (<span id="badge-count">0</span>)</button>
       </div>
@@ -158,7 +158,7 @@
             </div>
           </div>
 
-          <!-- 2. Speiseplan Montag bis Freitag (Direkt fest im HTML) -->
+          <!-- 2. Speiseplan Montag bis Freitag -->
           <div class="card">
             <div class="card-title">
               <span>2. Menüauswahl: Montag bis Freitag</span>
@@ -206,125 +206,4 @@
                   <div style="font-weight: 700; font-size: 12px;">Semmelknödel mit Rahmsauce</div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 4px;">herzhaft</div>
                 </button>
-                <button type="button" id="btn-di-none" onclick="selectDish('di', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
-
-            <!-- MITTWOCH -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Mittwoch (11.11.2026)</span>
-                <span style="font-size: 11px; font-weight: normal; color: #64748b;">Gurkensalat & Dessert: Birne</span>
-              </div>
-              <div class="meal-options">
-                <button type="button" id="btn-mi-hg1" onclick="selectDish('mi', 'hg1')" class="meal-btn">
-                  <span class="dish-tag tag-hg1">Hauptgericht 1</span>
-                  <div style="font-weight: 700; font-size: 12px;">Seelachsfilet mit Kräutersauce & Püree</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">MSC-Fisch</div>
-                </button>
-                <button type="button" id="btn-mi-hg2" onclick="selectDish('mi', 'hg2')" class="meal-btn">
-                  <span class="dish-tag tag-hg2">Hauptgericht 2</span>
-                  <div style="font-weight: 700; font-size: 12px;">Rahmkartoffeln mit Brokkoli</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">Auflauf</div>
-                </button>
-                <button type="button" id="btn-mi-none" onclick="selectDish('mi', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
-
-            <!-- DONNERSTAG -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Donnerstag (12.11.2026)</span>
-                <span style="font-size: 11px; font-weight: normal; color: #64748b;">Dessert: Apfel-Sahne-Pudding</span>
-              </div>
-              <div class="meal-options">
-                <button type="button" id="btn-do-hg1" onclick="selectDish('do', 'hg1')" class="meal-btn">
-                  <span class="dish-tag tag-hg1">Hauptgericht 1</span>
-                  <div style="font-weight: 700; font-size: 12px;">Rindergulasch mit Vollkorn-Penne</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">mit Brokkoli</div>
-                </button>
-                <button type="button" id="btn-do-hg2" onclick="selectDish('do', 'hg2')" class="meal-btn">
-                  <span class="dish-tag tag-hg2">Hauptgericht 2</span>
-                  <div style="font-weight: 700; font-size: 12px;">Kaiserschmarrn mit Apfelmus</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">süßer Klassiker</div>
-                </button>
-                <button type="button" id="btn-do-none" onclick="selectDish('do', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
-
-            <!-- FREITAG -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Freitag (13.11.2026)</span>
-                <span style="font-size: 11px; font-weight: normal; color: #64748b;">Möhrensalat & Dessert: Banane</span>
-              </div>
-              <div class="meal-options">
-                <button type="button" id="btn-fr-hg1" onclick="selectDish('fr', 'hg1')" class="meal-btn">
-                  <span class="dish-tag tag-hg1">Hauptgericht 1</span>
-                  <div style="font-weight: 700; font-size: 12px;">Penne mit Tomatensauce & Reibekäse</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">Nudelliebling</div>
-                </button>
-                <button type="button" id="btn-fr-hg2" onclick="selectDish('fr', 'hg2')" class="meal-btn">
-                  <span class="dish-tag tag-hg2">Hauptgericht 2</span>
-                  <div style="font-weight: 700; font-size: 12px;">Käsespätzle</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">mit Käse überbacken</div>
-                </button>
-                <button type="button" id="btn-fr-none" onclick="selectDish('fr', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Sidebar Zusammenfassung -->
-        <div>
-          <div class="card checkout-box">
-            <div class="card-title"><span>Bestellübersicht</span></div>
-            <div id="summary-items" style="font-size: 12px; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-              <div>Mo: kein Essen</div>
-              <div>Di: kein Essen</div>
-              <div>Mi: kein Essen</div>
-              <div>Do: kein Essen</div>
-              <div>Fr: kein Essen</div>
-            </div>
-            <div class="price-row">
-              <span>Bestellte Tage:</span>
-              <strong id="summary-days-count" style="color: #0f172a;">0 Tage</strong>
-            </div>
-            <div class="price-row">
-              <span>Einzelpreis:</span>
-              <span id="summary-single-price">3,70 €</span>
-            </div>
-            <div class="price-total">
-              <span>Gesamtbetrag:</span>
-              <span id="summary-total-sum">0,00 €</span>
-            </div>
-
-            <div id="checkout-err" class="alert alert-danger hidden" style="margin-top: 12px;"></div>
-
-            <button type="button" onclick="startCheckout()" class="btn btn-primary" style="margin-top: 14px; padding: 14px;">
-              💳 Jetzt online bezahlen
-            </button>
-            <div style="text-align: center; font-size: 11px; color: #64748b; margin-top: 8px;">
-              PayPal • Kreditkarte • Debitkarte
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ADMIN BEREICH -->
-    <div id="view-admin" class="hidden">
-      <div class="card">
+                <button type="button" id="btn
