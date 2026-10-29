@@ -23,7 +23,7 @@
     
     .meal-card {
       transition: all 0.15s ease-in-out;
-      border-width: 2px;
+      border: 2px solid #e2e8f0;
       cursor: pointer;
     }
     .meal-card.active-hg1 {
@@ -38,7 +38,7 @@
     }
     .meal-card.active-none {
       border-color: #475569 !important;
-      background-color: #f1f5f9 !important;
+      background-color: #e2e8f0 !important;
     }
   </style>
 </head>
@@ -155,10 +155,7 @@
               <span class="text-xs text-slate-500 font-normal">Klicken zum Auswählen</span>
             </div>
 
-            <!-- CONTAINER FÜR DIE ESSENSKARTEN -->
-            <div id="meal-cards-container" class="space-y-4">
-              <!-- Wird über JS gefüllt -->
-            </div>
+            <div id="meal-cards-container" class="space-y-4"></div>
           </div>
         </div>
 
@@ -242,211 +239,4 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
-              <h2 class="text-base font-extrabold text-slate-900">Online-Zahlungseingänge</h2>
-              <p class="text-xs text-slate-500">Übersicht aller online bezahlten Essen</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700">
-                Eingenommen: <strong id="kasse-total-sum" class="text-emerald-700 font-black text-sm ml-1">0,00 €</strong>
-              </div>
-              <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-300 transition">
-                <i class="ph-bold ph-download-simple"></i> CSV Export
-              </button>
-              <button type="button" onclick="clearAllOrders()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-rose-200 transition">
-                <i class="ph-bold ph-trash"></i> Zurücksetzen
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs md:text-sm">
-              <thead>
-                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
-                  <th class="py-3 px-3 font-bold">Bestell-Nr. / Transaktion</th>
-                  <th class="py-3 px-3 font-bold">Kind / Klasse</th>
-                  <th class="py-3 px-3 font-bold">Zahlungsart</th>
-                  <th class="py-3 px-3 font-bold">Tage</th>
-                  <th class="py-3 px-3 font-bold">Betrag</th>
-                  <th class="py-3 px-3 font-bold">Zahlungsstatus</th>
-                  <th class="py-3 px-3 font-bold text-right">Aktion</th>
-                </tr>
-              </thead>
-              <tbody id="orders-table-body" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-          <div id="orders-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
-            Bislang liegen noch keine Bestellungen vor.
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 2: CATERER -->
-      <div id="sub-caterer" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4 admin-card">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-            <div>
-              <h2 class="text-base font-extrabold text-slate-900" id="cat-meldungs-title">Portions-Meldung</h2>
-              <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden</span>
-            </div>
-            <div class="flex gap-2 no-print">
-              <button type="button" onclick="copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition">
-                <i class="ph-bold ph-copy"></i> Fertige E-Mail kopieren
-              </button>
-              <button type="button" onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5 transition">
-                <i class="ph-bold ph-printer"></i> Drucken
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead>
-                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
-                  <th class="py-3 px-4 font-bold">Tag</th>
-                  <th class="py-3 px-4 font-bold text-blue-700">Hauptgericht 1</th>
-                  <th class="py-3 px-4 font-bold text-emerald-700">Hauptgericht 2</th>
-                  <th class="py-3 px-4 font-extrabold text-right">Gesamtzahl</th>
-                </tr>
-              </thead>
-              <tbody id="caterer-table-body" class="divide-y divide-slate-100"></tbody>
-              <tfoot>
-                <tr class="bg-slate-100 font-black text-slate-900 border-t-2 border-slate-300">
-                  <td class="py-3 px-4">Wochensumme</td>
-                  <td id="cat-sum-v1" class="py-3 px-4 text-blue-800">0</td>
-                  <td id="cat-sum-v2" class="py-3 px-4 text-emerald-800">0</td>
-                  <td id="cat-sum-all" class="py-3 px-4 text-right text-emerald-700 text-base">0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-
-          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 no-print">
-            <div class="text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
-              <span>E-Mail Vorschau für: <span id="cat-email-addr-label" class="font-mono text-slate-900">f.simon@pirrung.de</span></span>
-              <span id="copy-status" class="text-emerald-700 font-bold hidden">In Zwischenablage kopiert!</span>
-            </div>
-            <pre id="caterer-email-preview" class="text-xs text-slate-800 font-mono whitespace-pre-wrap bg-white p-3.5 rounded-lg border border-slate-200 overflow-x-auto"></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 3: AUSGABELISTE -->
-      <div id="sub-ausgabe" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4 admin-card">
-          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
-            <div>
-              <h2 class="text-base font-extrabold text-slate-900">Mensa-Ausgabeliste für Betreuer</h2>
-              <span class="text-xs text-slate-500">Nur bezahlte Essen werden aufgeführt</span>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 no-print">
-              <select id="ausgabe-filter-day" onchange="renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
-                <option value="mo">Montag</option><option value="di">Dienstag</option>
-                <option value="mi">Mittwoch</option><option value="do">Donnerstag</option><option value="fr">Freitag</option>
-              </select>
-              <select id="ausgabe-filter-class" onchange="renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
-                <option value="all">Alle Klassen</option>
-                <option value="1a">Klasse 1a</option><option value="1b">Klasse 1b</option><option value="1c">Klasse 1c</option>
-                <option value="2a">Klasse 2a</option><option value="2b">Klasse 2b</option><option value="2c">Klasse 2c</option>
-                <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option>
-                <option value="4a">Klasse 4a</option><option value="4b">Klasse 4b</option><option value="4c">Klasse 4c</option>
-              </select>
-              <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1 transition">
-                <i class="ph-bold ph-printer"></i> Drucken
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead>
-                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
-                  <th class="py-3 px-3 w-16 text-center">Ausgegeben</th>
-                  <th class="py-3 px-4 font-bold">Kind (Name)</th>
-                  <th class="py-3 px-3 font-bold">Klasse</th>
-                  <th class="py-3 px-4 font-bold">Menüwahl</th>
-                  <th class="py-3 px-4 font-bold">Bezahlstatus</th>
-                  <th class="py-3 px-4 font-bold">Notiz / Allergie</th>
-                </tr>
-              </thead>
-              <tbody id="ausgabe-table-body" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-          <div id="ausgabe-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
-            Keine bezahlten Essen für diesen Tag oder diese Klasse eingetragen.
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 4: PDF IMPORT -->
-      <div id="sub-pdfimport" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-            <div>
-              <h2 class="text-base font-extrabold text-slate-900">Automatische Speiseplan-Übernahme (PDF)</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Laden Sie die PDF-Datei hoch oder bearbeiten Sie die Menüs direkt.</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="loadSampleKW(46)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300">
-                KW 46 laden
-              </button>
-              <button type="button" onclick="loadSampleKW(47)" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300">
-                KW 47 laden
-              </button>
-            </div>
-          </div>
-
-          <div id="pdf-dropzone" onclick="document.getElementById('pdf-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
-            <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden" onchange="handlePdfUpload(event)">
-            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shadow-sm">
-              <i class="ph-bold ph-file-arrow-up"></i>
-            </div>
-            <div class="text-sm font-bold text-slate-800">Caterer-PDF hier ablegen oder klicken zum Hochladen</div>
-            <div id="pdf-status-msg" class="text-xs font-bold text-emerald-700 mt-1"></div>
-          </div>
-
-          <div class="space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div class="flex items-center gap-2">
-                <label class="text-xs font-bold text-slate-700">Titel / Kalenderwoche:</label>
-                <input type="text" id="edit-kw-title" value="KW 46 (09.11. – 13.11.2026)" class="text-xs font-bold px-3 py-1.5 border border-slate-300 rounded-lg w-64 bg-white">
-              </div>
-              <button type="button" onclick="applyParsedMenuToSystem()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm flex items-center gap-1.5 transition">
-                <i class="ph-bold ph-check-circle"></i> In Speiseplan &amp; Eltern-Ansicht übernehmen
-              </button>
-            </div>
-
-            <div id="import-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 5: EINSTELLUNGEN -->
-      <div id="sub-settings" class="hidden space-y-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm max-w-2xl space-y-4">
-          <h2 class="text-base font-extrabold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
-            <i class="ph-bold ph-gear text-emerald-600"></i> PayPal &amp; Systemeinstellungen
-          </h2>
-          <div class="space-y-4 text-xs font-semibold">
-            
-            <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="text-xs font-black text-blue-900 flex items-center gap-2">
-                  <i class="ph-fill ph-paypal-logo text-[#003087] text-lg"></i> 
-                  <span>PayPal Integration</span>
-                </div>
-                <span id="sdk-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800">
-                  Aktiv
-                </span>
-              </div>
-
-              <div>
-                <label class="block text-slate-700 mb-1">
-                  PayPal Client-ID (öffentlich):
-                </label>
-                <input type="text" id="cfg-paypal-client-id" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="z. B. AeA1... (aus developer.paypal.com)">
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div>
-                  <label class="block text-slate-700 mb-1">PayPal Betriebsmodus:</label>
-                  <select id="cfg-paypal-mode" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg
+              <h2 class="text-base font-extrabold text-slate-900">
