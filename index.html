@@ -6,48 +6,47 @@
   <title>Mittelbergschule Spiesen – MensaConnect</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.5; padding-bottom: 60px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.5; padding-bottom: 60px; }
 
     /* Header */
-    .header { background: #ffffff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .header { background: #ffffff; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
     .header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .main-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
     /* Banner */
     .banner { background: linear-gradient(135deg, #0f172a, #064e3b); color: #fff; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-    .price-badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 12px; padding: 12px 16px; text-align: center; min-width: 130px; }
+    .price-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 12px 16px; text-align: center; }
     .price-badge .num { font-size: 24px; font-weight: 900; color: #fde047; }
 
-    /* Hauptaufteilung */
+    /* Layout Spalten */
     .grid-wrap { display: flex; gap: 24px; align-items: flex-start; }
     .left-col { flex: 2; min-width: 0; }
-    .right-col { flex: 1; min-width: 300px; }
+    .right-col { flex: 1; min-width: 320px; }
     @media (max-width: 850px) {
       .grid-wrap { flex-direction: column; }
       .right-col { width: 100%; min-width: auto; }
     }
 
     /* Karten */
-    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
     .card-title { font-size: 15px; font-weight: 800; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Formularfelder */
+    /* Formular */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
     .form-col-2 { grid-column: span 2; }
     @media (max-width: 600px) { .form-col-2 { grid-column: span 1; } }
     label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; }
-    input[type="text"], input[type="email"], input[type="number"], input[type="password"], select { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #f8fafc; font-family: inherit; }
+    input[type="text"], input[type="email"], input[type="number"], input[type="password"], select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #f8fafc; font-family: inherit; }
     input:focus, select:focus { outline: none; border-color: #059669; background: #ffffff; }
 
-    /* Speiseplankarten */
+    /* Speiseplan */
     .day-box { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 14px; background: #ffffff; }
     .day-header { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid #f8fafc; padding-bottom: 6px; }
     .meal-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
     @media (max-width: 700px) { .meal-options { grid-template-columns: 1fr; } }
 
-    .meal-btn { border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; text-align: left; cursor: pointer; transition: 0.1s; font-family: inherit; }
-    .meal-btn:hover { border-color: #cbd5e1; }
+    .meal-btn { border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; text-align: left; cursor: pointer; font-family: inherit; }
     .meal-btn.active-hg1 { border-color: #2563eb !important; background-color: #eff6ff !important; }
     .meal-btn.active-hg2 { border-color: #059669 !important; background-color: #ecfdf5 !important; }
     .meal-btn.active-none { border-color: #475569 !important; background-color: #f1f5f9 !important; }
@@ -57,35 +56,22 @@
     .tag-hg2 { background: #d1fae5; color: #065f46; }
 
     /* Buttons */
-    .btn { padding: 9px 15px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; user-select: none; }
-    .btn-primary { background: #059669; color: #ffffff; width: 100%; }
-    .btn-primary:hover { background: #047857; }
+    .btn { padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
     .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
     .btn-secondary:hover { background: #e2e8f0; }
     .btn-pdf { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-    .btn-pdf:hover { background: #ffe4e6; }
     .btn-danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
     .btn-dark { background: #0f172a; color: #ffffff; }
 
-    /* Zusammenfassung Sidebar */
-    .checkout-box { position: sticky; top: 75px; }
+    /* Bezahlen Box */
     .price-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #64748b; }
-    .price-total { display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 10px; font-weight: 800; font-size: 18px; color: #065f46; }
+    .price-total { display: flex; justify-content: space-between; border-top: 2px solid #e2e8f0; padding-top: 10px; margin-top: 10px; font-weight: 800; font-size: 18px; color: #065f46; }
+    .alert-err { background: #fee2e2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px; border-radius: 8px; font-size: 12px; margin-top: 12px; font-weight: 600; display: none; }
 
     /* Tabellen */
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     th { background: #f8fafc; padding: 10px; border-bottom: 2px solid #e2e8f0; font-size: 11px; text-transform: uppercase; color: #64748b; }
     td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
-
-    .alert { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; font-weight: 600; }
-    .alert-danger { background: #fee2e2; border: 1px solid #fecaca; color: #b91c1c; }
-
-    /* Modale Fenster */
-    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 16px; }
-    .modal-card { background: #ffffff; border-radius: 18px; width: 100%; max-width: 460px; padding: 22px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 14px; }
-    .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #94a3b8; font-weight: bold; line-height: 1; }
-    .close-btn:hover { color: #0f172a; }
   </style>
 </head>
 <body>
@@ -93,29 +79,29 @@
   <!-- KOPFZEILE -->
   <header class="header">
     <div class="header-inner">
-      <div id="btn-home-logo" style="cursor: pointer;">
+      <div onclick="showPage('eltern')" style="cursor: pointer;">
         <strong style="font-size: 17px; color: #0f172a;">Mittelbergschule Spiesen</strong>
         <div style="font-size: 12px; color: #059669; font-weight: 700;">MensaConnect • Nachmittagsbetreuung (FGTS)</div>
       </div>
       <div style="display: flex; gap: 8px; align-items: center;">
-        <a href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-pdf">
-          📄 Speiseplan PDF
+        <a href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" class="btn btn-pdf">
+          📄 Original Speiseplan (PDF)
         </a>
-        <button type="button" id="nav-btn-eltern" class="btn btn-secondary">🛒 Bestellung</button>
-        <button type="button" id="nav-btn-admin" class="btn btn-secondary">🔒 Admin (<span id="badge-count">0</span>)</button>
+        <button type="button" class="btn btn-secondary" onclick="showPage('eltern')">🛒 Bestellung</button>
+        <button type="button" class="btn btn-secondary" onclick="showPage('admin-login')">🔒 Admin (<span id="badge-count">0</span>)</button>
       </div>
     </div>
   </header>
 
   <main class="main-wrap">
-    
-    <!-- ELTERN ANSICHT -->
-    <div id="view-eltern" style="display: block;">
+
+    <!-- SEITE 1: BESTELLUNG (ELTERN) -->
+    <div id="page-eltern" style="display: block;">
       <div class="banner">
         <div>
           <span style="background:#fde047; color:#0f172a; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:900;">KW 46</span>
           <h1 style="font-size: 20px; font-weight: 900; margin: 6px 0;">Mittagessen vorbestellen & direkt online bezahlen</h1>
-          <p style="font-size: 13px; opacity: 0.9; max-width: 650px;">
+          <p style="font-size: 13px; opacity: 0.9;">
             Caterer: <strong>pirrung monsterlecker</strong>. Bestellschluss für die Folgewoche: <strong style="text-decoration: underline;">Mittwoch um 18:00 Uhr</strong>.
           </p>
         </div>
@@ -127,9 +113,9 @@
       </div>
 
       <div class="grid-wrap">
-        <!-- LINKE SPALTE -->
+        <!-- LINKE SPALTE: FORMULAR & SPEISEN -->
         <div class="left-col">
-          <!-- 1. Stammdaten Kind -->
+          <!-- 1. Kind Daten -->
           <div class="card">
             <div class="card-title"><span>1. Angaben zum Kind</span></div>
             <div class="form-grid">
@@ -165,7 +151,7 @@
           <div class="card">
             <div class="card-title">
               <span>2. Menüauswahl: Montag bis Freitag</span>
-              <span style="font-weight: normal; font-size: 12px; color: #64748b;">Tage frei kombinierbar</span>
+              <span style="font-weight: normal; font-size: 12px; color: #64748b;">Tage frei wählbar</span>
             </div>
 
             <!-- MONTAG -->
@@ -175,17 +161,17 @@
                 <span style="font-size: 11px; font-weight: normal; color: #64748b;">Dessert: Apfel</span>
               </div>
               <div class="meal-options">
-                <button type="button" id="btn-mo-hg1" onclick="selectDish('mo', 'hg1')" class="meal-btn">
+                <button type="button" id="btn-mo-hg1" onclick="choose('mo', 'hg1')" class="meal-btn">
                   <span class="dish-tag tag-hg1">Hauptgericht 1</span>
                   <div style="font-weight: 700; font-size: 12px;">Blumenkohl-Creme-Suppe mit Mehrkornbrötchen</div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 4px;">Milch &amp; Brötchen</div>
                 </button>
-                <button type="button" id="btn-mo-hg2" onclick="selectDish('mo', 'hg2')" class="meal-btn">
+                <button type="button" id="btn-mo-hg2" onclick="choose('mo', 'hg2')" class="meal-btn">
                   <span class="dish-tag tag-hg2">Hauptgericht 2</span>
                   <div style="font-weight: 700; font-size: 12px;">Ravioli mit Tomatenfüllung in Tomatensoße</div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 4px;">vegetarisch</div>
                 </button>
-                <button type="button" id="btn-mo-none" onclick="selectDish('mo', 'none')" class="meal-btn active-none" style="text-align: center;">
+                <button type="button" id="btn-mo-none" onclick="choose('mo', 'none')" class="meal-btn active-none" style="text-align: center;">
                   <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
                   <div style="font-size: 10px; color: #64748b;">0,00 €</div>
                 </button>
@@ -199,48 +185,16 @@
                 <span style="font-size: 11px; font-weight: normal; color: #64748b;">Salat &amp; Dessert: Milchreis</span>
               </div>
               <div class="meal-options">
-                <button type="button" id="btn-di-hg1" onclick="selectDish('di', 'hg1')" class="meal-btn">
+                <button type="button" id="btn-di-hg1" onclick="choose('di', 'hg1')" class="meal-btn">
                   <span class="dish-tag tag-hg1">Hauptgericht 1</span>
                   <div style="font-weight: 700; font-size: 12px;">"Chili sin Carne" dazu Reis</div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 4px;">vegan mit Mais &amp; Bohnen</div>
                 </button>
-                <button type="button" id="btn-di-hg2" onclick="selectDish('di', 'hg2')" class="meal-btn">
+                <button type="button" id="btn-di-hg2" onclick="choose('di', 'hg2')" class="meal-btn">
                   <span class="dish-tag tag-hg2">Hauptgericht 2</span>
                   <div style="font-weight: 700; font-size: 12px;">Semmelknödel mit Rahmsauce</div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 4px;">herzhafte Knödel</div>
                 </button>
-                <button type="button" id="btn-di-none" onclick="selectDish('di', 'none')" class="meal-btn active-none" style="text-align: center;">
+                <button type="button" id="btn-di-none" onclick="choose('di', 'none')" class="meal-btn active-none" style="text-align: center;">
                   <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
                   <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
-
-            <!-- MITTWOCH -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Mittwoch (11.11.2026)</span>
-                <span style="font-size: 11px; font-weight: normal; color: #64748b;">Gurkensalat &amp; Dessert: Birne</span>
-              </div>
-              <div class="meal-options">
-                <button type="button" id="btn-mi-hg1" onclick="selectDish('mi', 'hg1')" class="meal-btn">
-                  <span class="dish-tag tag-hg1">Hauptgericht 1</span>
-                  <div style="font-weight: 700; font-size: 12px;">Seelachsfilet mit Kräutersauce &amp; Püree</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">MSC-zertifizierter Fisch</div>
-                </button>
-                <button type="button" id="btn-mi-hg2" onclick="selectDish('mi', 'hg2')" class="meal-btn">
-                  <span class="dish-tag tag-hg2">Hauptgericht 2</span>
-                  <div style="font-weight: 700; font-size: 12px;">Rahmkartoffeln mit Brokkoli</div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 4px;">vegetarischer Auflauf</div>
-                </button>
-                <button type="button" id="btn-mi-none" onclick="selectDish('mi', 'none')" class="meal-btn active-none" style="text-align: center;">
-                  <div style="font-weight: 700; font-size: 12px;">Kein Essen</div>
-                  <div style="font-size: 10px; color: #64748b;">0,00 €</div>
-                </button>
-              </div>
-            </div>
-
-            <!-- DONNERSTAG -->
-            <div class="day-box">
-              <div class="day-header">
-                <span>Donnerstag (12.11.20
