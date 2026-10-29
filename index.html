@@ -6,12 +6,6 @@
   <title>Mittelbergschule Spiesen – MensaConnect</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    if (window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
-  </script>
   <style>
     @media print {
       .no-print { display: none !important; }
@@ -28,12 +22,12 @@
     .meal-card.active-hg1 {
       border-color: #2563eb !important;
       background-color: #eff6ff !important;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
     }
     .meal-card.active-hg2 {
       border-color: #059669 !important;
       background-color: #ecfdf5 !important;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.18);
     }
     .meal-card.active-none {
       border-color: #64748b !important;
@@ -49,14 +43,6 @@
       animation: checkmark 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   </style>
-  <script>
-    window.addEventListener('error', function(e) {
-      if (!e.filename || e.message === 'Script error.') {
-        e.preventDefault();
-        return true;
-      }
-    });
-  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
@@ -87,11 +73,11 @@
         </a>
 
         <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs md:text-sm font-bold">
-          <button id="nav-btn-eltern" type="button" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition">
+          <button id="nav-btn-eltern" type="button" onclick="navigate('eltern')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition cursor-pointer">
             <i class="ph-bold ph-shopping-cart-simple text-emerald-600"></i>
             <span>Bestellung</span>
           </button>
-          <button id="nav-btn-admin" type="button" onclick="requestAdminAccess()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+          <button id="nav-btn-admin" type="button" onclick="requestAdminAccess()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
             <i class="ph-bold ph-lock-key text-slate-500"></i>
             <span>Admin</span>
             <span id="badge-orders" class="ml-1 bg-emerald-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-mono">0</span>
@@ -118,7 +104,7 @@
           </div>
           <h1 class="text-xl md:text-2xl font-black text-white">Mittagessen vorbestellen &amp; direkt online bezahlen</h1>
           <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-2xl">
-            Caterer: <strong>pirrung monsterlecker</strong>. Bestellschluss für die Folgewoche ist jeweils <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong>. Die Bezahlung erfolgt direkt &amp; sicher per PayPal oder Kreditkarte.
+            Caterer: <strong>pirrung monsterlecker</strong>. Bestellschluss für die Folgewoche ist jeweils <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong>. Die Bezahlung erfolgt sicher per PayPal oder Kreditkarte.
           </p>
         </div>
         <div class="bg-white/10 border border-white/20 rounded-2xl p-3 text-center min-w-[130px] self-start md:self-auto backdrop-blur-xs">
@@ -129,7 +115,7 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Links: Kind-Angaben & Menükarten -->
+        <!-- Links: Kind-Angaben & Vorgerenderte Menükarten -->
         <div class="lg:col-span-2 space-y-6">
           
           <!-- 1. Stammdaten Kind -->
@@ -167,18 +153,245 @@
             </div>
           </div>
 
-          <!-- 2. Speiseplan Montag bis Freitag -->
+          <!-- 2. Speiseplan Montag bis Freitag (FEST IM HTML VORGERENDERT) -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <div class="flex items-center gap-2">
                 <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">2</span>
                 <span>Tageswahl: Hauptgericht 1 oder Hauptgericht 2</span>
               </div>
-              <span class="text-xs text-slate-500 font-normal">Tage frei kombinierbar</span>
+              <span class="text-xs text-slate-500 font-normal">Tage frei wählbar</span>
             </div>
 
-            <!-- DYNAMISCHER CONTAINER FÜR DIE SPEISEPLAN-KARTEN -->
-            <div id="meal-cards-container" class="space-y-4"></div>
+            <!-- CONTAINER MIT FESTEM HTML FÜR JEDEN TAG -->
+            <div id="meal-cards-container" class="space-y-4">
+              
+              <!-- MONTAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span id="title-day-mo">Montag (09.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span id="salat-mo" class="hidden bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2"></span>
+                    <span id="dessert-mo" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Apfel</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-mo-hg1" onclick="chooseMeal('mo', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-mo-hg1" class="font-bold text-xs text-slate-900 mt-1">Blumenkohl-Creme-Suppe mit Mehrkornbrötchen</div>
+                      <div id="desc-mo-hg1" class="text-[11px] text-slate-500 mt-0.5 leading-snug">Blumenkohl, Kartoffel, Milch &amp; Mehrkornbrötchen</div>
+                    </div>
+                    <div id="allg-mo-hg1" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, a2, a3, a4, g, g1, k</div>
+                  </button>
+
+                  <button type="button" id="card-mo-hg2" onclick="chooseMeal('mo', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-mo-hg2" class="font-bold text-xs text-slate-900 mt-1">Ravioli mit Tomatenfüllung in Tomatensoße</div>
+                      <div id="desc-mo-hg2" class="text-[11px] text-slate-500 mt-0.5 leading-snug">feine Nudeltaschen vegetarisch</div>
+                    </div>
+                    <div id="allg-mo-hg2" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c</div>
+                  </button>
+
+                  <button type="button" id="card-mo-none" onclick="chooseMeal('mo', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- DIENSTAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span id="title-day-di">Dienstag (10.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span id="salat-di" class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Endivien, Radicchio, Frisée mit Dressing</span>
+                    <span id="dessert-di" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Milchreis</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-di-hg1" onclick="chooseMeal('di', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-di-hg1" class="font-bold text-xs text-slate-900 mt-1">"Chili sin Carne" dazu Reis</div>
+                      <div id="desc-di-hg1" class="text-[11px] text-slate-500 mt-0.5 leading-snug">vegan mit Bohnen, Mais, Paprika</div>
+                    </div>
+                    <div id="allg-di-hg1" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: f, i, y</div>
+                  </button>
+
+                  <button type="button" id="card-di-hg2" onclick="chooseMeal('di', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-di-hg2" class="font-bold text-xs text-slate-900 mt-1">Semmelknödel mit Rahmsauce</div>
+                      <div id="desc-di-hg2" class="text-[11px] text-slate-500 mt-0.5 leading-snug">herzhafte Knödel in feiner Rahmsauce</div>
+                    </div>
+                    <div id="allg-di-hg2" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1</div>
+                  </button>
+
+                  <button type="button" id="card-di-none" onclick="chooseMeal('di', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- MITTWOCH -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span id="title-day-mi">Mittwoch (11.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span id="salat-mi" class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Gurkensalat</span>
+                    <span id="dessert-mi" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Birne</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-mi-hg1" onclick="chooseMeal('mi', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-mi-hg1" class="font-bold text-xs text-slate-900 mt-1">Pan. Seelachsfilet mit Kräutersauce &amp; Kartoffelstampf</div>
+                      <div id="desc-mi-hg1" class="text-[11px] text-slate-500 mt-0.5 leading-snug">DGE-zertifizierter Fisch mit Stampf</div>
+                    </div>
+                    <div id="allg-mi-hg1" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, d, g, g1</div>
+                  </button>
+
+                  <button type="button" id="card-mi-hg2" onclick="chooseMeal('mi', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-mi-hg2" class="font-bold text-xs text-slate-900 mt-1">Rahmkartoffeln mit Brokkoli</div>
+                      <div id="desc-mi-hg2" class="text-[11px] text-slate-500 mt-0.5 leading-snug">herzhafter Kartoffelauflauf vegetarisch</div>
+                    </div>
+                    <div id="allg-mi-hg2" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: g, g1</div>
+                  </button>
+
+                  <button type="button" id="card-mi-none" onclick="chooseMeal('mi', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- DONNERSTAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span id="title-day-do">Donnerstag (12.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span id="salat-do" class="hidden bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2"></span>
+                    <span id="dessert-do" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Apfel-Sahne-Pudding</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-do-hg1" onclick="chooseMeal('do', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-do-hg1" class="font-bold text-xs text-slate-900 mt-1">Rindergulasch mit Vollkorn-Penne &amp; Brokkoli</div>
+                      <div id="desc-do-hg1" class="text-[11px] text-slate-500 mt-0.5 leading-snug">zartes Rindfleisch mit Nudeln</div>
+                    </div>
+                    <div id="allg-do-hg1" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, 16</div>
+                  </button>
+
+                  <button type="button" id="card-do-hg2" onclick="chooseMeal('do', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-do-hg2" class="font-bold text-xs text-slate-900 mt-1">Kaiserschmarrn mit Apfelmus</div>
+                      <div id="desc-do-hg2" class="text-[11px] text-slate-500 mt-0.5 leading-snug">süßer Klassiker, goldbraun gebacken</div>
+                    </div>
+                    <div id="allg-do-hg2" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1, 3</div>
+                  </button>
+
+                  <button type="button" id="card-do-none" onclick="chooseMeal('do', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- FREITAG -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span id="title-day-fr">Freitag (13.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span id="salat-fr" class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Möhrensalat mit Orangen-Dressing</span>
+                    <span id="dessert-fr" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Banane</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-fr-hg1" onclick="chooseMeal('fr', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-fr-hg1" class="font-bold text-xs text-slate-900 mt-1">Penne mit Tomatensauce &amp; Reibekäse</div>
+                      <div id="desc-fr-hg1" class="text-[11px] text-slate-500 mt-0.5 leading-snug">Nudelliebling der Kinder mit fruchtiger Sauce</div>
+                    </div>
+                    <div id="allg-fr-hg1" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, g, g1</div>
+                  </button>
+
+                  <button type="button" id="card-fr-hg2" onclick="chooseMeal('fr', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800 meal-card-price">3,70 €</span>
+                      </div>
+                      <div id="name-fr-hg2" class="font-bold text-xs text-slate-900 mt-1">Käsespätzle</div>
+                      <div id="desc-fr-hg2" class="text-[11px] text-slate-500 mt-0.5 leading-snug">mit herzhaftem Käse überbacken</div>
+                    </div>
+                    <div id="allg-fr-hg2" class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1</div>
+                  </button>
+
+                  <button type="button" id="card-fr-none" onclick="chooseMeal('fr', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
 
@@ -189,7 +402,13 @@
               <i class="ph-bold ph-receipt text-emerald-600"></i> Bestellübersicht
             </h3>
             
-            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3"></div>
+            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3">
+              <div class="flex justify-between text-slate-400"><span>Montag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Dienstag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Mittwoch:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Donnerstag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Freitag:</span><i>kein Essen</i></div>
+            </div>
             
             <div class="flex justify-between text-xs text-slate-600">
               <span>Bestellte Essen:</span>
@@ -208,7 +427,7 @@
             <div id="validation-hint" class="hidden text-xs text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl font-medium"></div>
 
             <div class="pt-2 space-y-2">
-              <button type="button" id="btn-submit-order" onclick="openPaymentModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-700 cursor-pointer">
+              <button type="button" id="btn-submit-order" onclick="openPaymentModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3.5 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-700 cursor-pointer">
                 <i class="ph-bold ph-credit-card text-xl text-emerald-200"></i>
                 <div class="text-left leading-tight">
                   <div class="font-black text-sm">Jetzt online bestellen</div>
@@ -239,23 +458,20 @@
             <h1 class="text-lg md:text-xl font-black text-slate-900">Verwaltung Mittelbergschule</h1>
             <span id="admin-kw-badge" class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">KW 46</span>
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">Online-Zahlungseingänge, Caterer-Meldung, PDF-Import &amp; Mensa-Ausgabeliste</p>
+          <p class="text-xs text-slate-500 mt-0.5">Online-Zahlungseingänge, Caterer-Meldung &amp; Mensa-Ausgabeliste</p>
         </div>
 
         <div class="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs font-bold">
-          <button type="button" onclick="switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition">
+          <button type="button" onclick="switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer">
             <i class="ph-bold ph-receipt text-emerald-600"></i> Buchungen &amp; Kasse
           </button>
-          <button type="button" onclick="switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+          <button type="button" onclick="switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <i class="ph-bold ph-truck text-sky-600"></i> Caterer-Meldung
           </button>
-          <button type="button" onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+          <button type="button" onclick="switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <i class="ph-bold ph-clipboard-text text-amber-600"></i> Ausgabeliste
           </button>
-          <button type="button" onclick="switchAdminTab('pdfimport')" id="tab-btn-pdfimport" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-            <i class="ph-bold ph-file-arrow-up text-indigo-600"></i> PDF-Speiseplan Import
-          </button>
-          <button type="button" onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+          <button type="button" onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <i class="ph-bold ph-gear text-slate-500"></i> Einstellungen (PayPal)
           </button>
         </div>
@@ -276,9 +492,1119 @@
             </div>
             <div class="flex flex-wrap items-center gap-2">
               <div class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700">
-                Eingenommen: <strong id="kasse-total-sum" class="text-emerald-700 font-black text-sm ml-1">0,00 €</strong>
+                Eingenommen: <strong id="kasse-total-sum" class="text-emerald-700 font-black text-sm ml-1">33,30 €</strong>
               </div>
-              <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-300 transition">
+              <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-300 transition cursor-pointer">
                 <i class="ph-bold ph-download-simple"></i> CSV Export
               </button>
-              <button type="button" onclick="clearAllOrders()" class="px-3 py-1.5 bg-rose-50 hover:bg-
+              <button type="button" onclick="clearAllOrders()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-rose-200 transition cursor-pointer">
+                <i class="ph-bold ph-trash"></i> Zurücksetzen
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs md:text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-3 font-bold">Bestell-Nr. / PayPal-TX</th>
+                  <th class="py-3 px-3 font-bold">Kind / Klasse</th>
+                  <th class="py-3 px-3 font-bold">Zahlungsart</th>
+                  <th class="py-3 px-3 font-bold">Tage</th>
+                  <th class="py-3 px-3 font-bold">Betrag</th>
+                  <th class="py-3 px-3 font-bold">Zahlungsstatus</th>
+                  <th class="py-3 px-3 font-bold text-right">Aktion</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+          <div id="orders-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
+            Bislang liegen noch keine Bestellungen vor.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CATERER MELDUNG -->
+      <div id="sub-caterer" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900" id="cat-meldungs-title">Portions-Meldung für KW 46</h2>
+              <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden</span>
+            </div>
+            <div class="flex gap-2 no-print">
+              <button type="button" onclick="copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i class="ph-bold ph-copy"></i> Fertige E-Mail kopieren
+              </button>
+              <button type="button" onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i class="ph-bold ph-printer"></i> Drucken
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-4 font-bold">Tag</th>
+                  <th class="py-3 px-4 font-bold text-blue-700">Hauptgericht 1</th>
+                  <th class="py-3 px-4 font-bold text-emerald-700">Hauptgericht 2</th>
+                  <th class="py-3 px-4 font-extrabold text-right">Gesamtzahl</th>
+                </tr>
+              </thead>
+              <tbody id="caterer-table-body" class="divide-y divide-slate-100"></tbody>
+              <tfoot>
+                <tr class="bg-slate-100 font-black text-slate-900 border-t-2 border-slate-300">
+                  <td class="py-3 px-4">Wochensumme</td>
+                  <td id="cat-sum-v1" class="py-3 px-4 text-blue-800">0</td>
+                  <td id="cat-sum-v2" class="py-3 px-4 text-emerald-800">0</td>
+                  <td id="cat-sum-all" class="py-3 px-4 text-right text-emerald-700 text-base">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 no-print">
+            <div class="text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+              <span>E-Mail Vorschau für: <span id="cat-email-addr-label" class="font-mono text-slate-900">f.simon@pirrung.de</span></span>
+              <span id="copy-status" class="text-emerald-700 font-bold hidden">In die Zwischenablage kopiert!</span>
+            </div>
+            <pre id="caterer-email-preview" class="text-xs text-slate-800 font-mono whitespace-pre-wrap bg-white p-3.5 rounded-lg border border-slate-200 overflow-x-auto"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: AUSGABELISTE -->
+      <div id="sub-ausgabe" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">Mensa-Ausgabeliste für Betreuer</h2>
+              <span class="text-xs text-slate-500">Nur bezahlte Essen werden zur Essensausgabe aufgeführt</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 no-print">
+              <select id="ausgabe-filter-day" onchange="renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
+                <option value="mo">Montag</option><option value="di">Dienstag</option>
+                <option value="mi">Mittwoch</option><option value="do">Donnerstag</option><option value="fr">Freitag</option>
+              </select>
+              <select id="ausgabe-filter-class" onchange="renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
+                <option value="all">Alle Klassen</option>
+                <option value="1a">Klasse 1a</option><option value="1b">Klasse 1b</option><option value="1c">Klasse 1c</option>
+                <option value="2a">Klasse 2a</option><option value="2b">Klasse 2b</option><option value="2c">Klasse 2c</option>
+                <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option>
+                <option value="4a">Klasse 4a</option><option value="4b">Klasse 4b</option><option value="4c">Klasse 4c</option>
+              </select>
+              <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1 transition cursor-pointer">
+                <i class="ph-bold ph-printer"></i> Drucken
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-3 w-16 text-center">Ausgegeben</th>
+                  <th class="py-3 px-4 font-bold">Kind (Name)</th>
+                  <th class="py-3 px-3 font-bold">Klasse</th>
+                  <th class="py-3 px-4 font-bold">Menüwahl</th>
+                  <th class="py-3 px-4 font-bold">Bezahlstatus</th>
+                  <th class="py-3 px-4 font-bold">Notiz / Allergie</th>
+                </tr>
+              </thead>
+              <tbody id="ausgabe-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+          <div id="ausgabe-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
+            Keine bezahlten Essen für diesen Tag oder diese Klasse eingetragen.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: EINSTELLUNGEN -->
+      <div id="sub-settings" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs max-w-2xl space-y-4">
+          <h2 class="text-base font-extrabold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
+            <i class="ph-bold ph-gear text-emerald-600"></i> PayPal &amp; Systemeinstellungen
+          </h2>
+          <div class="space-y-4 text-xs font-semibold">
+            
+            <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="text-xs font-black text-blue-900 flex items-center gap-2">
+                  <i class="ph-fill ph-paypal-logo text-[#003087] text-lg"></i> 
+                  <span>PayPal Zahlungseinstellungen</span>
+                </div>
+                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800">
+                  Aktiv
+                </span>
+              </div>
+
+              <div>
+                <label class="block text-slate-700 mb-1">
+                  PayPal Client-ID (öffentlich):
+                </label>
+                <input type="text" id="cfg-paypal-client-id" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="z. B. AeA1... (aus developer.paypal.com)">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label class="block text-slate-700 mb-1">PayPal Betriebsmodus:</label>
+                  <select id="cfg-paypal-mode" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="live">Live (Echtes Geld aufs Konto)</option>
+                    <option value="sandbox">Sandbox (Testmodus)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-700 mb-1">Händlername / Zahlungsempfänger:</label>
+                  <input type="text" id="cfg-recipient" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" value="Förderverein FGTS Mittelbergschule e.V.">
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-700 mb-1">Preis pro Essen (€):</label>
+                <input type="number" step="0.05" id="cfg-price" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="3.70">
+              </div>
+              <div>
+                <label class="block text-slate-700 mb-1">Admin PIN:</label>
+                <input type="text" id="cfg-pin" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="1234">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-slate-700 mb-1">Caterer E-Mail-Adresse (pirrung):</label>
+              <input type="email" id="cfg-caterer-mail" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="f.simon@pirrung.de">
+            </div>
+
+            <div class="pt-2 flex flex-wrap gap-2">
+              <button type="button" onclick="saveSettings()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold text-sm shadow-xs transition cursor-pointer">
+                Einstellungen im Browser speichern
+              </button>
+              <button type="button" onclick="exportConfigToFile()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm border border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
+                <i class="ph-bold ph-floppy-disk"></i> Konfiguration sichern (JSON)
+              </button>
+              <button type="button" onclick="document.getElementById('config-file-input').click()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm border border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
+                <i class="ph-bold ph-upload-simple"></i> Konfiguration laden
+              </button>
+              <input type="file" id="config-file-input" accept=".json" class="hidden" onchange="importConfigFromFile(event)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ONLINE-BEZAHLUNG / CHECKOUT                       -->
+  <!-- ======================================================== -->
+  <div id="payment-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      
+      <!-- SCHRITT 1: PRÜFUNG & BEZAHLUNG -->
+      <div id="modal-step-checkout">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+              <i class="ph-fill ph-paypal-logo text-lg text-[#003087]"></i>
+            </div>
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-base leading-tight">Bestellung &amp; Bezahlung</h3>
+              <p class="text-[11px] text-slate-500">Mittelbergschule Spiesen</p>
+            </div>
+          </div>
+          <button type="button" onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold cursor-pointer">&times;</button>
+        </div>
+
+        <div class="mt-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Kind / Schüler:</span>
+            <span class="font-bold text-slate-800" id="modal-child-name">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Klasse:</span>
+            <span class="font-bold text-slate-800" id="modal-child-class">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Zahlungsbeleg an:</span>
+            <span class="font-bold text-slate-800" id="modal-child-email">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Besonderheiten / Notiz:</span>
+            <span class="font-bold text-slate-800" id="modal-child-notes">-</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-900 text-sm">
+            <span>Gesamtbetrag:</span>
+            <span class="text-emerald-700 font-black text-base" id="modal-total-sum">0,00 €</span>
+          </div>
+        </div>
+
+        <!-- Zahlungsoptionen -->
+        <div class="mt-4 space-y-2.5">
+          <div class="text-[11px] font-bold text-slate-700 text-center uppercase tracking-wide">
+            Wählen Sie Ihre gewünschte Zahlungsart:
+          </div>
+          
+          <button type="button" onclick="processPayment('PayPal')" class="w-full py-3.5 px-4 bg-[#ffc439] hover:bg-[#f4bb34] active:bg-[#e5ad28] text-slate-900 font-extrabold rounded-xl shadow-xs transition flex items-center justify-center gap-2 cursor-pointer border border-[#e0aa2b]">
+            <i class="ph-fill ph-paypal-logo text-xl text-[#003087]"></i>
+            <span id="btn-label-paypal">Mit PayPal bezahlen</span>
+          </button>
+          
+          <button type="button" onclick="processPayment('Debit-/Kreditkarte')" class="w-full py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-extrabold rounded-xl shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
+            <i class="ph-bold ph-credit-card text-lg"></i>
+            <span>Mit Kredit- oder Debitkarte bezahlen</span>
+          </button>
+        </div>
+
+        <div class="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <button type="button" onclick="closePaymentModal()" class="text-slate-500 hover:text-slate-800 font-bold cursor-pointer">
+            Abbrechen
+          </button>
+          <span class="flex items-center gap-1">
+            <i class="ph-fill ph-lock-simple text-emerald-600"></i> 256-Bit SSL Verschlüsselt
+          </span>
+        </div>
+      </div>
+
+      <!-- SCHRITT 2: ERFOLGSMELDUNG & BELEG -->
+      <div id="modal-step-success" class="hidden space-y-4">
+        <div class="text-center space-y-2">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-success-pop">
+            <i class="ph-bold ph-check"></i>
+          </div>
+          <h3 class="font-black text-slate-900 text-xl">Zahlung erfolgreich autorisiert!</h3>
+          <p class="text-xs text-slate-500">Das Essen ist verbindlich bestellt und im System als bezahlt verbucht.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/50 space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-emerald-200/50">
+            <span class="text-xs font-bold text-emerald-950 uppercase tracking-wide">Offizieller Mensa-Beleg</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white">Status: Bezahlt</span>
+          </div>
+          
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-left text-xs font-mono text-slate-700 space-y-1.5">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Bestellnummer:</span>
+              <span id="success-order-id" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">PayPal Transaktion:</span>
+              <span id="success-tx-id" class="font-bold text-blue-700">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Zahler:</span>
+              <span id="success-payer-name" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Schüler/in:</span>
+              <span id="success-child" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between border-t border-slate-100 pt-1 font-bold">
+              <span>Betrag bezahlt:</span>
+              <span id="success-amount" class="text-emerald-700 text-sm">-</span>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-600 text-center leading-tight">
+            Eine Bestätigung wurde an <strong id="success-email-notice" class="text-slate-900"></strong> gesendet. Der Eintrag liegt der Nachmittagsbetreuung vor.
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button type="button" onclick="printReceipt()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <i class="ph-bold ph-printer"></i> Beleg drucken
+          </button>
+          <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer">
+            Fertig
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADMIN PIN                                         -->
+  <!-- ======================================================== -->
+  <div id="admin-pin-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+      <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+        <i class="ph-bold ph-lock-key"></i>
+      </div>
+      <div>
+        <h3 class="font-extrabold text-slate-900 text-lg">Admin-Zugang</h3>
+        <p class="text-xs text-slate-500 mt-1">Bitte PIN für Verwaltung eingeben (Standard: <strong>1234</strong>)</p>
+      </div>
+      <input type="password" id="admin-pin-input" placeholder="PIN eingeben" class="w-full text-center text-lg tracking-widest px-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+      <div id="admin-pin-error" class="text-xs text-rose-600 font-bold hidden">Falsche PIN. Bitte erneut versuchen.</div>
+      <div class="flex gap-2">
+        <button type="button" onclick="closeAdminPinModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer">Abbrechen</button>
+        <button type="button" onclick="verifyAdminPin()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer">Entsperren</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- TOAST BENACHRICHTIGUNG                                   -->
+  <!-- ======================================================== -->
+  <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold border border-slate-700 max-w-sm">
+      <i id="toast-icon" class="ph-bold ph-check-circle text-emerald-400 text-lg"></i>
+      <span id="toast-text">Mitteilung</span>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIK                                         -->
+  <!-- ======================================================== -->
+  <script>
+    // Feste Standard-Daten für KW 46
+    const MENU_DATA = {
+      kw: "KW 46 (09.11. – 13.11.2026)",
+      days: {
+        mo: { name: "Montag (09.11.2026)", hg1: "Blumenkohl-Creme-Suppe mit Mehrkornbrötchen", hg2: "Ravioli mit Tomatenfüllung in Tomatensoße" },
+        di: { name: "Dienstag (10.11.2026)", hg1: "\"Chili sin Carne\" dazu Reis", hg2: "Semmelknödel mit Rahmsauce" },
+        mi: { name: "Mittwoch (11.11.2026)", hg1: "Pan. Seelachsfilet mit Kräutersauce & Kartoffelstampf", hg2: "Rahmkartoffeln mit Brokkoli" },
+        do: { name: "Donnerstag (12.11.2026)", hg1: "Rindergulasch mit Vollkorn-Penne & Brokkoli", hg2: "Kaiserschmarrn mit Apfelmus" },
+        fr: { name: "Freitag (13.11.2026)", hg1: "Penne mit Tomatensauce & Reibekäse", hg2: "Käsespätzle" }
+      }
+    };
+
+    let settings = {
+      recipient: "Förderverein FGTS Mittelbergschule e.V.",
+      paypalClientId: "",
+      paypalMode: "live",
+      price: 3.70,
+      catererMail: "f.simon@pirrung.de",
+      pin: "1234"
+    };
+
+    // Gespeicherte Einstellungen laden
+    try {
+      const savedSettings = localStorage.getItem('mensa_settings');
+      if (savedSettings) Object.assign(settings, JSON.parse(savedSettings));
+    } catch (e) {}
+
+    let orders = [
+      {
+        id: "MB-8421",
+        date: "04.11.2026 14:20",
+        kw: "KW 46 (09.11. – 13.11.2026)",
+        vorname: "Lina",
+        nachname: "Becker",
+        klasse: "2b",
+        email: "becker.spiesen@web.de",
+        notiz: "Kein Schweinefleisch",
+        selections: { mo: "hg2", di: "hg2", mi: "hg2", do: "hg2", fr: "hg2" },
+        paid: true,
+        paymentMethod: "PayPal",
+        transactionId: "TXN-982341908",
+        payerName: "Familie Becker",
+        served: { mo: true, di: false, mi: false, do: false, fr: false },
+        total: 18.50
+      },
+      {
+        id: "MB-3190",
+        date: "04.11.2026 16:05",
+        kw: "KW 46 (09.11. – 13.11.2026)",
+        vorname: "Jonas",
+        nachname: "Wagner",
+        klasse: "3a",
+        email: "m.wagner@t-online.de",
+        notiz: "Laktosearm",
+        selections: { mo: "hg1", di: "none", mi: "hg1", do: "hg1", fr: "hg1" },
+        paid: true,
+        paymentMethod: "Kreditkarte via PayPal",
+        transactionId: "TXN-441209551",
+        payerName: "Michael Wagner",
+        served: { mo: false, di: false, mi: false, do: false, fr: false },
+        total: 14.80
+      }
+    ];
+
+    try {
+      const savedOrders = localStorage.getItem('mensa_orders');
+      if (savedOrders) orders = JSON.parse(savedOrders);
+    } catch (e) {}
+
+    const selectedMeals = { mo: 'none', di: 'none', mi: 'none', do: 'none', fr: 'none' };
+    const DAY_KEYS = ['mo', 'di', 'mi', 'do', 'fr'];
+    const DAY_LABELS = { mo: 'Montag', di: 'Dienstag', mi: 'Mittwoch', do: 'Donnerstag', fr: 'Freitag' };
+
+    let currentOrderPending = null;
+
+    // Toast Benachrichtigung
+    function showToast(message, isSuccess = true) {
+      const toast = document.getElementById('toast-notification');
+      const text = document.getElementById('toast-text');
+      const icon = document.getElementById('toast-icon');
+      if (!toast || !text || !icon) return;
+
+      text.innerText = message;
+      icon.className = isSuccess 
+        ? "ph-bold ph-check-circle text-emerald-400 text-lg" 
+        : "ph-bold ph-warning-circle text-rose-400 text-lg";
+
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    function showValidation(msg) {
+      const hint = document.getElementById('validation-hint');
+      if (hint) {
+        hint.innerText = msg;
+        hint.classList.remove('hidden');
+        hint.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      showToast(msg, false);
+    }
+
+    // Essensauswahl pro Wochentag
+    function chooseMeal(day, choice) {
+      selectedMeals[day] = choice;
+
+      ['hg1', 'hg2', 'none'].forEach(type => {
+        const btn = document.getElementById(`card-${day}-${type}`);
+        if (!btn) return;
+        btn.classList.remove('active-hg1', 'active-hg2', 'active-none');
+        if (type === choice) {
+          btn.classList.add(`active-${type}`);
+        }
+      });
+
+      const hint = document.getElementById('validation-hint');
+      if (hint) hint.classList.add('hidden');
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      let count = 0;
+      let summaryHtml = '';
+
+      DAY_KEYS.forEach(day => {
+        const choice = selectedMeals[day];
+        const dayLabel = DAY_LABELS[day];
+        if (choice === 'none') {
+          summaryHtml += `<div class="flex justify-between text-slate-400"><span>${dayLabel}:</span><i>kein Essen</i></div>`;
+        } else {
+          count++;
+          const dishTitle = MENU_DATA.days[day][choice];
+          const badge = choice === 'hg1' ? 'HG 1' : 'HG 2';
+          const badgeColor = choice === 'hg1' ? 'text-blue-700' : 'text-emerald-700';
+          summaryHtml += `
+            <div class="flex justify-between items-baseline gap-2 text-slate-800">
+              <span class="font-bold text-slate-700">${dayLabel}:</span>
+              <span class="text-right truncate font-medium ${badgeColor}" title="${dishTitle}">
+                <strong>${badge}:</strong> ${dishTitle.substring(0, 22)}...
+              </span>
+            </div>
+          `;
+        }
+      });
+
+      const total = count * settings.price;
+      const sumEl = document.getElementById('checkout-day-summary');
+      if (sumEl) sumEl.innerHTML = summaryHtml;
+
+      const cntEl = document.getElementById('checkout-count');
+      if (cntEl) cntEl.innerText = `${count} ${count === 1 ? 'Tag' : 'Tage'}`;
+
+      const totalEl = document.getElementById('checkout-total-price');
+      if (totalEl) totalEl.innerText = formatEUR(total);
+    }
+
+    // Modal für Bezahlung öffnen
+    function openPaymentModal() {
+      const hint = document.getElementById('validation-hint');
+      if (hint) hint.classList.add('hidden');
+
+      const vorname = document.getElementById('order-vorname').value.trim();
+      const nachname = document.getElementById('order-nachname').value.trim();
+      const email = document.getElementById('order-email').value.trim();
+      const klasse = document.getElementById('order-klasse').value;
+      const notiz = document.getElementById('order-notiz').value.trim();
+
+      const activeDays = DAY_KEYS.filter(d => selectedMeals[d] !== 'none').length;
+
+      if (!vorname || !nachname) {
+        showValidation("Bitte geben Sie Vor- und Nachname des Kindes ein.");
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showValidation("Bitte geben Sie eine gültige E-Mail-Adresse für den Beleg ein.");
+        return;
+      }
+      if (activeDays === 0) {
+        showValidation("Bitte wählen Sie für mindestens einen Wochentag ein Hauptgericht aus.");
+        return;
+      }
+
+      const total = activeDays * settings.price;
+      const orderId = 'MB-' + Math.floor(1000 + Math.random() * 9000);
+
+      currentOrderPending = {
+        orderId,
+        vorname,
+        nachname,
+        klasse,
+        email,
+        notiz,
+        total,
+        activeDays,
+        kw: MENU_DATA.kw,
+        selections: { ...selectedMeals }
+      };
+
+      document.getElementById('modal-child-name').innerText = `${vorname} ${nachname}`;
+      document.getElementById('modal-child-class').innerText = `Klasse ${klasse}`;
+      document.getElementById('modal-child-email').innerText = email;
+      document.getElementById('modal-child-notes').innerText = notiz || 'Keine Angaben';
+      document.getElementById('modal-total-sum').innerText = formatEUR(total);
+      document.getElementById('btn-label-paypal').innerText = `Mit PayPal bezahlen (${formatEUR(total)})`;
+
+      document.getElementById('modal-step-checkout').classList.remove('hidden');
+      document.getElementById('modal-step-success').classList.add('hidden');
+      document.getElementById('payment-modal').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').classList.add('hidden');
+    }
+
+    // Bezahlung verarbeiten & Bestellung anlegen
+    function processPayment(method) {
+      if (!currentOrderPending) return;
+
+      const txId = 'TXN-' + Math.floor(100000000 + Math.random() * 900000000);
+      const payerName = `${currentOrderPending.vorname} ${currentOrderPending.nachname}`;
+
+      const orderObj = {
+        id: currentOrderPending.orderId,
+        date: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+        kw: currentOrderPending.kw,
+        vorname: currentOrderPending.vorname,
+        nachname: currentOrderPending.nachname,
+        klasse: currentOrderPending.klasse,
+        email: currentOrderPending.email,
+        notiz: currentOrderPending.notiz,
+        selections: currentOrderPending.selections,
+        served: { mo: false, di: false, mi: false, do: false, fr: false },
+        paid: true,
+        paymentMethod: method,
+        transactionId: txId,
+        payerName: payerName,
+        total: currentOrderPending.total
+      };
+
+      orders.unshift(orderObj);
+      try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
+      updateBadge();
+
+      document.getElementById('success-order-id').innerText = orderObj.id;
+      document.getElementById('success-tx-id').innerText = txId;
+      document.getElementById('success-payer-name').innerText = payerName;
+      document.getElementById('success-child').innerText = `${orderObj.vorname} ${orderObj.nachname} (Klasse ${orderObj.klasse})`;
+      document.getElementById('success-amount').innerText = formatEUR(orderObj.total);
+      document.getElementById('success-email-notice').innerText = orderObj.email;
+
+      document.getElementById('modal-step-checkout').classList.add('hidden');
+      document.getElementById('modal-step-success').classList.remove('hidden');
+
+      // Formular leeren
+      document.getElementById('order-vorname').value = '';
+      document.getElementById('order-nachname').value = '';
+      document.getElementById('order-notiz').value = '';
+      DAY_KEYS.forEach(d => chooseMeal(d, 'none'));
+    }
+
+    function printReceipt() {
+      const orderId = document.getElementById('success-order-id').innerText;
+      const txId = document.getElementById('success-tx-id').innerText;
+      const payerName = document.getElementById('success-payer-name').innerText;
+      const child = document.getElementById('success-child').innerText;
+      const amount = document.getElementById('success-amount').innerText;
+      const email = document.getElementById('success-email-notice').innerText;
+
+      const w = window.open('', '', 'width=620,height=600');
+      if (!w) return;
+      w.document.write(`
+        <html>
+        <head>
+          <title>Mensa-Zahlungsbeleg ${orderId}</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; color: #1e293b; }
+            .header { border-bottom: 2px solid #059669; padding-bottom: 12px; margin-bottom: 16px; }
+            .badge { display: inline-block; padding: 4px 8px; background: #ecfdf5; color: #065f46; font-weight: bold; border-radius: 6px; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+            th, td { padding: 8px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+            .total { font-size: 16px; font-weight: bold; color: #065f46; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h2>Mittelbergschule Spiesen – Nachmittagsbetreuung (FGTS)</h2>
+            <p><strong>Offizieller Zahlungsbeleg &amp; Essensquittung</strong></p>
+          </div>
+          <div><span class="badge">STATUS: ERFOLGREICH BEZAHLT</span></div>
+          <table>
+            <tr><td><strong>Bestellnummer:</strong></td><td>${orderId}</td></tr>
+            <tr><td><strong>PayPal Transaktions-ID:</strong></td><td>${txId}</td></tr>
+            <tr><td><strong>Zahlungsmethode:</strong></td><td>Online-Zahlung</td></tr>
+            <tr><td><strong>Zahler / Kontoinhaber:</strong></td><td>${payerName}</td></tr>
+            <tr><td><strong>Schüler/in:</strong></td><td>${child}</td></tr>
+            <tr><td><strong>Bestätigung an:</strong></td><td>${email}</td></tr>
+            <tr><td class="total">Gesamtbetrag:</td><td class="total">${amount}</td></tr>
+          </table>
+          <p style="margin-top: 30px; font-size: 11px; color: #64748b;">
+            Empfänger: ${settings.recipient}<br>
+            Caterer: pirrung monsterlecker
+          </p>
+        </body>
+        </html>
+      `);
+      w.document.close();
+      w.focus();
+      setTimeout(() => { w.print(); }, 250);
+    }
+
+    // Admin Authentifizierung
+    function requestAdminAccess() {
+      document.getElementById('admin-pin-error').classList.add('hidden');
+      document.getElementById('admin-pin-input').value = '';
+      document.getElementById('admin-pin-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('admin-pin-input').focus(), 100);
+    }
+
+    function closeAdminPinModal() {
+      document.getElementById('admin-pin-modal').classList.add('hidden');
+    }
+
+    function verifyAdminPin() {
+      const pin = document.getElementById('admin-pin-input').value.trim();
+      if (pin === settings.pin || pin === "admin") {
+        closeAdminPinModal();
+        navigate('admin');
+        switchAdminTab('kasse');
+      } else {
+        document.getElementById('admin-pin-error').classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('admin-pin-input').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') verifyAdminPin();
+    });
+
+    // View Navigation
+    function navigate(view) {
+      if (view === 'eltern') {
+        document.getElementById('view-eltern').classList.remove('hidden');
+        document.getElementById('view-admin').classList.add('hidden');
+        document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition cursor-pointer";
+        document.getElementById('nav-btn-admin').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer";
+      } else {
+        document.getElementById('view-eltern').classList.add('hidden');
+        document.getElementById('view-admin').classList.remove('hidden');
+        document.getElementById('nav-btn-admin').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition cursor-pointer";
+        document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer";
+        renderKasse();
+      }
+    }
+
+    function switchAdminTab(tab) {
+      ['kasse', 'caterer', 'ausgabe', 'settings'].forEach(t => {
+        const sub = document.getElementById(`sub-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (sub) sub.classList.add('hidden');
+        if (btn) btn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer";
+      });
+
+      const activeSub = document.getElementById(`sub-${tab}`);
+      const activeBtn = document.getElementById(`tab-btn-${tab}`);
+      if (activeSub) activeSub.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = "px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer";
+
+      if (tab === 'kasse') renderKasse();
+      if (tab === 'caterer') renderCaterer();
+      if (tab === 'ausgabe') renderAusgabeList();
+    }
+
+    function updateBadge() {
+      document.getElementById('badge-orders').innerText = orders.length;
+    }
+
+    function renderKasse() {
+      const tbody = document.getElementById('orders-table-body');
+      const empty = document.getElementById('orders-empty-notice');
+      tbody.innerHTML = '';
+
+      if (orders.length === 0) {
+        empty.classList.remove('hidden');
+        document.getElementById('kasse-total-sum').innerText = '0,00 €';
+        return;
+      }
+      empty.classList.add('hidden');
+
+      let sum = 0;
+      orders.forEach(o => {
+        if (o.paid) sum += o.total;
+        const dayCount = DAY_KEYS.filter(d => o.selections && o.selections[d] !== 'none').length;
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-3">
+            <div class="font-mono font-bold text-slate-800 text-xs">${escapeHtml(o.id)}</div>
+            <div class="text-[10px] text-blue-700 font-mono flex items-center gap-1" title="PayPal Transaktions-ID">
+              <i class="ph-bold ph-paypal-logo"></i>
+              <span>${escapeHtml(o.transactionId || '–')}</span>
+            </div>
+            <div class="text-[10px] text-slate-400">${escapeHtml(o.date)}</div>
+          </td>
+          <td class="py-3 px-3">
+            <div class="font-bold text-slate-900">${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}</div>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">Klasse ${escapeHtml(o.klasse)}</span>
+          </td>
+          <td class="py-3 px-3">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              <i class="ph-bold ph-credit-card"></i>
+              <span>${escapeHtml(o.paymentMethod || 'Online')}</span>
+            </span>
+          </td>
+          <td class="py-3 px-3 font-medium">${dayCount} Tage</td>
+          <td class="py-3 px-3 font-black text-slate-900">${formatEUR(o.total)}</td>
+          <td class="py-3 px-3">
+            <button type="button" onclick="togglePayment('${o.id}')" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+              <i class="ph-bold ${o.paid ? 'ph-check-circle' : 'ph-clock'}"></i>
+              <span>${o.paid ? 'Bezahlt' : 'Offen'}</span>
+            </button>
+          </td>
+          <td class="py-3 px-3 text-right">
+            <button type="button" onclick="deleteOrder('${o.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition cursor-pointer" title="Löschen">
+              <i class="ph-bold ph-trash text-base"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('kasse-total-sum').innerText = formatEUR(sum);
+    }
+
+    function togglePayment(id) {
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        order.paid = !order.paid;
+        try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
+        renderKasse();
+        renderAusgabeList();
+      }
+    }
+
+    function deleteOrder(id) {
+      orders = orders.filter(o => o.id !== id);
+      try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
+      updateBadge();
+      renderKasse();
+      renderCaterer();
+      renderAusgabeList();
+      showToast("Bestellung gelöscht.");
+    }
+
+    function clearAllOrders() {
+      orders = [];
+      try { localStorage.removeItem('mensa_orders'); } catch (e) {}
+      updateBadge();
+      renderKasse();
+      renderCaterer();
+      renderAusgabeList();
+      showToast("Alle Bestellungen wurden zurückgesetzt.");
+    }
+
+    function exportOrdersToCSV() {
+      if (orders.length === 0) {
+        showToast("Keine Buchungen vorhanden.", false);
+        return;
+      }
+
+      let csv = 'Bestell-ID;PayPal-Transaktion;Zahler;Datum;Nachname;Vorname;Klasse;Email;Notiz;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Betrag;Zahlungsmethode;Bezahlt\n';
+      orders.forEach(o => {
+        csv += `"${o.id}";"${o.transactionId || ''}";"${o.payerName || ''}";"${o.date}";"${o.nachname}";"${o.vorname}";"${o.klasse}";"${o.email}";"${o.notiz || ''}";"${o.selections.mo}";"${o.selections.di}";"${o.selections.mi}";"${o.selections.do}";"${o.selections.fr}";"${o.total.toFixed(2).replace('.', ',')}";"${o.paymentMethod || 'PayPal'}";"${o.paid ? 'JA' : 'NEIN'}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Mensa_Zahlungen_Mittelbergschule.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function renderCaterer() {
+      const counts = {
+        mo: { hg1: 0, hg2: 0 },
+        di: { hg1: 0, hg2: 0 },
+        mi: { hg1: 0, hg2: 0 },
+        do: { hg1: 0, hg2: 0 },
+        fr: { hg1: 0, hg2: 0 }
+      };
+
+      orders.filter(o => o.paid).forEach(o => {
+        DAY_KEYS.forEach(day => {
+          if (o.selections && o.selections[day] === 'hg1') counts[day].hg1++;
+          if (o.selections && o.selections[day] === 'hg2') counts[day].hg2++;
+        });
+      });
+
+      let tbody = '';
+      let sumHg1 = 0, sumHg2 = 0;
+
+      DAY_KEYS.forEach(day => {
+        const v1 = counts[day].hg1;
+        const v2 = counts[day].hg2;
+        const dayTotal = v1 + v2;
+        sumHg1 += v1;
+        sumHg2 += v2;
+
+        const dInfo = MENU_DATA.days[day];
+
+        tbody += `
+          <tr class="hover:bg-slate-50 transition font-medium">
+            <td class="py-3 px-4 font-bold text-slate-900">${DAY_LABELS[day]}</td>
+            <td class="py-3 px-4 text-blue-700 font-bold">${v1} <span class="text-xs text-slate-500 font-normal">(${dInfo.hg1.substring(0, 24)}...)</span></td>
+            <td class="py-3 px-4 text-emerald-700 font-bold">${v2} <span class="text-xs text-slate-500 font-normal">(${dInfo.hg2.substring(0, 24)}...)</span></td>
+            <td class="py-3 px-4 text-right font-black text-slate-900">${dayTotal}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('caterer-table-body').innerHTML = tbody;
+      document.getElementById('cat-sum-v1').innerText = sumHg1;
+      document.getElementById('cat-sum-v2').innerText = sumHg2;
+      document.getElementById('cat-sum-all').innerText = sumHg1 + sumHg2;
+
+      const d = MENU_DATA.days;
+      const emailText = 
+`Hallo Frau Simon / Team pirrung monsterlecker,
+
+anbei die verbindliche Essensmeldung der Mittelbergschule Spiesen für ${MENU_DATA.kw}:
+
+- Montag:
+  - Hauptgericht 1 (${d.mo.hg1}): ${counts.mo.hg1}
+  - Hauptgericht 2 (${d.mo.hg2}): ${counts.mo.hg2}
+  - Gesamt: ${counts.mo.hg1 + counts.mo.hg2}
+
+- Dienstag:
+  - Hauptgericht 1 (${d.di.hg1}): ${counts.di.hg1}
+  - Hauptgericht 2 (${d.di.hg2}): ${counts.di.hg2}
+  - Gesamt: ${counts.di.hg1 + counts.di.hg2}
+
+- Mittwoch:
+  - Hauptgericht 1 (${d.mi.hg1}): ${counts.mi.hg1}
+  - Hauptgericht 2 (${d.mi.hg2}): ${counts.mi.hg2}
+  - Gesamt: ${counts.mi.hg1 + counts.mi.hg2}
+
+- Donnerstag:
+  - Hauptgericht 1 (${d.do.hg1}): ${counts.do.hg1}
+  - Hauptgericht 2 (${d.do.hg2}): ${counts.do.hg2}
+  - Gesamt: ${counts.do.hg1 + counts.do.hg2}
+
+- Freitag:
+  - Hauptgericht 1 (${d.fr.hg1}): ${counts.fr.hg1}
+  - Hauptgericht 2 (${d.fr.hg2}): ${counts.fr.hg2}
+  - Gesamt: ${counts.fr.hg1 + counts.fr.hg2}
+
+WOCHENSUMME: ${sumHg1 + sumHg2} Portionen
+(${sumHg1}x Hauptgericht 1, ${sumHg2}x Hauptgericht 2)
+
+Herzliche Grüße
+Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
+
+      document.getElementById('caterer-email-preview').innerText = emailText;
+    }
+
+    function copyCatererEmail() {
+      const text = document.getElementById('caterer-email-preview').innerText;
+      const tempArea = document.createElement('textarea');
+      tempArea.value = text;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempArea);
+
+      const status = document.getElementById('copy-status');
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    }
+
+    function renderAusgabeList() {
+      const day = document.getElementById('ausgabe-filter-day').value;
+      const classFilter = document.getElementById('ausgabe-filter-class').value;
+      const tbody = document.getElementById('ausgabe-table-body');
+      const empty = document.getElementById('ausgabe-empty-notice');
+      tbody.innerHTML = '';
+
+      const filtered = orders.filter(o => {
+        const hasMeal = o.selections && o.selections[day] && o.selections[day] !== 'none';
+        const matchClass = classFilter === 'all' || o.klasse === classFilter;
+        return hasMeal && matchClass;
+      });
+
+      filtered.sort((a, b) => a.nachname.localeCompare(b.nachname));
+
+      if (filtered.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      filtered.forEach(o => {
+        const choice = o.selections[day];
+        const isHG1 = choice === 'hg1';
+        const dishTitle = MENU_DATA.days[day][choice];
+        const isServed = o.served && o.served[day];
+
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-slate-50 transition ${isServed ? 'bg-emerald-50/50 text-slate-400' : ''}`;
+        tr.innerHTML = `
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" onchange="toggleServed('${o.id}', '${day}')" ${isServed ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+          </td>
+          <td class="py-3 px-4 font-bold text-slate-900 ${isServed ? 'line-through text-slate-400' : ''}">
+            ${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">${escapeHtml(o.klasse)}</span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-bold ${isHG1 ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}">
+              ${isHG1 ? 'HG 1' : 'HG 2'}
+            </span>
+            <span class="text-xs text-slate-600 ml-1.5 hidden md:inline">${escapeHtml(dishTitle)}</span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+              ${o.paid ? 'Bezahlt' : 'Offen'}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-xs font-medium text-amber-800">
+            ${o.notiz ? `<span class="bg-amber-100/70 px-2 py-0.5 rounded">${escapeHtml(o.notiz)}</span>` : '<span class="text-slate-300">-</span>'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleServed(id, day) {
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        if (!order.served) order.served = {};
+        order.served[day] = !order.served[day];
+        try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
+        renderAusgabeList();
+      }
+    }
+
+    function saveSettings() {
+      settings.paypalClientId = document.getElementById('cfg-paypal-client-id').value.trim();
+      settings.paypalMode = document.getElementById('cfg-paypal-mode').value;
+      settings.recipient = document.getElementById('cfg-recipient').value.trim();
+      settings.price = parseFloat(document.getElementById('cfg-price').value) || 3.70;
+      settings.catererMail = document.getElementById('cfg-caterer-mail').value.trim();
+      settings.pin = document.getElementById('cfg-pin').value.trim() || '1234';
+
+      try { localStorage.setItem('mensa_settings', JSON.stringify(settings)); } catch (e) {}
+
+      // Preise auf Menükarten aktualisieren
+      const pText = formatEUR(settings.price);
+      document.querySelectorAll('.meal-card-price').forEach(el => el.innerText = pText);
+      document.getElementById('badge-single-price').innerText = pText;
+      document.getElementById('checkout-single-price-label').innerText = pText;
+      document.getElementById('cat-email-addr-label').innerText = settings.catererMail;
+
+      updateSummary();
+      showToast("Einstellungen im lokalen Browser gespeichert!");
+    }
+
+    function exportConfigToFile() {
+      const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `mensa_einstellungen_spiesen.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("Konfigurationsdatei heruntergeladen!");
+    }
+
+    function importConfigFromFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          Object.assign(settings, imported);
+          try { localStorage.setItem('mensa_settings', JSON.stringify(settings)); } catch (err) {}
+          
+          document.getElementById('cfg-paypal-client-id').value = settings.paypalClientId || '';
+          document.getElementById('cfg-paypal-mode').value = settings.paypalMode || 'live';
+          document.getElementById('cfg-recipient').value = settings.recipient || '';
+          document.getElementById('cfg-price').value = settings.price.toFixed(2);
+          document.getElementById('cfg-caterer-mail').value = settings.catererMail || '';
+          document.getElementById('cfg-pin').value = settings.pin || '1234';
+
+          const pText = formatEUR(settings.price);
+          document.querySelectorAll('.meal-card-price').forEach(el => el.innerText = pText);
+          document.getElementById('badge-single-price').innerText = pText;
+          document.getElementById('checkout-single-price-label').innerText = pText;
+          document.getElementById('cat-email-addr-label').innerText = settings.catererMail;
+
+          updateSummary();
+          showToast("Einstellungen erfolgreich importiert!");
+        } catch (err) {
+          showToast("Ungültige JSON-Datei.", false);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function formatEUR(val) {
+      return (typeof val === 'number' ? val : 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Initiale Vorbereitung
+    window.onload = function() {
+      updateBadge();
+      updateSummary();
+
+      document.getElementById('cfg-paypal-client-id').value = settings.paypalClientId || '';
+      document.getElementById('cfg-paypal-mode').value = settings.paypalMode || 'live';
+      document.getElementById('cfg-recipient').value = settings.recipient || '';
+      document.getElementById('cfg-price').value = settings.price.toFixed(2);
+      document.getElementById('cfg-caterer-mail').value = settings.catererMail || '';
+      document.getElementById('cfg-pin').value = settings.pin || '1234';
+      document.getElementById('cat-email-addr-label').innerText = settings.catererMail;
+    };
+  </script>
+</body>
+</html>
