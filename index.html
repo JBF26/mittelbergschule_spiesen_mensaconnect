@@ -51,7 +51,6 @@
     }
   </style>
   <script>
-    // Fängt Cross-Origin-Fehler externer Drittanbieter-Skripte (z. B. PayPal SDK Telemetrie im Sandbox-Modus) sicher ab
     window.addEventListener('error', function(e) {
       if (!e.filename || e.message === 'Script error.') {
         e.preventDefault();
@@ -62,9 +61,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-  <!-- ======================================================== -->
-  <!-- KOPFZEILE / NAVIGATION                                   -->
-  <!-- ======================================================== -->
+  <!-- HEADER -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('eltern')">
@@ -103,15 +100,12 @@
     </div>
   </header>
 
-  <!-- ======================================================== -->
-  <!-- HAUPTINHALT                                              -->
-  <!-- ======================================================== -->
+  <!-- HAUPTINHALT -->
   <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-    <!-- ==================== ELTERN ANSICHT ==================== -->
+    <!-- ELTERN ANSICHT -->
     <div id="view-eltern" class="space-y-6">
       
-      <!-- Ankündigungsbanner -->
       <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-emerald-900 text-white rounded-2xl p-5 md:p-6 shadow-lg border border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-2">
@@ -131,9 +125,7 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Links: Kind-Angaben & Menükarten -->
         <div class="lg:col-span-2 space-y-6">
-          
           <!-- 1. Stammdaten Kind -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
             <div class="flex items-center gap-2 pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
@@ -179,10 +171,7 @@
               <span class="text-xs text-slate-500 font-normal">Tage frei kombinierbar</span>
             </div>
 
-            <!-- DYNAMISCHER CONTAINER FÜR DIE SPEISEPLAN-KARTEN -->
-            <div id="meal-cards-container" class="space-y-4">
-              <!-- Dynamisch gerendert -->
-            </div>
+            <div id="meal-cards-container" class="space-y-4"></div>
           </div>
         </div>
 
@@ -193,9 +182,7 @@
               <i class="ph-bold ph-receipt text-emerald-600"></i> Bestellübersicht
             </h3>
             
-            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3">
-              <!-- Dynamische Tagesauflistung -->
-            </div>
+            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3"></div>
             
             <div class="flex justify-between text-xs text-slate-600">
               <span>Bestellte Essen:</span>
@@ -237,7 +224,7 @@
       </div>
     </div>
 
-    <!-- ==================== ADMIN BEREICH ==================== -->
+    <!-- ADMIN BEREICH -->
     <div id="view-admin" class="hidden space-y-6">
       <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4 no-print">
         <div>
@@ -267,7 +254,7 @@
         </div>
       </div>
 
-      <!-- TAB 1: KASSE & BUCHUNGEN -->
+      <!-- TAB 1: KASSE -->
       <div id="sub-kasse" class="space-y-4">
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
@@ -315,7 +302,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: CATERER MELDUNG -->
+      <!-- TAB 2: CATERER -->
       <div id="sub-caterer" class="hidden space-y-4">
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
@@ -412,7 +399,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: PDF IMPORT & SPEISEPLAN BEARBEITUNG -->
+      <!-- TAB 4: PDF IMPORT -->
       <div id="sub-pdfimport" class="hidden space-y-4">
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-5">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
@@ -430,7 +417,6 @@
             </div>
           </div>
 
-          <!-- Upload Drop-Zone -->
           <div id="pdf-dropzone" onclick="document.getElementById('pdf-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/30 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
             <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden" onchange="handlePdfUpload(event)">
             <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shadow-xs">
@@ -441,7 +427,6 @@
             <div id="pdf-status-msg" class="text-xs font-bold text-emerald-700 mt-1"></div>
           </div>
 
-          <!-- Formularkarten für Vorab-Bearbeitung -->
           <div class="space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
               <div class="flex items-center gap-2">
@@ -453,14 +438,12 @@
               </button>
             </div>
 
-            <div id="import-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-              <!-- Dynamisch generierte Eingabefelder -->
-            </div>
+            <div id="import-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3"></div>
           </div>
         </div>
       </div>
 
-      <!-- TAB 5: EINSTELLUNGEN MIT PAYPAL CLIENT-ID -->
+      <!-- TAB 5: EINSTELLUNGEN -->
       <div id="sub-settings" class="hidden space-y-4">
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs max-w-2xl space-y-4">
           <h2 class="text-base font-extrabold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
@@ -468,7 +451,6 @@
           </h2>
           <div class="space-y-4 text-xs font-semibold">
             
-            <!-- PAYPAL CONFIG CARD -->
             <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-3">
               <div class="flex items-center justify-between">
                 <div class="text-xs font-black text-blue-900 flex items-center gap-2">
@@ -486,7 +468,7 @@
                 </label>
                 <input type="text" id="cfg-paypal-client-id" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="z. B. AeA1... (aus developer.paypal.com)">
                 <p class="text-[11px] text-slate-500 mt-1 font-normal leading-relaxed">
-                  <strong>Woher nehmen?</strong> Loggen Sie sich auf <a href="https://developer.paypal.com" target="_blank" class="text-blue-700 underline font-bold">developer.paypal.com</a> mit Ihrem PayPal-Geschäftskonto ein &rarr; <em>Dashboard</em> &rarr; <em>Apps &amp; Credentials</em> &rarr; App erstellen &rarr; <strong>Client ID</strong> hier einfügen. Das geheime Passwort (<em>Secret</em>) wird <strong>nicht</strong> benötigt!
+                  Loggen Sie sich auf <a href="https://developer.paypal.com" target="_blank" class="text-blue-700 underline font-bold">developer.paypal.com</a> mit Ihrem PayPal-Geschäftskonto ein &rarr; <em>Dashboard</em> &rarr; <em>Apps &amp; Credentials</em> &rarr; <strong>Client ID</strong> kopieren.
                 </p>
               </div>
 
@@ -521,10 +503,17 @@
               <input type="email" id="cfg-caterer-mail" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="f.simon@pirrung.de">
             </div>
 
-            <div class="pt-2">
+            <div class="pt-2 flex flex-wrap items-center gap-2">
               <button type="button" onclick="saveSettings()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold text-sm shadow-xs transition">
                 Einstellungen &amp; PayPal SDK speichern
               </button>
+              <button type="button" onclick="exportDataBackup()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs border border-slate-300 transition flex items-center gap-1.5">
+                <i class="ph-bold ph-download-simple"></i> Backup herunterladen
+              </button>
+              <button type="button" onclick="document.getElementById('backup-file-input').click()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs border border-slate-300 transition flex items-center gap-1.5">
+                <i class="ph-bold ph-upload-simple"></i> Backup einspielen
+              </button>
+              <input type="file" id="backup-file-input" accept=".json" class="hidden" onchange="importDataBackup(event)">
             </div>
           </div>
         </div>
@@ -533,13 +522,11 @@
     </div>
   </main>
 
-  <!-- ======================================================== -->
-  <!-- MODAL: PAYPAL CHECKOUT (OFFIZIELLES SDK)                 -->
-  <!-- ======================================================== -->
+  <!-- MODAL: PAYPAL CHECKOUT -->
   <div id="payment-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       
-      <!-- SCHRITT 1: PRÜFUNG & PAYPAL CONTAINER -->
+      <!-- SCHRITT 1: PRÜFUNG -->
       <div id="modal-step-checkout">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div class="flex items-center gap-2">
@@ -551,7 +538,7 @@
               <p class="text-[11px] text-slate-500">Mittelbergschule Spiesen</p>
             </div>
           </div>
-          <button type="button" onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+          <button type="button" onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-700 text-2xl font-bold leading-none">&times;</button>
         </div>
 
         <div class="mt-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
@@ -577,17 +564,14 @@
           </div>
         </div>
 
-        <!-- Info-Hinweis bzgl. PayPal Modus -->
         <div id="paypal-mode-notice" class="mt-3 text-[11px] p-2.5 rounded-xl border hidden"></div>
 
-        <!-- CONTAINER FÜR DAS OFFIZIELLE PAYPAL SDK -->
         <div class="mt-4 space-y-2">
           <div class="text-[11px] font-bold text-slate-700 text-center uppercase tracking-wide">
             Wählen Sie Ihre gewünschte Zahlungsart:
           </div>
           
           <div id="paypal-button-container" class="min-h-[140px] flex items-center justify-center">
-            <!-- PayPal Buttons werden hier durch SDK gerendert -->
             <div id="paypal-loading-spinner" class="flex flex-col items-center gap-2 text-slate-400 text-xs py-4">
               <i class="ph-bold ph-spinner animate-spin text-2xl text-blue-600"></i>
               <span>Lade sichere PayPal-Zahlung...</span>
@@ -607,7 +591,7 @@
         </div>
       </div>
 
-      <!-- SCHRITT 2: ERFOLGSMELDUNG & BELEG (SOFORT BEZAHLT) -->
+      <!-- SCHRITT 2: ERFOLG -->
       <div id="modal-step-success" class="hidden space-y-4">
         <div class="text-center space-y-2">
           <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-success-pop">
@@ -655,8 +639,8 @@
           <button type="button" onclick="printReceipt()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition">
             <i class="ph-bold ph-printer"></i> Beleg drucken
           </button>
-          <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition">
-            Fertig
+          <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer">
+            Fertig &amp; Schließen
           </button>
         </div>
       </div>
@@ -664,9 +648,7 @@
     </div>
   </div>
 
-  <!-- ======================================================== -->
-  <!-- MODAL: ADMIN PIN                                         -->
-  <!-- ======================================================== -->
+  <!-- MODAL: ADMIN PIN -->
   <div id="admin-pin-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
       <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
@@ -685,9 +667,7 @@
     </div>
   </div>
 
-  <!-- ======================================================== -->
-  <!-- MODAL / TOAST BENACHRICHTIGUNG (KEIN ALERT())            -->
-  <!-- ======================================================== -->
+  <!-- TOAST -->
   <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
     <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold border border-slate-700 max-w-sm">
       <i id="toast-icon" class="ph-bold ph-check-circle text-emerald-400 text-lg"></i>
@@ -695,11 +675,8 @@
     </div>
   </div>
 
-  <!-- ======================================================== -->
-  <!-- JAVASCRIPT LOGIK & PAYPAL INTEGRATION                    -->
-  <!-- ======================================================== -->
   <script>
-    // --- 1. DEFAULT DATEN & INITIALER STATE ---
+    // Standard-Daten
     const DEFAULT_KW46 = {
       kw: "KW 46 (09.11. – 13.11.2026)",
       days: {
@@ -782,53 +759,28 @@
       }
     };
 
-    // Datenhaltung
-    let currentMenu = JSON.parse(localStorage.getItem('mensa_menu') || 'null') || DEFAULT_KW46;
-    let currentSettings = JSON.parse(localStorage.getItem('mensa_settings') || 'null') || {
+    // Standard-Einstellungen (Hier können Sie bei Bedarf Ihre Client-ID fest eintragen!)
+    const DEFAULT_SETTINGS = {
       recipient: "Förderverein FGTS Mittelbergschule e.V.",
-      paypalClientId: "", // Wenn leer -> Fallback auf 'test' (Sandbox)
-      paypalMode: "live", // 'live' oder 'sandbox'
+      paypalClientId: "", // Tragen Sie hier ggf. Ihre Client-ID fest ein, falls kein Server genutzt wird
+      paypalMode: "live",
       price: 3.70,
       catererMail: "f.simon@pirrung.de",
       pin: "1234"
     };
 
-    let orders = JSON.parse(localStorage.getItem('mensa_orders') || 'null') || [
-      {
-        id: "MB-8421",
-        date: "04.11.2026 14:20",
-        kw: "KW 46 (09.11. – 13.11.2026)",
-        vorname: "Lina",
-        nachname: "Becker",
-        klasse: "2b",
-        email: "becker.spiesen@web.de",
-        notiz: "Kein Schweinefleisch",
-        selections: { mo: "hg2", di: "hg2", mi: "hg2", do: "hg2", fr: "hg2" },
-        paid: true,
-        paymentMethod: "PayPal",
-        transactionId: "TXN-982341908",
-        payerName: "Familie Becker",
-        served: { mo: true, di: false, mi: false, do: false, fr: false },
-        total: 18.50
-      },
-      {
-        id: "MB-3190",
-        date: "04.11.2026 16:05",
-        kw: "KW 46 (09.11. – 13.11.2026)",
-        vorname: "Jonas",
-        nachname: "Wagner",
-        klasse: "3a",
-        email: "m.wagner@t-online.de",
-        notiz: "Laktosearm",
-        selections: { mo: "hg1", di: "none", mi: "hg1", do: "hg1", fr: "hg1" },
-        paid: true,
-        paymentMethod: "Kreditkarte via PayPal",
-        transactionId: "TXN-441209551",
-        payerName: "Michael Wagner",
-        served: { mo: false, di: false, mi: false, do: false, fr: false },
-        total: 14.80
+    function loadSavedObject(key, fallback) {
+      try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+      } catch (e) {
+        return fallback;
       }
-    ];
+    }
+
+    let currentMenu = loadSavedObject('mensa_menu', DEFAULT_KW46);
+    let currentSettings = Object.assign({}, DEFAULT_SETTINGS, loadSavedObject('mensa_settings', {}));
+    let orders = loadSavedObject('mensa_orders', []);
 
     let selectedMeals = { mo: 'none', di: 'none', mi: 'none', do: 'none', fr: 'none' };
     const DAY_KEYS = ['mo', 'di', 'mi', 'do', 'fr'];
@@ -836,9 +788,7 @@
 
     let currentOrderPending = null;
     let paypalSdkLoaded = false;
-    let paypalButtonsRendered = false;
 
-    // Toast Benachrichtigung anstelle von alert()
     function showToast(message, isSuccess = true) {
       const toast = document.getElementById('toast-notification');
       const text = document.getElementById('toast-text');
@@ -846,11 +796,7 @@
       if (!toast) return;
 
       text.innerText = message;
-      if (isSuccess) {
-        icon.className = "ph-bold ph-check-circle text-emerald-400 text-lg";
-      } else {
-        icon.className = "ph-bold ph-warning-circle text-rose-400 text-lg";
-      }
+      icon.className = isSuccess ? "ph-bold ph-check-circle text-emerald-400 text-lg" : "ph-bold ph-warning-circle text-rose-400 text-lg";
 
       toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
       setTimeout(() => {
@@ -858,7 +804,21 @@
       }, 3500);
     }
 
-    // --- 2. INITIALISIERUNG BEIM START ---
+    // Modal sauber schließen
+    function closePaymentModal() {
+      const modal = document.getElementById('payment-modal');
+      if (modal) modal.classList.add('hidden');
+      currentOrderPending = null;
+    }
+
+    function showValidation(msg) {
+      const hint = document.getElementById('validation-hint');
+      if (hint) {
+        hint.innerText = msg;
+        hint.classList.remove('hidden');
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       applySettingsToUI();
       renderElternCards();
@@ -877,7 +837,6 @@
       document.getElementById('cat-meldungs-title').innerText = "Portions-Meldung für " + currentMenu.kw;
       document.getElementById('cat-email-addr-label').innerText = currentSettings.catererMail;
 
-      // Einstellungs-Formular
       document.getElementById('cfg-paypal-client-id').value = currentSettings.paypalClientId || "";
       document.getElementById('cfg-paypal-mode').value = currentSettings.paypalMode || "live";
       document.getElementById('cfg-recipient').value = currentSettings.recipient || "Förderverein FGTS Mittelbergschule e.V.";
@@ -899,11 +858,9 @@
       }
     }
 
-    // --- 3. DYNAMISCHES LADEN DES OFFIZIELLEN PAYPAL SDK ---
     function loadPayPalSdk(onLoadedCallback) {
       const clientId = currentSettings.paypalClientId ? currentSettings.paypalClientId.trim() : "";
       
-      // Wenn keine echte Client-ID konfiguriert ist, kein externes Skript laden (verhindert Script Error)
       if (!clientId || clientId.length < 10) {
         paypalSdkLoaded = false;
         updateSdkStatusPill();
@@ -915,7 +872,6 @@
         const existingScript = document.getElementById('paypal-sdk-script');
         if (existingScript) existingScript.remove();
         paypalSdkLoaded = false;
-        paypalButtonsRendered = false;
 
         const script = document.createElement('script');
         script.id = 'paypal-sdk-script';
@@ -942,7 +898,6 @@
       }
     }
 
-    // --- 4. SPEISEPLAN RENDERN & AUSWÄHLEN ---
     function renderElternCards() {
       const container = document.getElementById('meal-cards-container');
       container.innerHTML = '';
@@ -967,7 +922,6 @@
             </div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-            <!-- HG 1 -->
             <button type="button" id="card-${day}-hg1" onclick="chooseMeal('${day}', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
               <div>
                 <div class="flex justify-between items-center mb-1">
@@ -980,7 +934,6 @@
               <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: ${escapeHtml(d.hg1.allergene || '–')}</div>
             </button>
 
-            <!-- HG 2 -->
             <button type="button" id="card-${day}-hg2" onclick="chooseMeal('${day}', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
               <div>
                 <div class="flex justify-between items-center mb-1">
@@ -993,7 +946,6 @@
               <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: ${escapeHtml(d.hg2.allergene || '–')}</div>
             </button>
 
-            <!-- Kein Essen -->
             <button type="button" id="card-${day}-none" onclick="chooseMeal('${day}', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
               <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
               <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
@@ -1012,9 +964,7 @@
         const btn = document.getElementById(`card-${day}-${type}`);
         if (!btn) return;
         btn.classList.remove('active-hg1', 'active-hg2', 'active-none');
-        if (type === choice) {
-          btn.classList.add(`active-${type}`);
-        }
+        if (type === choice) btn.classList.add(`active-${type}`);
       });
 
       updateOrderSummaryUI();
@@ -1051,7 +1001,6 @@
       document.getElementById('checkout-total-price').innerText = formatEUR(total);
     }
 
-    // --- 5. CHECKOUT & PAYPAL BUTTONS RENDERN ---
     function openPaymentModal() {
       const hint = document.getElementById('validation-hint');
       hint.classList.add('hidden');
@@ -1081,15 +1030,8 @@
       const orderId = 'MB-' + Math.floor(1000 + Math.random() * 9000);
 
       currentOrderPending = {
-        orderId,
-        vorname,
-        nachname,
-        klasse,
-        email,
-        notiz,
-        total,
-        activeDays,
-        kw: currentMenu.kw,
+        orderId, vorname, nachname, klasse, email, notiz,
+        total, activeDays, kw: currentMenu.kw,
         selections: { ...selectedMeals }
       };
 
@@ -1099,70 +1041,51 @@
       document.getElementById('modal-child-notes').innerText = notiz || 'Keine Angaben';
       document.getElementById('modal-total-sum').innerText = formatEUR(total);
 
-      // PayPal Modus-Hinweis
       const notice = document.getElementById('paypal-mode-notice');
       const hasRealId = currentSettings.paypalClientId && currentSettings.paypalClientId.trim().length > 10;
       if (!hasRealId) {
         notice.className = "mt-3 text-[11px] p-2.5 rounded-xl border bg-amber-50 border-amber-200 text-amber-900";
-        notice.innerHTML = `<i class="ph-bold ph-info"></i> <strong>Hinweis:</strong> Aktuell ist der PayPal-Testmodus aktiv. Administratoren können im Admin-Bereich unter <em>Einstellungen</em> die echte Live-Client-ID hinterlegen.`;
+        notice.innerHTML = `<i class="ph-bold ph-info"></i> <strong>Hinweis:</strong> Aktuell ist der Testmodus aktiv. Administratoren können im Admin-Bereich unter <em>Einstellungen</em> die echte Live-Client-ID hinterlegen.`;
         notice.classList.remove('hidden');
       } else {
         notice.classList.add('hidden');
       }
 
-      // Modal anzeigen
       document.getElementById('modal-step-checkout').classList.remove('hidden');
       document.getElementById('modal-step-success').classList.add('hidden');
       document.getElementById('payment-modal').classList.remove('hidden');
 
-      // PayPal Buttons initialisieren (bei vorhandener Client-ID laden, sonst sicherer Fallback)
       if (hasRealId && !paypalSdkLoaded) {
-        loadPayPalSdk(() => {
-          renderPayPalButtons();
-        });
+        loadPayPalSdk(() => { renderPayPalButtons(); });
       } else {
         renderPayPalButtons();
       }
     }
 
-    // PayPal SDK Buttons rendern oder Fallback anbieten
     function renderPayPalButtons() {
       const container = document.getElementById('paypal-button-container');
       const errorHint = document.getElementById('paypal-error-hint');
       errorHint.classList.add('hidden');
       container.innerHTML = '';
 
-      // Falls PayPal SDK verfügbar ist
       if (window.paypal && typeof window.paypal.Buttons === 'function') {
         try {
           window.paypal.Buttons({
-            style: {
-              layout: 'vertical',
-              color: 'gold',
-              shape: 'rect',
-              label: 'pay'
-            },
-
+            style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
             createOrder: function(data, actions) {
               const desc = `Mensa (${currentOrderPending.kw}) - ${currentOrderPending.nachname}, ${currentOrderPending.vorname} (${currentOrderPending.klasse})`.substring(0, 127);
-              
               return actions.order.create({
                 purchase_units: [{
                   description: desc,
-                  amount: {
-                    currency_code: 'EUR',
-                    value: currentOrderPending.total.toFixed(2)
-                  }
+                  amount: { currency_code: 'EUR', value: currentOrderPending.total.toFixed(2) }
                 }]
               });
             },
-
             onApprove: function(data, actions) {
               return actions.order.capture().then(function(details) {
                 handlePaymentSuccess(details);
               });
             },
-
             onError: function(err) {
               console.warn("PayPal Button Fehler:", err);
               errorHint.innerText = "Die Zahlung über das PayPal-Fenster konnte nicht abgeschlossen werden. Sie können die Direktzahlung unten nutzen.";
@@ -1171,11 +1094,10 @@
           }).render('#paypal-button-container');
           return;
         } catch (err) {
-          console.warn("Fehler beim Rendern des Buttons, schalte Fallback frei:", err);
+          console.warn("Fallback aktiv:", err);
         }
       }
 
-      // Zuverlässiger Fallback-Button (falls Script im Browser/iFrame blockiert wird)
       container.innerHTML = `
         <div class="w-full space-y-2">
           <button type="button" onclick="simulateSuccessfulPayment('PayPal')" class="w-full py-3 px-4 bg-[#ffc439] hover:bg-[#f4bb34] text-slate-900 font-extrabold rounded-xl shadow-xs transition flex items-center justify-center gap-2 cursor-pointer border border-[#e0aa2b]">
@@ -1190,7 +1112,6 @@
       `;
     }
 
-    // Schnelle Fallback-Ausführung
     function simulateSuccessfulPayment(method) {
       const mockDetails = {
         id: "TXN-" + Math.floor(100000000 + Math.random() * 900000000),
@@ -1204,7 +1125,6 @@
       handlePaymentSuccess(mockDetails, method);
     }
 
-    // Erfolgreiche Zahlung verbuchen
     function handlePaymentSuccess(details, forcedMethod = null) {
       const txId = (details.purchase_units && details.purchase_units[0] && details.purchase_units[0].payments && details.purchase_units[0].payments.captures)
         ? details.purchase_units[0].payments.captures[0].id
@@ -1233,10 +1153,9 @@
       };
 
       orders.unshift(orderObj);
-      localStorage.setItem('mensa_orders', JSON.stringify(orders));
+      safeSave('mensa_orders', orders);
       updateAdminBadge();
 
-      // Schritt 2 im Modal anzeigen
       document.getElementById('success-order-id').innerText = orderObj.id;
       document.getElementById('success-tx-id').innerText = txId;
       document.getElementById('success-payer-name').innerText = payerName;
@@ -1247,7 +1166,6 @@
       document.getElementById('modal-step-checkout').classList.add('hidden');
       document.getElementById('modal-step-success').classList.remove('hidden');
 
-      // Formular zurücksetzen für nächste Bestellung
       document.getElementById('order-vorname').value = '';
       document.getElementById('order-nachname').value = '';
       document.getElementById('order-notiz').value = '';
@@ -1305,7 +1223,6 @@
       setTimeout(() => { w.print(); }, 250);
     }
 
-    // --- 6. ADMIN AUTH & NAVIGATION ---
     function requestAdminAccess() {
       document.getElementById('admin-pin-error').classList.add('hidden');
       document.getElementById('admin-pin-input').value = '';
@@ -1345,489 +1262,3 @@
         document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
         renderKasseList();
       }
-    }
-
-    function switchAdminTab(tab) {
-      const tabs = ['kasse', 'caterer', 'ausgabe', 'pdfimport', 'settings'];
-      tabs.forEach(t => {
-        document.getElementById(`sub-${t}`).classList.add('hidden');
-        document.getElementById(`tab-btn-${t}`).className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition";
-      });
-
-      document.getElementById(`sub-${tab}`).classList.remove('hidden');
-      document.getElementById(`tab-btn-${tab}`).className = "px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition";
-
-      if (tab === 'kasse') renderKasseList();
-      if (tab === 'caterer') renderCatererSummary();
-      if (tab === 'ausgabe') renderAusgabeList();
-    }
-
-    function updateAdminBadge() {
-      document.getElementById('badge-orders').innerText = orders.length;
-    }
-
-    // --- 7. ADMIN TAB: ZAHLUNGEN & KASSE ---
-    function renderKasseList() {
-      const tbody = document.getElementById('orders-table-body');
-      const empty = document.getElementById('orders-empty-notice');
-      tbody.innerHTML = '';
-
-      if (orders.length === 0) {
-        empty.classList.remove('hidden');
-        document.getElementById('kasse-total-sum').innerText = '0,00 €';
-        return;
-      }
-      empty.classList.add('hidden');
-
-      let sum = 0;
-      orders.forEach(o => {
-        if (o.paid) sum += o.total;
-        const dayCount = DAY_KEYS.filter(d => o.selections && o.selections[d] !== 'none').length;
-
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50 transition";
-        tr.innerHTML = `
-          <td class="py-3 px-3">
-            <div class="font-mono font-bold text-slate-800 text-xs">${escapeHtml(o.id)}</div>
-            <div class="text-[10px] text-blue-700 font-mono flex items-center gap-1" title="PayPal Transaktions-ID">
-              <i class="ph-bold ph-paypal-logo"></i>
-              <span>${escapeHtml(o.transactionId || '–')}</span>
-            </div>
-            <div class="text-[10px] text-slate-400">${escapeHtml(o.date)}</div>
-          </td>
-          <td class="py-3 px-3">
-            <div class="font-bold text-slate-900">${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}</div>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">Klasse ${escapeHtml(o.klasse)}</span>
-          </td>
-          <td class="py-3 px-3">
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-              <i class="ph-bold ph-credit-card"></i>
-              <span>${escapeHtml(o.paymentMethod || 'PayPal')}</span>
-            </span>
-          </td>
-          <td class="py-3 px-3 font-medium">${dayCount} Tage</td>
-          <td class="py-3 px-3 font-black text-slate-900">${formatEUR(o.total)}</td>
-          <td class="py-3 px-3">
-            <button type="button" onclick="togglePayment('${o.id}')" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-              <i class="ph-bold ${o.paid ? 'ph-check-circle' : 'ph-clock'}"></i>
-              <span>${o.paid ? 'Bezahlt' : 'Offen'}</span>
-            </button>
-          </td>
-          <td class="py-3 px-3 text-right">
-            <button type="button" onclick="deleteOrder('${o.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition" title="Löschen">
-              <i class="ph-bold ph-trash text-base"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('kasse-total-sum').innerText = formatEUR(sum);
-    }
-
-    function togglePayment(id) {
-      const order = orders.find(o => o.id === id);
-      if (order) {
-        order.paid = !order.paid;
-        localStorage.setItem('mensa_orders', JSON.stringify(orders));
-        renderKasseList();
-        renderAusgabeList();
-      }
-    }
-
-    function deleteOrder(id) {
-      const order = orders.find(o => o.id === id);
-      if (order) {
-        orders = orders.filter(o => o.id !== id);
-        localStorage.setItem('mensa_orders', JSON.stringify(orders));
-        updateAdminBadge();
-        renderKasseList();
-        renderCatererSummary();
-        renderAusgabeList();
-        showToast("Bestellung gelöscht.");
-      }
-    }
-
-    function clearAllOrders() {
-      orders = [];
-      localStorage.removeItem('mensa_orders');
-      updateAdminBadge();
-      renderKasseList();
-      renderCatererSummary();
-      renderAusgabeList();
-      showToast("Alle Bestellungen wurden zurückgesetzt.");
-    }
-
-    function exportOrdersToCSV() {
-      if (orders.length === 0) {
-        showToast("Keine Buchungen zum Exportieren vorhanden.", false);
-        return;
-      }
-
-      let csv = 'Bestell-ID;PayPal-Transaktion;Zahler;Datum;Nachname;Vorname;Klasse;Email;Notiz;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Betrag;Zahlungsmethode;Bezahlt\n';
-      orders.forEach(o => {
-        csv += `"${o.id}";"${o.transactionId || ''}";"${o.payerName || ''}";"${o.date}";"${o.nachname}";"${o.vorname}";"${o.klasse}";"${o.email}";"${o.notiz || ''}";"${o.selections.mo}";"${o.selections.di}";"${o.selections.mi}";"${o.selections.do}";"${o.selections.fr}";"${o.total.toFixed(2).replace('.', ',')}";"${o.paymentMethod || 'PayPal'}";"${o.paid ? 'JA' : 'NEIN'}"\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Mensa_Zahlungen_PayPal_${currentMenu.kw.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-
-    // --- 8. ADMIN TAB: CATERER MELDUNG ---
-    function renderCatererSummary() {
-      const counts = {
-        mo: { hg1: 0, hg2: 0 },
-        di: { hg1: 0, hg2: 0 },
-        mi: { hg1: 0, hg2: 0 },
-        do: { hg1: 0, hg2: 0 },
-        fr: { hg1: 0, hg2: 0 }
-      };
-
-      // Nur bezahlte Bestellungen werden an den Caterer gemeldet
-      orders.filter(o => o.paid).forEach(o => {
-        DAY_KEYS.forEach(day => {
-          if (o.selections && o.selections[day] === 'hg1') counts[day].hg1++;
-          if (o.selections && o.selections[day] === 'hg2') counts[day].hg2++;
-        });
-      });
-
-      let tbody = '';
-      let sumHg1 = 0, sumHg2 = 0;
-
-      DAY_KEYS.forEach(day => {
-        const v1 = counts[day].hg1;
-        const v2 = counts[day].hg2;
-        const dayTotal = v1 + v2;
-        sumHg1 += v1;
-        sumHg2 += v2;
-
-        const dInfo = currentMenu.days[day];
-
-        tbody += `
-          <tr class="hover:bg-slate-50 transition font-medium">
-            <td class="py-3 px-4 font-bold text-slate-900">${DAY_LABELS[day]}</td>
-            <td class="py-3 px-4 text-blue-700 font-bold">${v1} <span class="text-xs text-slate-500 font-normal">(${escapeHtml(dInfo.hg1.title.substring(0, 24))}...)</span></td>
-            <td class="py-3 px-4 text-emerald-700 font-bold">${v2} <span class="text-xs text-slate-500 font-normal">(${escapeHtml(dInfo.hg2.title.substring(0, 24))}...)</span></td>
-            <td class="py-3 px-4 text-right font-black text-slate-900">${dayTotal}</td>
-          </tr>
-        `;
-      });
-
-      document.getElementById('caterer-table-body').innerHTML = tbody;
-      document.getElementById('cat-sum-v1').innerText = sumHg1;
-      document.getElementById('cat-sum-v2').innerText = sumHg2;
-      document.getElementById('cat-sum-all').innerText = sumHg1 + sumHg2;
-
-      // E-Mail Vorschau
-      const emailText = 
-`Hallo Frau Simon / Team pirrung monsterlecker,
-
-anbei die verbindliche Essensmeldung der Mittelbergschule Spiesen für ${currentMenu.kw}:
-
-- Montag:
-  - Hauptgericht 1 (${currentMenu.days.mo.hg1.title}): ${counts.mo.hg1}
-  - Hauptgericht 2 (${currentMenu.days.mo.hg2.title}): ${counts.mo.hg2}
-  - Gesamt: ${counts.mo.hg1 + counts.mo.hg2}
-
-- Dienstag:
-  - Hauptgericht 1 (${currentMenu.days.di.hg1.title}): ${counts.di.hg1}
-  - Hauptgericht 2 (${currentMenu.days.di.hg2.title}): ${counts.di.hg2}
-  - Gesamt: ${counts.di.hg1 + counts.di.hg2}
-
-- Mittwoch:
-  - Hauptgericht 1 (${currentMenu.days.mi.hg1.title}): ${counts.mi.hg1}
-  - Hauptgericht 2 (${currentMenu.days.mi.hg2.title}): ${counts.mi.hg2}
-  - Gesamt: ${counts.mi.hg1 + counts.mi.hg2}
-
-- Donnerstag:
-  - Hauptgericht 1 (${currentMenu.days.do.hg1.title}): ${counts.do.hg1}
-  - Hauptgericht 2 (${currentMenu.days.do.hg2.title}): ${counts.do.hg2}
-  - Gesamt: ${counts.do.hg1 + counts.do.hg2}
-
-- Freitag:
-  - Hauptgericht 1 (${currentMenu.days.fr.hg1.title}): ${counts.fr.hg1}
-  - Hauptgericht 2 (${currentMenu.days.fr.hg2.title}): ${counts.fr.hg2}
-  - Gesamt: ${counts.fr.hg1 + counts.fr.hg2}
-
-WOCHENSUMME: ${sumHg1 + sumHg2} Portionen
-(${sumHg1}x Hauptgericht 1, ${sumHg2}x Hauptgericht 2)
-
-Herzliche Grüße
-Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
-
-      document.getElementById('caterer-email-preview').innerText = emailText;
-    }
-
-    function copyCatererEmail() {
-      const text = document.getElementById('caterer-email-preview').innerText;
-      const tempArea = document.createElement('textarea');
-      tempArea.value = text;
-      document.body.appendChild(tempArea);
-      tempArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempArea);
-
-      const status = document.getElementById('copy-status');
-      status.classList.remove('hidden');
-      setTimeout(() => status.classList.add('hidden'), 3000);
-    }
-
-    // --- 9. ADMIN TAB: AUSGABELISTE ---
-    function renderAusgabeList() {
-      const day = document.getElementById('ausgabe-filter-day').value;
-      const classFilter = document.getElementById('ausgabe-filter-class').value;
-      const tbody = document.getElementById('ausgabe-table-body');
-      const empty = document.getElementById('ausgabe-empty-notice');
-      tbody.innerHTML = '';
-
-      const filtered = orders.filter(o => {
-        const hasMeal = o.selections && o.selections[day] && o.selections[day] !== 'none';
-        const matchClass = classFilter === 'all' || o.klasse === classFilter;
-        return hasMeal && matchClass;
-      });
-
-      filtered.sort((a, b) => a.nachname.localeCompare(b.nachname));
-
-      if (filtered.length === 0) {
-        empty.classList.remove('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
-
-      filtered.forEach(o => {
-        const choice = o.selections[day];
-        const isHG1 = choice === 'hg1';
-        const dishTitle = currentMenu.days[day][choice].title;
-        const isServed = o.served && o.served[day];
-
-        const tr = document.createElement('tr');
-        tr.className = `hover:bg-slate-50 transition ${isServed ? 'bg-emerald-50/50 text-slate-400' : ''}`;
-        tr.innerHTML = `
-          <td class="py-3 px-3 text-center">
-            <input type="checkbox" onchange="toggleServed('${o.id}', '${day}')" ${isServed ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
-          </td>
-          <td class="py-3 px-4 font-bold text-slate-900 ${isServed ? 'line-through text-slate-400' : ''}">
-            ${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}
-          </td>
-          <td class="py-3 px-3">
-            <span class="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">${escapeHtml(o.klasse)}</span>
-          </td>
-          <td class="py-3 px-4">
-            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-bold ${isHG1 ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}">
-              ${isHG1 ? 'HG 1' : 'HG 2'}
-            </span>
-            <span class="text-xs text-slate-600 ml-1.5 hidden md:inline">${escapeHtml(dishTitle)}</span>
-          </td>
-          <td class="py-3 px-4">
-            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-              ${o.paid ? 'Bezahlt' : 'Offen'}
-            </span>
-          </td>
-          <td class="py-3 px-4 text-xs font-medium text-amber-800">
-            ${o.notiz ? `<span class="bg-amber-100/70 px-2 py-0.5 rounded">${escapeHtml(o.notiz)}</span>` : '<span class="text-slate-300">-</span>'}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function toggleServed(id, day) {
-      const order = orders.find(o => o.id === id);
-      if (order) {
-        if (!order.served) order.served = {};
-        order.served[day] = !order.served[day];
-        localStorage.setItem('mensa_orders', JSON.stringify(orders));
-        renderAusgabeList();
-      }
-    }
-
-    // --- 10. ADMIN TAB: PDF-IMPORT & BEARBEITUNG ---
-    function renderAdminEditCards() {
-      document.getElementById('edit-kw-title').value = currentMenu.kw;
-      const grid = document.getElementById('import-cards-grid');
-      grid.innerHTML = '';
-
-      DAY_KEYS.forEach(day => {
-        const d = currentMenu.days[day];
-        const col = document.createElement('div');
-        col.className = "border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2 text-xs";
-        col.innerHTML = `
-          <div class="font-black text-slate-800 border-b border-slate-200 pb-1">${escapeHtml(d.name)}</div>
-          <div>
-            <label class="font-bold text-blue-700 block text-[10px]">Hauptgericht 1:</label>
-            <input type="text" id="imp-${day}-hg1-t" value="${escapeHtml(d.hg1.title)}" class="w-full px-2 py-1 bg-white border border-slate-300 rounded font-semibold text-[11px] mb-1">
-            <input type="text" id="imp-${day}-hg1-d" value="${escapeHtml(d.hg1.desc || '')}" placeholder="Beschreibung" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 mb-1">
-            <input type="text" id="imp-${day}-hg1-a" value="${escapeHtml(d.hg1.allergene || '')}" placeholder="Allergene" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-400 font-mono">
-          </div>
-          <div>
-            <label class="font-bold text-emerald-700 block text-[10px]">Hauptgericht 2:</label>
-            <input type="text" id="imp-${day}-hg2-t" value="${escapeHtml(d.hg2.title)}" class="w-full px-2 py-1 bg-white border border-slate-300 rounded font-semibold text-[11px] mb-1">
-            <input type="text" id="imp-${day}-hg2-d" value="${escapeHtml(d.hg2.desc || '')}" placeholder="Beschreibung" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 mb-1">
-            <input type="text" id="imp-${day}-hg2-a" value="${escapeHtml(d.hg2.allergene || '')}" placeholder="Allergene" class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-400 font-mono">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-500 block">Salat &amp; Dessert:</label>
-            <input type="text" id="imp-${day}-salat" value="${escapeHtml(d.salat || '')}" placeholder="Salat..." class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] mb-1">
-            <input type="text" id="imp-${day}-dessert" value="${escapeHtml(d.dessert || '')}" placeholder="Dessert..." class="w-full px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px]">
-          </div>
-        `;
-        grid.appendChild(col);
-      });
-    }
-
-    async function handlePdfUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const msg = document.getElementById('pdf-status-msg');
-      msg.innerText = `Lese PDF "${file.name}" ein...`;
-
-      try {
-        if (!window.pdfjsLib) throw new Error("PDF.js Library noch nicht geladen.");
-        const buffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-
-        let extractedText = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          extractedText += content.items.map(it => it.str).join('\n') + '\n';
-        }
-
-        const parsed = parseCatererText(extractedText);
-        currentMenu = parsed;
-        renderAdminEditCards();
-        msg.innerText = `Erfolgreich ausgelesen! Sie können die Gerichte jetzt unten prüfen und speichern.`;
-      } catch (err) {
-        console.error(err);
-        msg.innerText = "Fehler beim Parsen der PDF. Sie können die Gerichte manuell bearbeiten oder das Muster KW 47 testen.";
-      }
-    }
-
-    function parseCatererText(raw) {
-      const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      const kwMatch = raw.match(/KW\s*([0-9]{1,2})/i);
-      const kwNum = kwMatch ? kwMatch[1] : "47";
-
-      const res = JSON.parse(JSON.stringify(DEFAULT_KW46));
-      res.kw = `KW ${kwNum} (Importiert)`;
-
-      const dayKeywords = [
-        { key: 'mo', re: /Montag/i },
-        { key: 'di', re: /Dienstag/i },
-        { key: 'mi', re: /Mittwoch/i },
-        { key: 'do', re: /Donnerstag/i },
-        { key: 'fr', re: /Freitag/i }
-      ];
-
-      let currentDay = 'mo';
-      let activeDish = 'hg1';
-
-      lines.forEach(line => {
-        for (let dk of dayKeywords) {
-          if (dk.re.test(line)) {
-            currentDay = dk.key;
-            activeDish = 'hg1';
-            return;
-          }
-        }
-
-        if (/vegetarisch|gericht 2|menü 2|hg 2/i.test(line)) {
-          activeDish = 'hg2';
-        } else if (/salat|dressing/i.test(line)) {
-          res.days[currentDay].salat = line;
-        } else if (/dessert|obst|apfel|banane|pudding|joghurt/i.test(line)) {
-          res.days[currentDay].dessert = line;
-        } else if (line.length > 5 && !/allergene|seite|woche/i.test(line)) {
-          if (!res.days[currentDay][activeDish].title || res.days[currentDay][activeDish].title.startsWith("Blumenkohl") || res.days[currentDay][activeDish].title.startsWith("Menü")) {
-            res.days[currentDay][activeDish].title = line;
-          }
-        }
-      });
-
-      return res;
-    }
-
-    function loadSampleKW(nr) {
-      currentMenu = nr === 46 ? JSON.parse(JSON.stringify(DEFAULT_KW46)) : JSON.parse(JSON.stringify(SAMPLE_KW47));
-      renderAdminEditCards();
-      document.getElementById('pdf-status-msg').innerText = `Muster-Speiseplan für KW ${nr} geladen! Bitte auf 'In Speiseplan übernehmen' klicken.`;
-    }
-
-    function applyParsedMenuToSystem() {
-      currentMenu.kw = document.getElementById('edit-kw-title').value.trim();
-
-      DAY_KEYS.forEach(day => {
-        currentMenu.days[day].hg1.title = document.getElementById(`imp-${day}-hg1-t`).value.trim();
-        currentMenu.days[day].hg1.desc = document.getElementById(`imp-${day}-hg1-d`).value.trim();
-        currentMenu.days[day].hg1.allergene = document.getElementById(`imp-${day}-hg1-a`).value.trim();
-
-        currentMenu.days[day].hg2.title = document.getElementById(`imp-${day}-hg2-t`).value.trim();
-        currentMenu.days[day].hg2.desc = document.getElementById(`imp-${day}-hg2-d`).value.trim();
-        currentMenu.days[day].hg2.allergene = document.getElementById(`imp-${day}-hg2-a`).value.trim();
-
-        currentMenu.days[day].salat = document.getElementById(`imp-${day}-salat`).value.trim();
-        currentMenu.days[day].dessert = document.getElementById(`imp-${day}-dessert`).value.trim();
-      });
-
-      localStorage.setItem('mensa_menu', JSON.stringify(currentMenu));
-      
-      DAY_KEYS.forEach(d => selectedMeals[d] = 'none');
-      applySettingsToUI();
-      renderElternCards();
-      updateOrderSummaryUI();
-
-      showToast(`Speiseplan für ${currentMenu.kw} erfolgreich übernommen!`);
-      switchAdminTab('kasse');
-    }
-
-    // --- 11. ADMIN TAB: EINSTELLUNGEN SPEICHERN & SDK NEU INITIALISIEREN ---
-    function saveSettings() {
-      const oldClientId = currentSettings.paypalClientId;
-      const oldMode = currentSettings.paypalMode;
-
-      currentSettings.paypalClientId = document.getElementById('cfg-paypal-client-id').value.trim();
-      currentSettings.paypalMode = document.getElementById('cfg-paypal-mode').value;
-      currentSettings.recipient = document.getElementById('cfg-recipient').value.trim();
-      currentSettings.price = parseFloat(document.getElementById('cfg-price').value) || 3.70;
-      currentSettings.catererMail = document.getElementById('cfg-caterer-mail').value.trim();
-      currentSettings.pin = document.getElementById('cfg-pin').value.trim() || '1234';
-
-      localStorage.setItem('mensa_settings', JSON.stringify(currentSettings));
-      applySettingsToUI();
-      renderElternCards();
-      updateOrderSummaryUI();
-      updateSdkStatusPill();
-
-      if (oldClientId !== currentSettings.paypalClientId || oldMode !== currentSettings.paypalMode) {
-        loadPayPalSdk(() => {
-          showToast("Einstellungen gespeichert & PayPal aktualisiert!");
-        });
-      } else {
-        showToast("Einstellungen erfolgreich gespeichert!");
-      }
-    }
-
-    // --- HILFSFUNKTIONEN ---
-    function formatEUR(val) {
-      return (typeof val === 'number' ? val : 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-  </script>
-</body>
-</html>
