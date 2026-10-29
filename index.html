@@ -38,7 +38,7 @@
     }
     .meal-card.active-none {
       border-color: #475569 !important;
-      background-color: #e2e8f0 !important;
+      background-color: #f1f5f9 !important;
     }
   </style>
 </head>
@@ -83,7 +83,7 @@
     </div>
   </header>
 
-  <!-- HAUPTINHALT -->
+  <!-- HAUPTBEREICH -->
   <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
 
     <!-- ELTERN ANSICHT -->
@@ -93,11 +93,11 @@
         <div>
           <div class="flex items-center gap-2 mb-2">
             <span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2 py-0.5 rounded uppercase tracking-wide">Frist &amp; Online-Zahlung</span>
-            <span id="banner-kw-tag" class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46 (09.11. – 13.11.2026)</span>
+            <span id="banner-kw-tag" class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded font-medium">KW 46</span>
           </div>
           <h1 class="text-xl md:text-2xl font-black text-white">Mittagessen vorbestellen &amp; direkt online bezahlen</h1>
           <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-2xl">
-            Caterer: <strong>pirrung monsterlecker</strong>. Bestellschluss für die Folgewoche ist jeweils <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong>. Die Bezahlung erfolgt direkt &amp; sicher per PayPal oder Kreditkarte.
+            Caterer: <strong>pirrung monsterlecker</strong>. Bestellschluss für die Folgewoche ist jeweils <strong class="text-amber-300 underline">Mittwoch um 18:00 Uhr</strong>. Die Bezahlung erfolgt direkt per PayPal oder Debit-/Kreditkarte.
           </p>
         </div>
         <div class="bg-white/10 border border-white/20 rounded-2xl p-3 text-center min-w-[130px] self-start md:self-auto backdrop-blur-sm">
@@ -110,7 +110,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
           
-          <!-- 1. Stammdaten Kind -->
+          <!-- 1. Angaben zum Kind -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center gap-2 pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">1</span>
@@ -150,13 +150,15 @@
             <div class="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
               <div class="flex items-center gap-2">
                 <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">2</span>
-                <span>Tageswahl: Hauptgericht 1 oder Hauptgericht 2</span>
+                <span>Tagesauswahl: Montag bis Freitag</span>
               </div>
               <span class="text-xs text-slate-500 font-normal">Klicken zum Auswählen</span>
             </div>
 
-            <!-- Dynamische Karten -->
-            <div id="meal-cards-container" class="space-y-4"></div>
+            <!-- CONTAINER FÜR DIE ESSENSKARTEN -->
+            <div id="meal-cards-container" class="space-y-4">
+              <!-- Wird über JS gefüllt -->
+            </div>
           </div>
         </div>
 
@@ -260,7 +262,7 @@
             <table class="w-full text-left text-xs md:text-sm">
               <thead>
                 <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
-                  <th class="py-3 px-3 font-bold">Bestell-Nr. / PayPal-TX</th>
+                  <th class="py-3 px-3 font-bold">Bestell-Nr. / Transaktion</th>
                   <th class="py-3 px-3 font-bold">Kind / Klasse</th>
                   <th class="py-3 px-3 font-bold">Zahlungsart</th>
                   <th class="py-3 px-3 font-bold">Tage</th>
@@ -430,10 +432,10 @@
               <div class="flex items-center justify-between">
                 <div class="text-xs font-black text-blue-900 flex items-center gap-2">
                   <i class="ph-fill ph-paypal-logo text-[#003087] text-lg"></i> 
-                  <span>Offizielles PayPal JavaScript SDK</span>
+                  <span>PayPal Integration</span>
                 </div>
-                <span id="sdk-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-blue-100 text-blue-800">
-                  SDK aktiv
+                <span id="sdk-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800">
+                  Aktiv
                 </span>
               </div>
 
@@ -447,236 +449,4 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
                   <label class="block text-slate-700 mb-1">PayPal Betriebsmodus:</label>
-                  <select id="cfg-paypal-mode" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <option value="live">Live (Echtes Geld aufs Konto)</option>
-                    <option value="sandbox">Sandbox (Testmodus)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-slate-700 mb-1">Händlername / Zahlungsempfänger:</label>
-                  <input type="text" id="cfg-recipient" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" value="Förderverein FGTS Mittelbergschule e.V.">
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-slate-700 mb-1">Preis pro Essen (€):</label>
-                <input type="number" step="0.05" id="cfg-price" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="3.70">
-              </div>
-              <div>
-                <label class="block text-slate-700 mb-1">Admin PIN:</label>
-                <input type="text" id="cfg-pin" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="1234">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-slate-700 mb-1">Caterer E-Mail-Adresse (pirrung):</label>
-              <input type="email" id="cfg-caterer-mail" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="f.simon@pirrung.de">
-            </div>
-
-            <div class="pt-2 flex flex-wrap items-center gap-2">
-              <button type="button" onclick="saveSettings()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold text-sm shadow-sm transition">
-                Einstellungen speichern
-              </button>
-              <button type="button" onclick="exportDataBackup()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs border border-slate-300 transition flex items-center gap-1.5">
-                <i class="ph-bold ph-download-simple"></i> Backup herunterladen
-              </button>
-              <button type="button" onclick="document.getElementById('backup-file-input').click()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs border border-slate-300 transition flex items-center gap-1.5">
-                <i class="ph-bold ph-upload-simple"></i> Backup einspielen
-              </button>
-              <input type="file" id="backup-file-input" accept=".json" class="hidden" onchange="importDataBackup(event)">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- MODAL: PAYPAL CHECKOUT -->
-  <div id="payment-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
-      
-      <!-- SCHRITT 1 -->
-      <div id="modal-step-checkout">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
-              <i class="ph-fill ph-paypal-logo text-lg text-[#003087]"></i>
-            </div>
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-base leading-tight">Bestellung &amp; Bezahlung</h3>
-              <p class="text-[11px] text-slate-500">Mittelbergschule Spiesen</p>
-            </div>
-          </div>
-          <button type="button" onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-700 text-2xl font-bold leading-none">&times;</button>
-        </div>
-
-        <div class="mt-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
-          <div class="flex justify-between">
-            <span class="text-slate-500">Kind:</span>
-            <span class="font-bold text-slate-800" id="modal-child-name">-</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-500">Klasse:</span>
-            <span class="font-bold text-slate-800" id="modal-child-class">-</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-500">Beleg an:</span>
-            <span class="font-bold text-slate-800" id="modal-child-email">-</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-500">Notiz:</span>
-            <span class="font-bold text-slate-800" id="modal-child-notes">-</span>
-          </div>
-          <div class="flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-900 text-sm">
-            <span>Gesamtbetrag:</span>
-            <span class="text-emerald-700 font-black text-base" id="modal-total-sum">0,00 €</span>
-          </div>
-        </div>
-
-        <div class="mt-4 space-y-2">
-          <div id="paypal-button-container" class="min-h-[140px] flex items-center justify-center"></div>
-          <div id="paypal-error-hint" class="hidden text-xs text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl font-medium text-center"></div>
-        </div>
-
-        <div class="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-          <button type="button" onclick="closePaymentModal()" class="text-slate-500 hover:text-slate-800 font-bold">Abbrechen</button>
-          <span><i class="ph-fill ph-lock-simple text-emerald-600"></i> SSL Verschlüsselt</span>
-        </div>
-      </div>
-
-      <!-- SCHRITT 2: ERFOLG -->
-      <div id="modal-step-success" class="hidden space-y-4">
-        <div class="text-center space-y-2">
-          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
-            <i class="ph-bold ph-check"></i>
-          </div>
-          <h3 class="font-black text-slate-900 text-xl">Zahlung erfolgreich autorisiert!</h3>
-          <p class="text-xs text-slate-500">Das Essen ist verbindlich bestellt und verbucht.</p>
-        </div>
-
-        <div class="p-4 rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/50 space-y-3">
-          <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-left text-xs font-mono text-slate-700 space-y-1.5">
-            <div class="flex justify-between">
-              <span class="text-slate-500">Bestellnummer:</span>
-              <span id="success-order-id" class="font-bold text-slate-900">-</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">PayPal Transaktion:</span>
-              <span id="success-tx-id" class="font-bold text-blue-700">-</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Schüler/in:</span>
-              <span id="success-child" class="font-bold text-slate-900">-</span>
-            </div>
-            <div class="flex justify-between border-t border-slate-100 pt-1 font-bold">
-              <span>Betrag bezahlt:</span>
-              <span id="success-amount" class="text-emerald-700 text-sm">-</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex gap-2">
-          <button type="button" onclick="printReceipt()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition">
-            <i class="ph-bold ph-printer"></i> Beleg drucken
-          </button>
-          <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer">
-            Fertig &amp; Schließen
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL: PIN -->
-  <div id="admin-pin-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
-      <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
-        <i class="ph-bold ph-lock-key"></i>
-      </div>
-      <div>
-        <h3 class="font-extrabold text-slate-900 text-lg">Admin-Zugang</h3>
-        <p class="text-xs text-slate-500 mt-1">Bitte PIN für Verwaltung eingeben (Standard: <strong>1234</strong>)</p>
-      </div>
-      <input type="password" id="admin-pin-input" placeholder="PIN" class="w-full text-center text-lg tracking-widest px-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-      <div id="admin-pin-error" class="text-xs text-rose-600 font-bold hidden">Falsche PIN.</div>
-      <div class="flex gap-2">
-        <button type="button" onclick="closeAdminPinModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">Abbrechen</button>
-        <button type="button" onclick="verifyAdminPin()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition">Entsperren</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold border border-slate-700 max-w-sm">
-      <i id="toast-icon" class="ph-bold ph-check-circle text-emerald-400 text-lg"></i>
-      <span id="toast-text">Mitteilung</span>
-    </div>
-  </div>
-
-  <script>
-    const DEFAULT_KW46 = {
-      kw: "KW 46 (09.11. – 13.11.2026)",
-      days: {
-        mo: {
-          name: "Montag (09.11.2026)",
-          salat: "",
-          dessert: "Dessert: Apfel",
-          hg1: { title: "Blumenkohl-Creme-Suppe mit Mehrkornbrötchen", desc: "Blumenkohl, Kartoffel, Milch & Mehrkornbrötchen", allergene: "a, a1, a2, a3, a4, g, g1, k" },
-          hg2: { title: "Ravioli mit Tomatenfüllung in Tomatensoße", desc: "feine Nudeltaschen vegetarisch", allergene: "a, a1, c" }
-        },
-        di: {
-          name: "Dienstag (10.11.2026)",
-          salat: "Salat: Endivien, Radicchio, Frisée mit Balsamico-Dressing",
-          dessert: "Dessert: Milchreis (g, g1)",
-          hg1: { title: "\"Chili sin Carne\" dazu Reis", desc: "vegan mit Bohnen, Mais, Paprika", allergene: "f, i, y" },
-          hg2: { title: "Semmelknödel mit Rahmsauce", desc: "herzhafte Knödel in feiner Rahmsauce", allergene: "a, a1, c, g, g1" }
-        },
-        mi: {
-          name: "Mittwoch (11.11.2026)",
-          salat: "Salat: Gurkensalat",
-          dessert: "Dessert: Birne",
-          hg1: { title: "Wild/MSC pan. Seelachsfilet mit Kräutersauce & Kartoffelstampf", desc: "DGE-zertifizierter Fisch", allergene: "a, a1, d, g, g1" },
-          hg2: { title: "Rahmkartoffeln mit Brokkoli", desc: "herzhafter Kartoffelauflauf", allergene: "g, g1" }
-        },
-        do: {
-          name: "Donnerstag (12.11.2026)",
-          salat: "",
-          dessert: "Dessert: Apfel-Sahne-Pudding (g, g1)",
-          hg1: { title: "Rindergulasch mit Vollkorn-Penne & Brokkoli", desc: "zartes Rindfleisch", allergene: "a, a1, 16" },
-          hg2: { title: "Kaiserschmarrn mit Apfelmus", desc: "süßer Klassiker", allergene: "a, a1, c, g, g1, 3" }
-        },
-        fr: {
-          name: "Freitag (13.11.2026)",
-          salat: "Salat: Möhrensalat mit Orangen-Dressing",
-          dessert: "Dessert: Banane",
-          hg1: { title: "Penne mit Tomatensauce & Reibekäse", desc: "Nudelliebling der Kinder", allergene: "a, a1, g, g1" },
-          hg2: { title: "Käsespätzle", desc: "mit würzigem Käse überbacken", allergene: "a, a1, c, g, g1" }
-        }
-      }
-    };
-
-    const SAMPLE_KW47 = {
-      kw: "KW 47 (16.11. – 20.11.2026)",
-      days: {
-        mo: {
-          name: "Montag (16.11.2026)",
-          salat: "Salat: Gurkensalat",
-          dessert: "Dessert: Mandarine",
-          hg1: { title: "Hähnchen-Nuggets mit Kartoffelpüree", desc: "knusprig gebacken mit Erbsengemüse", allergene: "a, a1, c" },
-          hg2: { title: "Gemüselasagne", desc: "mit buntem Marktgemüse und Bechamelsauce", allergene: "a, a1, g, g1" }
-        },
-        di: {
-          name: "Dienstag (17.11.2026)",
-          salat: "Salat: Blattsalat",
-          dessert: "Dessert: Vanillepudding",
-          hg1: { title: "Spaghetti Bolognese (Rind)", desc: "mit Tomaten-Hackfleischsauce", allergene: "a, a1, i" },
-          hg2: { title: "Spaghetti mit Linsenbolognese", desc: "vegane Sauce mit Berglinsen", allergene: "a, a1, i" }
-        },
-        mi: {
-          name: "Mittwoch (18.11.2026)",
-          salat:
+                  <select id="cfg-paypal-mode" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg
