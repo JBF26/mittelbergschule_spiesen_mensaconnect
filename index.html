@@ -158,4 +158,660 @@
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">E-Mail für Beleg &amp; Bestätigung *</label>
-                <input type="email" id="order-email" maxlength="100" placeholder="eltern@beispiel.de" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald
+                <input type="email" id="order-email" maxlength="100" placeholder="eltern@beispiel.de" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Hinweise (Allergien, Unverträglichkeiten, kein Schweinefleisch)</label>
+                <input type="text" id="order-notiz" maxlength="120" placeholder="z. B. Glutenfrei, Laktosearm, kein Schweinefleisch..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Speiseplan Montag bis Freitag -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs flex items-center justify-center font-bold">2</span>
+                <span>Tageswahl: Hauptgericht 1 oder Hauptgericht 2</span>
+              </div>
+              <span class="text-xs text-slate-500 font-normal">Tage frei kombinierbar</span>
+            </div>
+
+            <!-- CONTAINER FÜR DIE SPEISEPLAN-KARTEN (MIT SOFORT-FALLBACK) -->
+            <div id="meal-cards-container" class="space-y-4">
+              <!-- Montag -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Montag (09.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Apfel</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-mo-hg1" onclick="window.chooseMeal('mo', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Blumenkohl-Creme-Suppe mit Mehrkornbrötchen</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Blumenkohl, Kartoffel, Milch &amp; Mehrkornbrötchen</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, a2, a3, a4, g, g1, k</div>
+                  </button>
+                  <button type="button" id="card-mo-hg2" onclick="window.chooseMeal('mo', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Ravioli mit Tomatenfüllung in Tomatensoße</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">feine Nudeltaschen vegetarisch</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c</div>
+                  </button>
+                  <button type="button" id="card-mo-none" onclick="window.chooseMeal('mo', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Dienstag -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Dienstag (10.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Endivien, Radicchio, Frisée mit Balsamico-Dressing</span>
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Milchreis (g, g1)</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-di-hg1" onclick="window.chooseMeal('di', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">"Chili sin Carne" dazu Reis</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">vegan mit Bohnen, Mais, Paprika</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: f, i, y</div>
+                  </button>
+                  <button type="button" id="card-di-hg2" onclick="window.chooseMeal('di', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Semmelknödel mit Rahmsauce</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">herzhafte Knödel in feiner Rahmsauce</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1</div>
+                  </button>
+                  <button type="button" id="card-di-none" onclick="window.chooseMeal('di', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Mittwoch -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Mittwoch (11.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Gurkensalat</span>
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Birne</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-mi-hg1" onclick="window.chooseMeal('mi', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Wild/MSC pan. Seelachsfilet mit Kräutersauce &amp; Kartoffelstampf</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">DGE-zertifizierter Fisch</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, d, g, g1</div>
+                  </button>
+                  <button type="button" id="card-mi-hg2" onclick="window.chooseMeal('mi', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Rahmkartoffeln mit Brokkoli</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">herzhafter Kartoffelauflauf</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: g, g1</div>
+                  </button>
+                  <button type="button" id="card-mi-none" onclick="window.chooseMeal('mi', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Donnerstag -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Donnerstag (12.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Apfel-Sahne-Pudding (g, g1)</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-do-hg1" onclick="window.chooseMeal('do', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Rindergulasch mit Vollkorn-Penne &amp; Brokkoli</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">zartes Rindfleisch</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, 16</div>
+                  </button>
+                  <button type="button" id="card-do-hg2" onclick="window.chooseMeal('do', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Kaiserschmarrn mit Apfelmus</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">süßer Klassiker</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1, 3</div>
+                  </button>
+                  <button type="button" id="card-do-none" onclick="window.chooseMeal('do', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Freitag -->
+              <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-1 mb-3 pb-2 border-b border-slate-100">
+                  <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span>Freitag (13.11.2026)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded font-medium mr-2">Salat: Möhrensalat mit Orangen-Dressing</span>
+                    <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Dessert: Banane</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <button type="button" id="card-fr-hg1" onclick="window.chooseMeal('fr', 'hg1')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase">Hauptgericht 1</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Penne mit Tomatensauce &amp; Reibekäse</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">Nudelliebling der Kinder</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, g, g1</div>
+                  </button>
+                  <button type="button" id="card-fr-hg2" onclick="window.chooseMeal('fr', 'hg2')" class="meal-card text-left p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer select-none flex flex-col justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Hauptgericht 2</span>
+                        <span class="text-xs font-bold text-slate-800">3,70 €</span>
+                      </div>
+                      <div class="font-bold text-xs text-slate-900 mt-1">Käsespätzle</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">mit würzigem Käse überbacken</div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 mt-2 font-mono">Allergene: a, a1, c, g, g1</div>
+                  </button>
+                  <button type="button" id="card-fr-none" onclick="window.chooseMeal('fr', 'none')" class="meal-card text-center p-3 rounded-xl border border-slate-300 bg-slate-100 cursor-pointer select-none flex flex-col items-center justify-center active-none">
+                    <i class="ph-bold ph-x-circle text-slate-400 text-xl mb-1"></i>
+                    <span class="text-xs font-bold text-slate-700">Kein Mittagessen</span>
+                    <span class="text-[10px] text-slate-400">0,00 €</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rechts: Zusammenfassung & Checkout -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs sticky top-20 space-y-4">
+            <h3 class="font-bold text-slate-900 text-base flex items-center gap-2 pb-2 border-b border-slate-100">
+              <i class="ph-bold ph-receipt text-emerald-600"></i> Bestellübersicht
+            </h3>
+            
+            <div id="checkout-day-summary" class="space-y-2 text-xs border-b border-slate-100 pb-3">
+              <div class="flex justify-between text-slate-400"><span>Montag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Dienstag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Mittwoch:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Donnerstag:</span><i>kein Essen</i></div>
+              <div class="flex justify-between text-slate-400"><span>Freitag:</span><i>kein Essen</i></div>
+            </div>
+            
+            <div class="flex justify-between text-xs text-slate-600">
+              <span>Bestellte Essen:</span>
+              <span class="font-bold text-slate-900" id="checkout-count">0 Tage</span>
+            </div>
+            <div class="flex justify-between text-xs text-slate-600">
+              <span>Einzelpreis:</span>
+              <span class="font-medium text-slate-900" id="checkout-single-price-label">3,70 €</span>
+            </div>
+            
+            <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
+              <span class="text-sm font-bold text-slate-900">Gesamtbetrag:</span>
+              <span class="text-2xl font-black text-emerald-700" id="checkout-total-price">0,00 €</span>
+            </div>
+
+            <div id="validation-hint" class="hidden text-xs text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl font-medium"></div>
+
+            <div class="pt-2 space-y-2">
+              <button id="btn-online-order" type="button" onclick="window.openPaymentModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-3 rounded-xl transition text-xs shadow-md flex items-center justify-center gap-2 border border-emerald-700 cursor-pointer">
+                <i class="ph-bold ph-credit-card text-xl text-emerald-200"></i>
+                <div class="text-left leading-tight">
+                  <div class="font-black text-sm">Jetzt online bestellen</div>
+                  <div class="text-[10px] text-emerald-100 font-normal">PayPal • Debit-/Kreditkarte</div>
+                </div>
+              </button>
+
+              <div class="flex items-center justify-center gap-3 pt-2 text-slate-400 text-xs">
+                <span class="flex items-center gap-1 font-bold text-slate-600"><i class="ph-fill ph-paypal-logo text-[#003087] text-sm"></i> PayPal</span>
+                <span class="text-slate-300">•</span>
+                <span class="flex items-center gap-1 font-bold text-slate-600"><i class="ph-fill ph-credit-card text-slate-700 text-sm"></i> Visa / Mastercard</span>
+              </div>
+
+              <div class="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200/60 p-2 rounded-xl text-center flex items-center justify-center gap-1.5 mt-2">
+                <i class="ph-fill ph-check-circle text-emerald-600"></i> Sofortige Buchung &amp; automatische Erfassung im Mensa-System
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ADMIN BEREICH ==================== -->
+    <div id="view-admin" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4 no-print">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg md:text-xl font-black text-slate-900">Verwaltung Mittelbergschule</h1>
+            <span id="admin-kw-badge" class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">KW 46</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">Online-Zahlungseingänge, Caterer-Meldung, PDF-Import &amp; Mensa-Ausgabeliste</p>
+        </div>
+
+        <div class="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs font-bold">
+          <button type="button" onclick="window.switchAdminTab('kasse')" id="tab-btn-kasse" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer">
+            <i class="ph-bold ph-receipt text-emerald-600"></i> Buchungen &amp; Kasse
+          </button>
+          <button type="button" onclick="window.switchAdminTab('caterer')" id="tab-btn-caterer" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <i class="ph-bold ph-truck text-sky-600"></i> Caterer-Meldung
+          </button>
+          <button type="button" onclick="window.switchAdminTab('ausgabe')" id="tab-btn-ausgabe" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <i class="ph-bold ph-clipboard-text text-amber-600"></i> Ausgabeliste
+          </button>
+          <button type="button" onclick="window.switchAdminTab('pdfimport')" id="tab-btn-pdfimport" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <i class="ph-bold ph-file-arrow-up text-indigo-600"></i> PDF-Speiseplan Import
+          </button>
+          <button type="button" onclick="window.switchAdminTab('settings')" id="tab-btn-settings" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <i class="ph-bold ph-gear text-slate-500"></i> Einstellungen (PayPal)
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: KASSE & BUCHUNGEN -->
+      <div id="sub-kasse" class="space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base font-extrabold text-slate-900">Online-Zahlungseingänge</h2>
+                <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i class="ph-bold ph-shield-check"></i> Automatisch autorisiert
+                </span>
+              </div>
+              <p class="text-xs text-slate-500">Übersicht aller online bezahlten Essen inklusive Transaktions-ID</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700">
+                Eingenommen: <strong id="kasse-total-sum" class="text-emerald-700 font-black text-sm ml-1">0,00 €</strong>
+              </div>
+              <button type="button" onclick="window.exportOrdersToCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-300 transition cursor-pointer">
+                <i class="ph-bold ph-download-simple"></i> CSV Export
+              </button>
+              <button type="button" onclick="window.clearAllOrders()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-rose-200 transition cursor-pointer">
+                <i class="ph-bold ph-trash"></i> Zurücksetzen
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs md:text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-3 font-bold">Bestell-Nr. / PayPal-TX</th>
+                  <th class="py-3 px-3 font-bold">Kind / Klasse</th>
+                  <th class="py-3 px-3 font-bold">Zahlungsart</th>
+                  <th class="py-3 px-3 font-bold">Tage</th>
+                  <th class="py-3 px-3 font-bold">Betrag</th>
+                  <th class="py-3 px-3 font-bold">Zahlungsstatus</th>
+                  <th class="py-3 px-3 font-bold text-right">Aktion</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+          <div id="orders-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
+            Bislang liegen noch keine Bestellungen vor.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CATERER MELDUNG -->
+      <div id="sub-caterer" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900" id="cat-meldungs-title">Portions-Meldung für KW 46</h2>
+              <span class="text-xs text-amber-700 font-bold">Donnerstags bis 10:00 Uhr an pirrung monsterlecker melden</span>
+            </div>
+            <div class="flex gap-2 no-print">
+              <button type="button" onclick="window.copyCatererEmail()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i class="ph-bold ph-copy"></i> Fertige E-Mail kopieren
+              </button>
+              <button type="button" onclick="window.print()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i class="ph-bold ph-printer"></i> Drucken
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-4 font-bold">Tag</th>
+                  <th class="py-3 px-4 font-bold text-blue-700">Hauptgericht 1</th>
+                  <th class="py-3 px-4 font-bold text-emerald-700">Hauptgericht 2</th>
+                  <th class="py-3 px-4 font-extrabold text-right">Gesamtzahl</th>
+                </tr>
+              </thead>
+              <tbody id="caterer-table-body" class="divide-y divide-slate-100"></tbody>
+              <tfoot>
+                <tr class="bg-slate-100 font-black text-slate-900 border-t-2 border-slate-300">
+                  <td class="py-3 px-4">Wochensumme</td>
+                  <td id="cat-sum-v1" class="py-3 px-4 text-blue-800">0</td>
+                  <td id="cat-sum-v2" class="py-3 px-4 text-emerald-800">0</td>
+                  <td id="cat-sum-all" class="py-3 px-4 text-right text-emerald-700 text-base">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 no-print">
+            <div class="text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+              <span>E-Mail Vorschau für: <span id="cat-email-addr-label" class="font-mono text-slate-900">f.simon@pirrung.de</span></span>
+              <span id="copy-status" class="text-emerald-700 font-bold hidden">In die Zwischenablage kopiert!</span>
+            </div>
+            <pre id="caterer-email-preview" class="text-xs text-slate-800 font-mono whitespace-pre-wrap bg-white p-3.5 rounded-lg border border-slate-200 overflow-x-auto"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: AUSGABELISTE -->
+      <div id="sub-ausgabe" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4 admin-card">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">Mensa-Ausgabeliste für Betreuer</h2>
+              <span class="text-xs text-slate-500">Nur bezahlte Essen werden zur Essensausgabe aufgeführt</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 no-print">
+              <select id="ausgabe-filter-day" onchange="window.renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
+                <option value="mo">Montag</option><option value="di">Dienstag</option>
+                <option value="mi">Mittwoch</option><option value="do">Donnerstag</option><option value="fr">Freitag</option>
+              </select>
+              <select id="ausgabe-filter-class" onchange="window.renderAusgabeList()" class="px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-xl bg-white focus:outline-none">
+                <option value="all">Alle Klassen</option>
+                <option value="1a">Klasse 1a</option><option value="1b">Klasse 1b</option><option value="1c">Klasse 1c</option>
+                <option value="2a">Klasse 2a</option><option value="2b">Klasse 2b</option><option value="2c">Klasse 2c</option>
+                <option value="3a">Klasse 3a</option><option value="3b">Klasse 3b</option>
+                <option value="4a">Klasse 4a</option><option value="4b">Klasse 4b</option><option value="4c">Klasse 4c</option>
+              </select>
+              <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1 transition cursor-pointer">
+                <i class="ph-bold ph-printer"></i> Drucken
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-y border-slate-200">
+                  <th class="py-3 px-3 w-16 text-center">Ausgegeben</th>
+                  <th class="py-3 px-4 font-bold">Kind (Name)</th>
+                  <th class="py-3 px-3 font-bold">Klasse</th>
+                  <th class="py-3 px-4 font-bold">Menüwahl</th>
+                  <th class="py-3 px-4 font-bold">Bezahlstatus</th>
+                  <th class="py-3 px-4 font-bold">Notiz / Allergie</th>
+                </tr>
+              </thead>
+              <tbody id="ausgabe-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+          <div id="ausgabe-empty-notice" class="hidden text-center py-8 text-slate-400 text-sm">
+            Keine bezahlten Essen für diesen Tag oder diese Klasse eingetragen.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: PDF IMPORT & SPEISEPLAN BEARBEITUNG -->
+      <div id="sub-pdfimport" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">Automatische Speiseplan-Übernahme (PDF)</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Laden Sie die PDF-Datei von pirrung hoch oder bearbeiten Sie die Menüs direkt.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="window.loadSampleKW(46)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 cursor-pointer">
+                KW 46 laden
+              </button>
+              <button type="button" onclick="window.loadSampleKW(47)" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300 cursor-pointer">
+                KW 47 Test laden
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload Drop-Zone -->
+          <div id="pdf-dropzone" onclick="document.getElementById('pdf-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/30 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
+            <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden" onchange="window.handlePdfUpload(event)">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shadow-xs">
+              <i class="ph-bold ph-file-arrow-up"></i>
+            </div>
+            <div class="text-sm font-bold text-slate-800">Caterer-PDF hier ablegen oder klicken zum Hochladen</div>
+            <div class="text-xs text-slate-500">Wird clientseitig abgesichert ausgelesen und in die Wochentage übertragen.</div>
+            <div id="pdf-status-msg" class="text-xs font-bold text-emerald-700 mt-1"></div>
+          </div>
+
+          <!-- Formularkarten für Vorab-Bearbeitung -->
+          <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-700">Titel / Kalenderwoche:</label>
+                <input type="text" id="edit-kw-title" value="KW 46 (09.11. – 13.11.2026)" class="text-xs font-bold px-3 py-1.5 border border-slate-300 rounded-lg w-64 bg-white">
+              </div>
+              <button type="button" onclick="window.applyParsedMenuToSystem()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition cursor-pointer">
+                <i class="ph-bold ph-check-circle"></i> In Speiseplan &amp; Eltern-Ansicht übernehmen
+              </button>
+            </div>
+
+            <div id="import-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: EINSTELLUNGEN MIT PAYPAL CLIENT-ID -->
+      <div id="sub-settings" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs max-w-2xl space-y-4">
+          <h2 class="text-base font-extrabold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
+            <i class="ph-bold ph-gear text-emerald-600"></i> PayPal &amp; Systemeinstellungen
+          </h2>
+          <div class="space-y-4 text-xs font-semibold">
+            
+            <!-- PAYPAL CONFIG CARD -->
+            <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="text-xs font-black text-blue-900 flex items-center gap-2">
+                  <i class="ph-fill ph-paypal-logo text-[#003087] text-lg"></i> 
+                  <span>Offizielles PayPal JavaScript SDK</span>
+                </div>
+                <span id="sdk-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-blue-100 text-blue-800">
+                  SDK aktiv
+                </span>
+              </div>
+
+              <div>
+                <label class="block text-slate-700 mb-1">
+                  PayPal Client-ID (öffentlich):
+                </label>
+                <input type="text" id="cfg-paypal-client-id" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="z. B. AeA1... (aus developer.paypal.com)">
+                <p class="text-[11px] text-slate-500 mt-1 font-normal leading-relaxed">
+                  <strong>Woher nehmen?</strong> Loggen Sie sich auf <a href="https://developer.paypal.com" target="_blank" rel="noopener noreferrer" class="text-blue-700 underline font-bold">developer.paypal.com</a> mit Ihrem PayPal-Geschäftskonto ein &rarr; <em>Dashboard</em> &rarr; <em>Apps &amp; Credentials</em> &rarr; App erstellen &rarr; <strong>Client ID</strong> hier einfügen.
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label class="block text-slate-700 mb-1">PayPal Betriebsmodus:</label>
+                  <select id="cfg-paypal-mode" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="live">Live (Echtes Geld aufs Vereinskonto)</option>
+                    <option value="sandbox">Sandbox (Testmodus für Entwickler)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-700 mb-1">Händlername / Zahlungsempfänger:</label>
+                  <input type="text" id="cfg-recipient" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" value="JBF Bildungcenter">
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-700 mb-1">Preis pro Essen (€):</label>
+                <input type="number" step="0.05" min="0.50" max="50.00" id="cfg-price" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="3.70">
+              </div>
+              <div>
+                <label class="block text-slate-700 mb-1">Admin PIN:</label>
+                <input type="password" id="cfg-pin" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="2702">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-slate-700 mb-1">Caterer E-Mail-Adresse (pirrung):</label>
+              <input type="email" id="cfg-caterer-mail" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-slate-50 focus:bg-white" value="f.simon@pirrung.de">
+            </div>
+
+            <div class="pt-2 flex flex-wrap gap-2">
+              <button type="button" onclick="window.saveSettings()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold text-sm shadow-xs transition cursor-pointer">
+                Einstellungen im Browser speichern
+              </button>
+              <button type="button" onclick="window.exportConfigToFile()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm border border-slate-300 transition flex items-center gap-1.5 cursor-pointer" title="Auf USB-Stick oder Rechner sichern">
+                <i class="ph-bold ph-floppy-disk"></i> Konfiguration sichern (JSON)
+              </button>
+              <button type="button" onclick="document.getElementById('config-file-input').click()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm border border-slate-300 transition flex items-center gap-1.5 cursor-pointer" title="Von anderem Rechner laden">
+                <i class="ph-bold ph-upload-simple"></i> Konfiguration laden
+              </button>
+              <input type="file" id="config-file-input" accept=".json" class="hidden" onchange="window.importConfigFromFile(event)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: PAYPAL CHECKOUT (SICHERES GATEWAY OHNE KARTENDATEN)-->
+  <!-- ======================================================== -->
+  <div id="payment-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      
+      <!-- SCHRITT 1: PRÜFUNG & ZAHLUNGSAUSWAHL -->
+      <div id="modal-step-checkout">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+              <i class="ph-fill ph-paypal-logo text-lg text-[#003087]"></i>
+            </div>
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-base leading-tight">Bestellung &amp; Bezahlung</h3>
+              <p class="text-[11px] text-slate-500">Mittelbergschule Spiesen</p>
+            </div>
+          </div>
+          <button type="button" onclick="window.closePaymentModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold cursor-pointer">&times;</button>
+        </div>
+
+        <div class="mt-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Kind / Schüler:</span>
+            <span class="font-bold text-slate-800" id="modal-child-name">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Klasse:</span>
+            <span class="font-bold text-slate-800" id="modal-child-class">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Zahlungsbeleg an:</span>
+            <span class="font-bold text-slate-800" id="modal-child-email">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Besonderheiten / Notiz:</span>
+            <span class="font-bold text-slate-800" id="modal-child-notes">-</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-900 text-sm">
+            <span>Gesamtbetrag:</span>
+            <span class="text-emerald-700 font-black text-base" id="modal-total-sum">0,00 €</span>
+          </div>
+        </div>
+
+        <!-- Sichere Zahlungsauswahl (ohne eigene Kreditkarten-Eingabefelder) -->
+        <div class="mt-4 space-y-3">
+          <div class="text-[11px] font-bold text-slate-700 text-center uppercase tracking-wide">
+            Wählen Sie Ihre gewünschte Zahlungsart:
+          </div>
+          
+          <div id="paypal-button-container" class="hidden min-h-[50px] flex items-center justify-center"></div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="window.openAuthForm('paypal')" class="py-3 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 border-2 border-[#003087] bg-[#ffc439] text-slate-900 cursor-pointer shadow-sm hover:bg-[#f4bb34] transition">
+              <i class="ph-fill ph-paypal-logo text-base text-[#003087]"></i> PayPal / Lastschrift
+            </button>
+            <button type="button" onclick="window.openAuthForm('card')" class="py-3 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 border border-slate-300 bg-slate-900 text-white cursor-pointer shadow-sm hover:bg-slate-800 transition">
+              <i class="ph-bold ph-credit-card text-base"></i> Kredit-/Debitkarte
+            </button>
+          </div>
+
+          <!-- Formular A: PayPal / Lastschrift Bestätigung -->
+          <div id="form-paypal" class="hidden bg-blue-50/70 p-4 rounded-2xl border border-blue-200 space-y-3 mt-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-blue-900 text-xs flex items-center gap-1">
+                <i class="ph-fill ph-paypal-logo text-[#003087]"></i> PayPal / SEPA-Lastschrift
+              </span>
+              <button type="button" onclick="document.getElementById('form-paypal').classList.add('hidden')" class="text-slate-
