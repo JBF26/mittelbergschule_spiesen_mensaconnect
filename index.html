@@ -1083,10 +1083,22 @@
       }, console.error);
 
       fb.onSnapshot(fb.doc(fb.db, 'config', 'settings'), snap => {
-        if (snap.exists() && typeof snap.data().price === 'number') {
-          settings.price = snap.data().price;
-          syncPrerenderedCardsWithMenu(); updateSummary();
-        }
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (typeof data.price === 'number') settings.price = data.price;
+        if (typeof data.paypalClientId === 'string') settings.paypalClientId = data.paypalClientId;
+        if (data.paypalMode === 'sandbox' || data.paypalMode === 'live') settings.paypalMode = data.paypalMode;
+        if (typeof data.recipient === 'string') settings.recipient = data.recipient;
+        if (typeof data.catererMail === 'string') settings.catererMail = data.catererMail;
+        document.getElementById('cfg-paypal-client-id').value = settings.paypalClientId;
+        document.getElementById('cfg-paypal-mode').value = settings.paypalMode;
+        document.getElementById('cfg-recipient').value = settings.recipient;
+        document.getElementById('cfg-price').value = settings.price.toFixed(2);
+        document.getElementById('cfg-caterer-mail').value = settings.catererMail;
+        document.getElementById('cat-email-addr-label').innerText = settings.catererMail;
+        syncPrerenderedCardsWithMenu();
+        updateSummary();
+        loadPayPalSdk();
       }, console.error);
     });
 
@@ -2105,9 +2117,17 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
         }
         await fb.setDoc(
           fb.doc(fb.db, 'config', 'settings'),
-          { price: settings.price },
+          {
+            price: settings.price,
+            paypalClientId: settings.paypalClientId,
+            paypalMode: settings.paypalMode,
+            recipient: settings.recipient,
+            catererMail: settings.catererMail
+          },
           { merge: true }
         );
+        // Only non-sensitive settings are stored in Firestore; never store the legacy PIN there.
+        try { localStorage.setItem('mensa_settings', JSON.stringify(settings)); } catch (err) {}
       } catch (error) {
         console.error('Preis speichern:', error);
         alert('Speichern fehlgeschlagen: ' + error.message);
