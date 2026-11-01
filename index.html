@@ -64,6 +64,7 @@
       animation: checkmark 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   </style>
+  <script type="module" src="./firebase-bridge.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
@@ -521,7 +522,7 @@
               <button type="button" onclick="exportOrdersToCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-300 transition cursor-pointer">
                 <i class="ph-bold ph-download-simple"></i> CSV Export
               </button>
-              <button type="button" onclick="clearAllOrders()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-rose-200 transition cursor-pointer">
+              <button type="button" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-rose-200 transition cursor-pointer" disabled title="Zurücksetzen für bestätigte Bestellungen deaktiviert">
                 <i class="ph-bold ph-trash"></i> Zurücksetzen
               </button>
             </div>
@@ -852,72 +853,6 @@
             </div>
           </div>
 
-          <!-- Direktes Karten- / PayPal-Eingabefenster für reibungslose Nutzung -->
-          <div id="manual-payment-gate" class="space-y-3 pt-2 border-t border-slate-200">
-            <div class="grid grid-cols-2 gap-2">
-              <button type="button" onclick="openAuthForm('paypal')" id="gate-btn-paypal" class="py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 border-2 border-[#003087] bg-[#ffc439] text-slate-900 cursor-pointer">
-                <i class="ph-fill ph-paypal-logo text-base text-[#003087]"></i> PayPal / Lastschrift
-              </button>
-              <button type="button" onclick="openAuthForm('card')" id="gate-btn-card" class="py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 border border-slate-300 bg-slate-900 text-white cursor-pointer">
-                <i class="ph-bold ph-credit-card text-base"></i> Kredit-/Debitkarte
-              </button>
-            </div>
-
-            <!-- Formular A: PayPal / Lastschrift -->
-            <div id="auth-form-paypal" class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 space-y-3 text-xs">
-              <div class="flex items-center justify-between border-b border-blue-200 pb-2">
-                <span class="font-black text-[#003087] flex items-center gap-1.5 text-sm">
-                  <i class="ph-fill ph-paypal-logo text-lg"></i> PayPal &amp; SEPA-Lastschrift
-                </span>
-                <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">Sofort-Freigabe</span>
-              </div>
-              <div>
-                <label class="block text-slate-700 font-bold mb-1">E-Mail-Adresse oder PayPal-Konto *</label>
-                <input type="email" id="pp-login-email" placeholder="eltern@beispiel.de" class="w-full px-3 py-2 border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
-              </div>
-              <div>
-                <label class="block text-slate-700 font-bold mb-1">Passwort / Freigabe-PIN *</label>
-                <input type="password" id="pp-login-pass" placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
-              </div>
-              <div id="pp-auth-error" class="hidden text-rose-600 font-bold text-[11px]"></div>
-              <button type="button" id="pp-submit-btn" onclick="submitPayPalAuth()" class="w-full py-3 bg-[#0070ba] hover:bg-[#003087] text-white font-extrabold rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-2">
-                <i class="ph-bold ph-lock-key"></i> <span id="pp-submit-text">Zahlung verbindlich ausführen &amp; für Mensa freigeben</span>
-              </button>
-            </div>
-
-            <!-- Formular B: Kreditkarte -->
-            <div id="auth-form-card" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 text-xs">
-              <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <span class="font-black text-slate-900 flex items-center gap-1.5 text-sm">
-                  <i class="ph-bold ph-credit-card text-emerald-600 text-lg"></i> Kartenzahlung
-                </span>
-                <span class="text-[10px] text-slate-500 font-bold">Visa • Mastercard • Debit</span>
-              </div>
-              <div>
-                <label class="block text-slate-700 font-bold mb-1">Karteninhaber *</label>
-                <input type="text" id="cc-holder" placeholder="Max Mustermann" class="w-full px-3 py-2 border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600">
-              </div>
-              <div>
-                <label class="block text-slate-700 font-bold mb-1">Kartennummer (16-stellig) *</label>
-                <input type="text" id="cc-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" oninput="formatCardNumber(this)" class="w-full px-3 py-2 border border-slate-300 rounded-xl bg-white font-mono focus:outline-none focus:ring-2 focus:ring-emerald-600">
-              </div>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-slate-700 font-bold mb-1">Gültig bis (MM/JJ) *</label>
-                  <input type="text" id="cc-exp" maxlength="5" placeholder="MM/JJ" oninput="formatExpiry(this)" class="w-full px-3 py-2 border border-slate-300 rounded-xl bg-white font-mono focus:outline-none focus:ring-2 focus:ring-emerald-600">
-                </div>
-                <div>
-                  <label class="block text-slate-700 font-bold mb-1">Prüfziffer (CVC) *</label>
-                  <input type="password" id="cc-cvc" maxlength="4" placeholder="123" class="w-full px-3 py-2 border border-slate-300 rounded-xl bg-white font-mono focus:outline-none focus:ring-2 focus:ring-emerald-600">
-                </div>
-              </div>
-              <div id="cc-auth-error" class="hidden text-rose-600 font-bold text-[11px]"></div>
-              <button type="button" id="cc-submit-btn" onclick="submitCardAuth()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-2">
-                <i class="ph-bold ph-shield-check"></i> <span id="cc-submit-text">Jetzt kostenpflichtig bezahlen</span>
-              </button>
-            </div>
-          </div>
-
           <div id="paypal-error-hint" class="hidden text-xs text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl font-medium text-center"></div>
         </div>
 
@@ -937,7 +872,7 @@
           <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-success-pop">
             <i class="ph-bold ph-check"></i>
           </div>
-          <h3 class="font-black text-slate-900 text-xl">Zahlung erfolgreich autorisiert!</h3>
+          <h3 class="font-black text-slate-900 text-xl">Sandbox-Zahlung bestätigt!</h3>
           <p class="text-xs text-slate-500">Das Essen ist verbindlich bestellt und im System als <strong>bezahlt</strong> verbucht.</p>
         </div>
 
@@ -957,7 +892,7 @@
               <span id="success-tx-id" class="font-bold text-blue-700">-</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-slate-500">Zahler:</span>
+              <span class="text-slate-500">Bestellende Person:</span>
               <span id="success-payer-name" class="font-bold text-slate-900">-</span>
             </div>
             <div class="flex justify-between">
@@ -971,7 +906,7 @@
           </div>
 
           <div class="text-[11px] text-slate-600 text-center leading-tight">
-            Eine Bestätigung wurde an <strong id="success-email-notice" class="text-slate-900"></strong> gesendet. Der Eintrag ist für die Betreuungskräfte sofort in der Ausgabeliste sichtbar.
+            Hinterlegte E-Mail-Adresse: <strong id="success-email-notice" class="text-slate-900"></strong>. Die Anzeige in der Ausgabeliste wird separat angebunden; ein E-Mail-Versand ist noch nicht bestätigt.
           </div>
         </div>
 
@@ -998,13 +933,18 @@
       </div>
       <div>
         <h3 class="font-extrabold text-slate-900 text-lg">Admin-Zugang</h3>
-        <p class="text-xs text-slate-500 mt-1">Bitte PIN für Verwaltung eingeben (Standard: <strong>1234</strong>)</p>
+        <p class="text-xs text-slate-500 mt-1">Bitte Administrator-E-Mail und Passwort eingeben </p>
       </div>
-      <input type="password" id="admin-pin-input" placeholder="PIN eingeben" class="w-full text-center text-lg tracking-widest px-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-      <div id="admin-pin-error" class="text-xs text-rose-600 font-bold hidden">Falsche PIN. Bitte erneut versuchen.</div>
+      <input type="email" id="admin-email-input"
+        placeholder="Administrator-E-Mail"
+        autocomplete="username"
+        class="w-full px-3 py-2.5 border border-slate-300 rounded-xl mb-3">
+      <input type="password" id="admin-pin-input"
+        autocomplete="current-password" placeholder="Passwort eingeben" class="w-full text-center text-lg tracking-widest px-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+      <div id="admin-pin-error" class="text-xs text-rose-600 font-bold hidden">Anmeldung fehlgeschlagen. Bitte erneut versuchen.</div>
       <div class="flex gap-2">
         <button type="button" onclick="closeAdminPinModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer">Abbrechen</button>
-        <button type="button" onclick="verifyAdminPin()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer">Entsperren</button>
+        <button type="button" onclick="verifyAdminPin()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer">Anmelden</button>
       </div>
     </div>
   </div>
@@ -1126,53 +1066,39 @@
       }
     } catch (e) {}
 
+    
+    window.addEventListener('load', () => {
+      const fb = window.mensaFirebase;
+      if (!fb) {
+        console.error('Firebase nicht verfügbar');
+        return;
+      }
+
+      fb.onSnapshot(fb.doc(fb.db, 'config', 'menuPlan'), snap => {
+        if (snap.exists() && snap.data().days) {
+          currentMenu = snap.data();
+          syncPrerenderedCardsWithMenu();
+          syncPrerenderedCardsWithMenu(); updateSummary();
+        }
+      }, console.error);
+
+      fb.onSnapshot(fb.doc(fb.db, 'config', 'settings'), snap => {
+        if (snap.exists() && typeof snap.data().price === 'number') {
+          settings.price = snap.data().price;
+          syncPrerenderedCardsWithMenu(); updateSummary();
+        }
+      }, console.error);
+    });
+
     let settings = Object.assign({}, EMBEDDED_DEFAULT_SETTINGS);
     try {
       const savedSettings = localStorage.getItem('mensa_settings');
       if (savedSettings) Object.assign(settings, JSON.parse(savedSettings));
     } catch (e) {}
 
-    let orders = [
-      {
-        id: "MB-8421",
-        date: "04.11.2026 14:20",
-        kw: "KW 46 (09.11. – 13.11.2026)",
-        vorname: "Lina",
-        nachname: "Becker",
-        klasse: "2b",
-        email: "becker.spiesen@web.de",
-        notiz: "Kein Schweinefleisch",
-        selections: { mo: "hg2", di: "hg2", mi: "hg2", do: "hg2", fr: "hg2" },
-        paid: true,
-        paymentMethod: "PayPal",
-        transactionId: "TXN-982341908",
-        payerName: "Familie Becker",
-        served: { mo: true, di: false, mi: false, do: false, fr: false },
-        total: 18.50
-      },
-      {
-        id: "MB-3190",
-        date: "04.11.2026 16:05",
-        kw: "KW 46 (09.11. – 13.11.2026)",
-        vorname: "Jonas",
-        nachname: "Wagner",
-        klasse: "3a",
-        email: "m.wagner@t-online.de",
-        notiz: "Laktosearm",
-        selections: { mo: "hg1", di: "none", mi: "hg1", do: "hg1", fr: "hg1" },
-        paid: true,
-        paymentMethod: "Kreditkarte via PayPal",
-        transactionId: "TXN-441209551",
-        payerName: "Michael Wagner",
-        served: { mo: false, di: false, mi: false, do: false, fr: false },
-        total: 14.80
-      }
-    ];
-
-    try {
-      const savedOrders = localStorage.getItem('mensa_orders');
-      if (savedOrders) orders = JSON.parse(savedOrders);
-    } catch (e) {}
+    // Keine Beispiel- oder Browserbestellungen als Zahlungsnachweis verwenden.
+    // Echte bezahlte Bestellungen werden erst nach sicherer Firestore-Anbindung geladen.
+    let orders = [];
 
     const selectedMeals = { mo: 'none', di: 'none', mi: 'none', do: 'none', fr: 'none' };
     const DAY_KEYS = ['mo', 'di', 'mi', 'do', 'fr'];
@@ -1422,8 +1348,6 @@
       document.getElementById('modal-child-notes').innerText = notiz || 'Keine Angaben';
       document.getElementById('modal-total-sum').innerText = formatEUR(total);
 
-      document.getElementById('auth-form-paypal').classList.remove('hidden');
-      document.getElementById('auth-form-card').classList.add('hidden');
       document.getElementById('modal-step-checkout').classList.remove('hidden');
       document.getElementById('modal-step-success').classList.add('hidden');
       document.getElementById('payment-modal').classList.remove('hidden');
@@ -1442,135 +1366,71 @@
       const errorHint = document.getElementById('paypal-error-hint');
       errorHint.classList.add('hidden');
 
+      function showPayPalError(message) {
+        errorHint.textContent = message;
+        errorHint.classList.remove('hidden');
+      }
+
       if (window.paypal && typeof window.paypal.Buttons === 'function') {
         container.innerHTML = '';
         try {
           window.paypal.Buttons({
             style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
-            createOrder: function(data, actions) {
-              const desc = `Mensa (${currentOrderPending.kw}) - ${currentOrderPending.nachname}, ${currentOrderPending.vorname} (${currentOrderPending.klasse})`.substring(0, 127);
-              return actions.order.create({
-                purchase_units: [{ description: desc, amount: { currency_code: 'EUR', value: currentOrderPending.total.toFixed(2) } }]
+
+            createOrder: async function() {
+              const fb = window.mensaFirebase;
+              if (!fb || !fb.createPayPalOrder || !currentOrderPending) {
+                throw new Error('Firebase oder Bestellung nicht verfuegbar.');
+              }
+              const order = currentOrderPending;
+              const result = await fb.createPayPalOrder({
+                vorname: order.vorname,
+                nachname: order.nachname,
+                klasse: order.klasse,
+                email: order.email,
+                notiz: order.notiz,
+                kw: order.kw,
+                selections: order.selections
               });
+              if (!result.data || !result.data.paypalOrderId) {
+                throw new Error('PayPal-Bestellnummer fehlt.');
+              }
+              return result.data.paypalOrderId;
             },
-            onApprove: function(data, actions) {
-              return actions.order.capture().then(function(details) {
-                handlePaymentSuccess(details, "PayPal / Online-Zahlung");
-              });
+
+            onApprove: async function(data) {
+              const fb = window.mensaFirebase;
+              if (!fb || !fb.capturePayPalOrder || !data.orderID) {
+                throw new Error('Zahlungsbestaetigung nicht moeglich.');
+              }
+              try {
+                const result = await fb.capturePayPalOrder({
+                  paypalOrderId: data.orderID
+                });
+                if (result.data?.success !== true || !result.data.captureId) {
+                  throw new Error('Zahlung nicht bestaetigt.');
+                }
+                showVerifiedPayPalSuccess(data.orderID, result.data.captureId);
+              } catch (err) {
+                console.error('PayPal-Capture-Status unklar:', err);
+                showPayPalError(
+                  'Der Zahlungsstatus konnte nicht eindeutig bestaetigt werden. Bitte keine erneute Zahlung starten. Wenden Sie sich an die Schule, damit die Zahlung geprueft werden kann.'
+                );
+              }
             },
+
             onError: function(err) {
-              console.warn("PayPal SDK-Hinweis:", err);
+              console.warn('PayPal-Sandbox-Fehler:', err);
+              showPayPalError(
+                'Bei PayPal ist ein Fehler aufgetreten. Der Zahlungsstatus ist moeglicherweise unklar. Bitte keine erneute Zahlung starten und wenden Sie sich zur Pruefung an die Schule.'
+              );
             }
           }).render('#paypal-button-container');
-        } catch (err) {}
+        } catch (err) {
+          console.error('PayPal-Button-Fehler:', err);
+          showPayPalError('PayPal-Buttons konnten nicht geladen werden.');
+        }
       }
-    }
-
-    function openAuthForm(type) {
-      const fPP = document.getElementById('auth-form-paypal');
-      const fCC = document.getElementById('auth-form-card');
-      const errHint = document.getElementById('paypal-error-hint');
-      if (errHint) errHint.classList.add('hidden');
-
-      if (type === 'paypal') {
-        fPP.classList.remove('hidden');
-        fCC.classList.add('hidden');
-        document.getElementById('pp-submit-text').innerText = `Zahlung verbindlich ausführen (${formatEUR(currentOrderPending ? currentOrderPending.total : 0)})`;
-      } else {
-        fPP.classList.add('hidden');
-        fCC.classList.remove('hidden');
-        document.getElementById('cc-submit-text').innerText = `Jetzt kostenpflichtig bezahlen (${formatEUR(currentOrderPending ? currentOrderPending.total : 0)})`;
-      }
-    }
-
-    function formatCardNumber(input) {
-      let v = input.value.replace(/\D/g, '').substring(0, 16);
-      let parts = v.match(/.{1,4}/g);
-      input.value = parts ? parts.join(' ') : v;
-    }
-
-    function formatExpiry(input) {
-      let v = input.value.replace(/\D/g, '').substring(0, 4);
-      if (v.length >= 3) {
-        input.value = v.substring(0, 2) + '/' + v.substring(2, 4);
-      } else {
-        input.value = v;
-      }
-    }
-
-    function submitPayPalAuth() {
-      const email = document.getElementById('pp-login-email').value.trim();
-      const pass = document.getElementById('pp-login-pass').value.trim();
-      const err = document.getElementById('pp-auth-error');
-
-      if (!email || !email.includes('@')) {
-        err.innerText = "Bitte gültige PayPal E-Mail-Adresse eingeben.";
-        err.classList.remove('hidden');
-        return;
-      }
-      if (!pass || pass.length < 4) {
-        err.innerText = "Bitte Passwort / PIN zur Autorisierung eingeben.";
-        err.classList.remove('hidden');
-        return;
-      }
-      err.classList.add('hidden');
-
-      const btn = document.getElementById('pp-submit-btn');
-      btn.disabled = true;
-      document.getElementById('pp-submit-text').innerText = "Zahlung wird verbucht...";
-
-      setTimeout(() => {
-        btn.disabled = false;
-        document.getElementById('pp-login-pass').value = '';
-        handlePaymentSuccess({
-          id: 'PP-' + Math.floor(100000000 + Math.random() * 900000000),
-          payer: { name: { given_name: email, surname: '' } }
-        }, "PayPal / SEPA");
-      }, 700);
-    }
-
-    function submitCardAuth() {
-      const holder = document.getElementById('cc-holder').value.trim();
-      const num = document.getElementById('cc-number').value.replace(/\s+/g, '');
-      const exp = document.getElementById('cc-exp').value.trim();
-      const cvc = document.getElementById('cc-cvc').value.trim();
-      const err = document.getElementById('cc-auth-error');
-
-      if (!holder || holder.length < 3) {
-        err.innerText = "Bitte Namen des Karteninhabers eingeben.";
-        err.classList.remove('hidden');
-        return;
-      }
-      if (num.length < 15) {
-        err.innerText = "Bitte gültige Kartennummer eingeben.";
-        err.classList.remove('hidden');
-        return;
-      }
-      if (!/^\d{2}\/\d{2}$/.test(exp)) {
-        err.innerText = "Gültigkeit im Format MM/JJ eingeben.";
-        err.classList.remove('hidden');
-        return;
-      }
-      if (cvc.length < 3) {
-        err.innerText = "Bitte CVC-Prüfziffer eingeben.";
-        err.classList.remove('hidden');
-        return;
-      }
-      err.classList.add('hidden');
-
-      const btn = document.getElementById('cc-submit-btn');
-      btn.disabled = true;
-      document.getElementById('cc-submit-text').innerText = "Kartenzahlung wird verarbeitet...";
-
-      setTimeout(() => {
-        btn.disabled = false;
-        document.getElementById('cc-number').value = '';
-        document.getElementById('cc-cvc').value = '';
-        handlePaymentSuccess({
-          id: 'CC-' + Math.floor(100000000 + Math.random() * 900000000),
-          payer: { name: { given_name: holder, surname: '' } }
-        }, "Kredit-/Debitkarte");
-      }, 700);
     }
 
     function closePaymentModal() {
@@ -1578,54 +1438,22 @@
     }
 
     // Setzt die Bestellung in Echtzeit auf BEZAHLT, damit die Mitarbeiter sofort das grüne Häkchen sehen
-    function handlePaymentSuccess(details, methodLabel) {
-      if (!currentOrderPending) return;
-
-      const txId = (details && details.purchase_units && details.purchase_units[0] && details.purchase_units[0].payments && details.purchase_units[0].payments.captures)
-        ? details.purchase_units[0].payments.captures[0].id
-        : (details && details.id ? details.id : ('TXN-' + Math.floor(100000000 + Math.random() * 900000000)));
-
-      const payerName = (details && details.payer && details.payer.name)
-        ? `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim()
-        : `${currentOrderPending.vorname} ${currentOrderPending.nachname}`;
-
-      const orderObj = {
-        id: currentOrderPending.orderId,
-        date: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
-        kw: currentOrderPending.kw,
-        vorname: currentOrderPending.vorname,
-        nachname: currentOrderPending.nachname,
-        klasse: currentOrderPending.klasse,
-        email: currentOrderPending.email,
-        notiz: currentOrderPending.notiz,
-        selections: currentOrderPending.selections,
-        served: { mo: false, di: false, mi: false, do: false, fr: false },
-        paid: true, // IMMER SOFORT BEZAHLT BEI ONLINE-ZAHLUNG!
-        paymentMethod: methodLabel || "Online-Zahlung",
-        transactionId: txId,
-        payerName: payerName || "Elternteil",
-        total: currentOrderPending.total
-      };
-
-      orders.unshift(orderObj);
-      try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
-      updateBadge();
-
-      document.getElementById('success-order-id').innerText = orderObj.id;
-      document.getElementById('success-tx-id').innerText = txId;
-      document.getElementById('success-payer-name').innerText = payerName;
-      document.getElementById('success-child').innerText = `${orderObj.vorname} ${orderObj.nachname} (Klasse ${orderObj.klasse})`;
-      document.getElementById('success-amount').innerText = formatEUR(orderObj.total);
-      document.getElementById('success-email-notice').innerText = orderObj.email;
-
+    function showVerifiedPayPalSuccess(paypalOrderId, captureId) {
+      if (!paypalOrderId || !captureId || !currentOrderPending) {
+        throw new Error('Bestaetigte Zahlungsdaten fehlen.');
+      }
+      const order = currentOrderPending;
+      document.getElementById('success-order-id').textContent = paypalOrderId;
+      document.getElementById('success-tx-id').textContent = captureId;
+      document.getElementById('success-payer-name').textContent =
+        `${order.vorname} ${order.nachname}`;
+      document.getElementById('success-child').textContent =
+        `${order.vorname} ${order.nachname} (Klasse ${order.klasse})`;
+      document.getElementById('success-amount').textContent = formatEUR(order.total);
+      document.getElementById('success-email-notice').textContent = order.email;
       document.getElementById('modal-step-checkout').classList.add('hidden');
       document.getElementById('modal-step-success').classList.remove('hidden');
-
-      document.getElementById('order-vorname').value = '';
-      document.getElementById('order-nachname').value = '';
-      document.getElementById('order-notiz').value = '';
-      DAY_KEYS.forEach(d => chooseMeal(d, 'none'));
-      showToast("Zahlung erfolgreich! Für Betreuer freigegeben.");
+      showToast('Sandbox-Zahlung durch Firebase bestaetigt.');
     }
 
     function printReceipt() {
@@ -1690,14 +1518,35 @@
       document.getElementById('admin-pin-modal').classList.add('hidden');
     }
 
-    function verifyAdminPin() {
-      const pin = document.getElementById('admin-pin-input').value.trim();
-      if (pin === settings.pin || pin === "admin") {
+    async function verifyAdminPin() {
+      const email = document.getElementById('admin-email-input').value.trim();
+      const password = document.getElementById('admin-pin-input').value;
+      const errorBox = document.getElementById('admin-pin-error');
+
+      errorBox.classList.add('hidden');
+
+      try {
+        const fb = window.mensaFirebase;
+        if (!fb || !fb.auth) throw new Error('Firebase nicht bereit');
+
+        const result = await fb.signInWithEmailAndPassword(
+          fb.auth, email, password
+        );
+
+        if (result.user.uid !== 'x4qt2PN1hJOEH8KrMPxwsh0uWbD3') {
+          await fb.signOut(fb.auth);
+          throw new Error('Kein Administratorkonto');
+        }
+
+        document.getElementById('admin-pin-input').value = '';
         closeAdminPinModal();
         navigate('admin');
         switchAdminTab('kasse');
-      } else {
-        document.getElementById('admin-pin-error').classList.remove('hidden');
+        startAdminOrderListener();
+      } catch (error) {
+        console.error('Administrator-Anmeldung:', error.code || error.message);
+        errorBox.textContent = 'Anmeldung fehlgeschlagen. E-Mail und Passwort prüfen.';
+        errorBox.classList.remove('hidden');
       }
     }
 
@@ -1706,8 +1555,91 @@
     });
 
     // View Navigation
+    // Platzhalter für die spätere Firestore-Bestellüberwachung.
+    let unsubscribeAdminOrders = null;
+    let activeAdminOrdersToken = null;
+
+    // Nur nach erfolgreicher Firebase-Admin-Anmeldung: bezahlte Bestellungen lesen.
+    function startAdminOrderListener() {
+      clearAdminOrderView();
+      const fb = window.mensaFirebase;
+      const adminUid = 'x4qt2PN1hJOEH8KrMPxwsh0uWbD3';
+      if (!fb || !fb.auth || !fb.auth.currentUser ||
+          fb.auth.currentUser.uid !== adminUid) {
+        console.error('Firestore-Bestellungen: kein Administratorkonto.');
+        return;
+      }
+      const activeUser = fb.auth.currentUser;
+      const paidQuery = fb.query(
+        fb.collection(fb.db, 'orders'),
+        fb.where('status', '==', 'paid')
+      );
+      // Auch bereits eingetroffene, aber inzwischen ungültige Rückrufe ignorieren.
+      const listenerToken = {};
+      activeAdminOrdersToken = listenerToken;
+      unsubscribeAdminOrders = fb.onSnapshot(paidQuery, snapshot => {
+        if (activeAdminOrdersToken !== listenerToken ||
+            fb.auth.currentUser !== activeUser) return;
+        orders = snapshot.docs.filter(docSnap => docSnap.data().paid === true).map(docSnap => {
+          const data = docSnap.data();
+          const amount = Number(data.total);
+          const paidDate = data.paidAt && typeof data.paidAt.toDate === 'function'
+            ? data.paidAt.toDate().toLocaleString('de-DE') : '–';
+          return {
+            id: docSnap.id,
+            date: paidDate,
+            kw: data.kw || '',
+            vorname: String(data.vorname || ''),
+            nachname: String(data.nachname || ''),
+            klasse: String(data.klasse || ''),
+            email: String(data.email || ''),
+            notiz: String(data.notiz || ''),
+            selections: data.selections || {},
+            paid: true,
+            paymentMethod: 'PayPal (serverseitig bestätigt)',
+            transactionId: String(data.captureId || ''),
+            served: data.served || {},
+            total: Number.isFinite(amount) ? amount : 0
+          };
+        });
+        updateBadge();
+        renderKasse();
+        renderCaterer();
+        renderAusgabeList();
+      }, error => {
+        if (activeAdminOrdersToken !== listenerToken) return;
+        console.error('Firestore-Bestellungen konnten nicht geladen werden:', error);
+        orders = [];
+        updateBadge();
+        renderKasse();
+        renderCaterer();
+        renderAusgabeList();
+        showToast('Bestellungen konnten nicht geladen werden.', false);
+      });
+    }
+
+    function clearAdminOrderView() {
+      activeAdminOrdersToken = null;
+      if (typeof unsubscribeAdminOrders === 'function') {
+        unsubscribeAdminOrders();
+        unsubscribeAdminOrders = null;
+      }
+      orders = [];
+      updateBadge();
+      renderKasse();
+      renderCaterer();
+      renderAusgabeList();
+    }
+
     function navigate(view) {
       if (view === 'eltern') {
+        clearAdminOrderView();
+        const fb = window.mensaFirebase;
+        if (fb && fb.auth && fb.auth.currentUser) {
+          fb.signOut(fb.auth).catch(error => {
+            console.error('Administrator-Abmeldung fehlgeschlagen:', error);
+          });
+        }
         document.getElementById('view-eltern').classList.remove('hidden');
         document.getElementById('view-admin').classList.add('hidden');
         document.getElementById('nav-btn-eltern').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition cursor-pointer";
@@ -1785,15 +1717,13 @@
           <td class="py-3 px-3 font-medium">${dayCount} Tage</td>
           <td class="py-3 px-3 font-black text-slate-900">${formatEUR(o.total)}</td>
           <td class="py-3 px-3">
-            <button type="button" onclick="togglePayment('${o.id}')" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+            <span type="button" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 cursor-default transition ${o.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
               <i class="ph-bold ${o.paid ? 'ph-check-circle' : 'ph-clock'}"></i>
               <span>${o.paid ? 'Bezahlt' : 'Offen'}</span>
-            </button>
+            </span>
           </td>
           <td class="py-3 px-3 text-right">
-            <button type="button" onclick="deleteOrder('${o.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition cursor-pointer" title="Löschen">
-              <i class="ph-bold ph-trash text-base"></i>
-            </button>
+            
           </td>
         `;
         tbody.appendChild(tr);
@@ -1803,6 +1733,8 @@
     }
 
     function togglePayment(id) {
+      console.warn("MensaConnect: togglePayment ist deaktiviert. Zahlungsnachweise bleiben unverändert.");
+      return;
       const order = orders.find(o => o.id === id);
       if (order) {
         order.paid = !order.paid;
@@ -1813,6 +1745,8 @@
     }
 
     function deleteOrder(id) {
+      console.warn("MensaConnect: deleteOrder ist deaktiviert. Zahlungsnachweise bleiben unverändert.");
+      return;
       orders = orders.filter(o => o.id !== id);
       try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
       updateBadge();
@@ -1823,6 +1757,8 @@
     }
 
     function clearAllOrders() {
+      console.warn("MensaConnect: clearAllOrders ist deaktiviert. Zahlungsnachweise bleiben unverändert.");
+      return;
       orders = [];
       try { localStorage.removeItem('mensa_orders'); } catch (e) {}
       updateBadge();
@@ -1981,7 +1917,7 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
         tr.className = `hover:bg-slate-50 transition ${isServed ? 'bg-emerald-50/50 text-slate-400' : ''}`;
         tr.innerHTML = `
           <td class="py-3 px-3 text-center">
-            <input type="checkbox" onchange="toggleServed('${o.id}', '${day}')" ${isServed ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+            <input type="checkbox" disabled title="Ausgabestatus derzeit nur lesbar – Serverfunktion folgt" ${isServed ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
           </td>
           <td class="py-3 px-4 font-bold text-slate-900 ${isServed ? 'line-through text-slate-400' : ''}">
             ${escapeHtml(o.nachname)}, ${escapeHtml(o.vorname)}
@@ -2009,13 +1945,7 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
     }
 
     function toggleServed(id, day) {
-      const order = orders.find(o => o.id === id);
-      if (order) {
-        if (!order.served) order.served = {};
-        order.served[day] = !order.served[day];
-        try { localStorage.setItem('mensa_orders', JSON.stringify(orders)); } catch (e) {}
-        renderAusgabeList();
-      }
+      showToast('Ausgabestatus kann erst nach Einrichtung der Serverfunktion geändert werden.', false);
     }
 
     // PDF-Import & Speiseplan-Editor
@@ -2128,7 +2058,7 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
       document.getElementById('pdf-status-msg').innerText = `Speiseplan KW ${nr} geladen! Klicken Sie rechts auf 'In Speiseplan übernehmen'.`;
     }
 
-    function applyParsedMenuToSystem() {
+    async function applyParsedMenuToSystem() {
       currentMenu.kw = document.getElementById('edit-kw-title').value.trim();
 
       DAY_KEYS.forEach(day => {
@@ -2144,13 +2074,23 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
         currentMenu.days[day].dessert = document.getElementById(`imp-${day}-dessert`).value.trim();
       });
 
-      try { localStorage.setItem('mensa_menu', JSON.stringify(currentMenu)); } catch (e) {}
+      try {
+        const fb = window.mensaFirebase;
+        if (!fb || !fb.auth.currentUser) {
+          throw new Error('Bitte als Administrator anmelden.');
+        }
+        await fb.setDoc(fb.doc(fb.db, 'config', 'menuPlan'), currentMenu);
+      } catch (error) {
+        console.error('Speichern fehlgeschlagen:', error);
+        alert('Speichern fehlgeschlagen: ' + error.message);
+        return;
+      }
       syncPrerenderedCardsWithMenu();
       updateSummary();
       showToast(`Speiseplan für ${currentMenu.kw} übernommen!`);
     }
 
-    function saveSettings() {
+    async function saveSettings() {
       settings.paypalClientId = document.getElementById('cfg-paypal-client-id').value.trim();
       settings.paypalMode = document.getElementById('cfg-paypal-mode').value;
       settings.recipient = document.getElementById('cfg-recipient').value.trim();
@@ -2158,7 +2098,21 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
       settings.catererMail = document.getElementById('cfg-caterer-mail').value.trim();
       settings.pin = document.getElementById('cfg-pin').value.trim() || '1234';
 
-      try { localStorage.setItem('mensa_settings', JSON.stringify(settings)); } catch (e) {}
+      try {
+        const fb = window.mensaFirebase;
+        if (!fb || !fb.auth.currentUser) {
+          throw new Error('Bitte als Administrator anmelden.');
+        }
+        await fb.setDoc(
+          fb.doc(fb.db, 'config', 'settings'),
+          { price: settings.price },
+          { merge: true }
+        );
+      } catch (error) {
+        console.error('Preis speichern:', error);
+        alert('Speichern fehlgeschlagen: ' + error.message);
+        return;
+      }
 
       syncPrerenderedCardsWithMenu();
       document.getElementById('cat-email-addr-label').innerText = settings.catererMail;
