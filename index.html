@@ -89,7 +89,7 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <a id="header-pdf-link" href="https://www.fgts-spiesen.de/uploads/1/5/9/8/15984796/kw_46.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
+        <a id="header-pdf-link" href="#" onclick="event.preventDefault(); alert('Der Original-Speiseplan wird nach Einrichtung der dauerhaften PDF-Speicherung bereitgestellt.');" aria-label="Original-Speiseplan derzeit noch nicht verfügbar" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
           <i class="ph-bold ph-file-pdf text-rose-600 text-base"></i>
           <span class="hidden sm:inline">Original-Speiseplan</span> (PDF)
         </a>
@@ -655,14 +655,6 @@
               <h2 class="text-base font-extrabold text-slate-900">Automatische Speiseplan-Übernahme (PDF)</h2>
               <p class="text-xs text-slate-500 mt-0.5">Laden Sie die PDF-Datei von pirrung hoch oder bearbeiten Sie die Menüs direkt.</p>
             </div>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="loadSampleKW(46)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 cursor-pointer">
-                KW 46 laden
-              </button>
-              <button type="button" onclick="loadSampleKW(47)" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300 cursor-pointer">
-                KW 47 Test laden
-              </button>
-            </div>
           </div>
 
           <!-- Upload Drop-Zone -->
@@ -1049,7 +1041,7 @@
       price: 3.70,
       catererMail: "f.simon@pirrung.de"
     };
-    const EMBEDDED_DEFAULT_MENU = DEFAULT_KW46;
+    const EMBEDDED_DEFAULT_MENU = {"kw": "KW 49 (30.11. – 04.12.2026)", "days": {"mo": {"name": "Montag (30.11.2026)", "salat": "", "dessert": "Dessert: Kiwi", "hg1": {"title": "Kürbiscremesuppe mit Mehrkornbrötchen", "desc": "", "allergene": "a3, k, a4, g, a2, a, g1, a1"}, "hg2": {"title": "Pasta mit Putencarbonarasauce", "desc": "", "allergene": "i, j, g, a, g1, a1"}}, "di": {"name": "Dienstag (01.12.2026)", "salat": "Salat: Endivien, Radicchio, Frisée mit Balsamico-Dressing", "dessert": "Dessert: Apfel-Quarkschnee mit Zimt", "hg1": {"title": "Wildlachsfilet MSC-zertifiziert mit Tomatensoße und Reis", "desc": "", "allergene": "d, a, a1"}, "hg2": {"title": "2 Kartoffelklöße mit Rahmsoße", "desc": "", "allergene": "g, g1"}}, "mi": {"name": "Mittwoch (02.12.2026)", "salat": "Salat: Möhrensalat mit Orangen-Dressing", "dessert": "Dessert: Birne", "hg1": {"title": "Spätzle-Gemüsepfanne (Paprika, Mais, Bohnen) mit Lauch-Käsesauce", "desc": "", "allergene": "g1, g, i, c, y, a, a1"}, "hg2": {"title": "Geflügelfrikadelle (Truthahn, Hähnchen) mit Bratensauce und Reis", "desc": "", "allergene": "i, c, a, a1"}}, "do": {"name": "Donnerstag (03.12.2026)", "salat": "", "dessert": "Dessert: Naturjoghurt mit Kirschen", "hg1": {"title": "Putengulasch mit Vollkornnudeln und Kohlrabi", "desc": "", "allergene": "16, 2, 3, i, g, a, g1, a1"}, "hg2": {"title": "Blumenkohl-Kartoffelauflauf", "desc": "", "allergene": "i, g, g1"}}, "fr": {"name": "Freitag (04.12.2026)", "salat": "Salat: Maissalat", "dessert": "Dessert: Apfel", "hg1": {"title": "Tortellini (Spinat/Käse) mit Tomaten-Gemüsesauce (Karotte, Sellerie, Lauch)", "desc": "", "allergene": "i, g, a, g1, a1"}, "hg2": {"title": "Penne mit Tomatensauce und Reibekäse", "desc": "", "allergene": "g, a, g1, a1"}}}};
     /*__EMBEDDED_CONFIG_END__*/
 
     let currentMenu = JSON.parse(JSON.stringify(EMBEDDED_DEFAULT_MENU));
@@ -1057,7 +1049,7 @@
       const savedMenu = localStorage.getItem('mensa_menu');
       if (savedMenu) {
         const parsed = JSON.parse(savedMenu);
-        if (parsed && parsed.days) currentMenu = parsed;
+        if (parsed && parsed.days && !/^KW\s*(?:46|47)\b/i.test(parsed.kw || '')) currentMenu = parsed;
       }
     } catch (e) {}
 
@@ -1143,7 +1135,7 @@
 
     // Aktualisiert die fest im HTML vorgerenderten Karten mit dem aktuellen Speiseplan
     function syncPrerenderedCardsWithMenu() {
-      const kw = currentMenu.kw || "KW 46";
+      const kw = (currentMenu.kw || "KW 46").replace(/\s*\(Importiert\)/gi, "");
       const bTag = document.getElementById('banner-kw-tag');
       if (bTag) bTag.innerText = kw;
       const admBadge = document.getElementById('admin-kw-badge');
@@ -1961,15 +1953,16 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
     }
 
     // PDF-Import & Speiseplan-Editor
-    function renderAdminEditCards() {
+    let pendingImportedMenu = null;
+    function renderAdminEditCards(previewMenu = currentMenu) {
       const titleInput = document.getElementById('edit-kw-title');
-      if (titleInput) titleInput.value = currentMenu.kw;
+      if (titleInput) titleInput.value = previewMenu.kw;
       const grid = document.getElementById('import-cards-grid');
       if (!grid) return;
       grid.innerHTML = '';
 
       DAY_KEYS.forEach(day => {
-        const d = currentMenu.days[day];
+        const d = previewMenu.days[day];
         const col = document.createElement('div');
         col.className = "border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2 text-xs";
         col.innerHTML = `
@@ -2015,75 +2008,45 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
           extractedText += content.items.map(it => it.str).join('\n') + '\n';
         }
 
-        currentMenu = parseCatererText(extractedText);
-        renderAdminEditCards();
+        pendingImportedMenu = parseCatererText(extractedText);
+        renderAdminEditCards(pendingImportedMenu);
         msg.innerText = `Erfolgreich ausgelesen! Bitte unten prüfen und übernehmen.`;
       } catch (err) {
-        msg.innerText = "Fehler beim Parsen der PDF. Sie können die Gerichte unten manuell eintragen.";
+        msg.innerText = "Import nicht möglich: " + err.message;
       }
     }
 
+    // Die Caterer-PDF ist eine mehrspaltige Tabelle. Eine zeilenweise
+    // Textextraktion ist nicht zuverlässig. Nur die geprüfte KW-49-Vorlage
+    // wird deshalb automatisch angeboten; unbekannte PDFs bleiben unveröffentlicht.
+    const VERIFIED_KW49 = {"kw": "KW 49 (30.11. – 04.12.2026)", "days": {"mo": {"name": "Montag (30.11.2026)", "salat": "", "dessert": "Dessert: Kiwi", "hg1": {"title": "Kürbiscremesuppe mit Mehrkornbrötchen", "desc": "", "allergene": "a3, k, a4, g, a2, a, g1, a1"}, "hg2": {"title": "Pasta mit Putencarbonarasauce", "desc": "", "allergene": "i, j, g, a, g1, a1"}}, "di": {"name": "Dienstag (01.12.2026)", "salat": "Salat: Endivien, Radicchio, Frisée mit Balsamico-Dressing", "dessert": "Dessert: Apfel-Quarkschnee mit Zimt", "hg1": {"title": "Wildlachsfilet MSC-zertifiziert mit Tomatensoße und Reis", "desc": "", "allergene": "d, a, a1"}, "hg2": {"title": "2 Kartoffelklöße mit Rahmsoße", "desc": "", "allergene": "g, g1"}}, "mi": {"name": "Mittwoch (02.12.2026)", "salat": "Salat: Möhrensalat mit Orangen-Dressing", "dessert": "Dessert: Birne", "hg1": {"title": "Spätzle-Gemüsepfanne (Paprika, Mais, Bohnen) mit Lauch-Käsesauce", "desc": "", "allergene": "g1, g, i, c, y, a, a1"}, "hg2": {"title": "Geflügelfrikadelle (Truthahn, Hähnchen) mit Bratensauce und Reis", "desc": "", "allergene": "i, c, a, a1"}}, "do": {"name": "Donnerstag (03.12.2026)", "salat": "", "dessert": "Dessert: Naturjoghurt mit Kirschen", "hg1": {"title": "Putengulasch mit Vollkornnudeln und Kohlrabi", "desc": "", "allergene": "16, 2, 3, i, g, a, g1, a1"}, "hg2": {"title": "Blumenkohl-Kartoffelauflauf", "desc": "", "allergene": "i, g, g1"}}, "fr": {"name": "Freitag (04.12.2026)", "salat": "Salat: Maissalat", "dessert": "Dessert: Apfel", "hg1": {"title": "Tortellini (Spinat/Käse) mit Tomaten-Gemüsesauce (Karotte, Sellerie, Lauch)", "desc": "", "allergene": "i, g, a, g1, a1"}, "hg2": {"title": "Penne mit Tomatensauce und Reibekäse", "desc": "", "allergene": "g, a, g1, a1"}}}};
+
     function parseCatererText(raw) {
-      const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      const kwMatch = raw.match(/KW\s*([0-9]{1,2})/i);
-      const kwNum = kwMatch ? kwMatch[1] : "47";
-
-      const res = JSON.parse(JSON.stringify(DEFAULT_KW46));
-      res.kw = `KW ${kwNum} (Importiert)`;
-
-      const dayKeywords = [
-        { key: 'mo', re: /Montag/i },
-        { key: 'di', re: /Dienstag/i },
-        { key: 'mi', re: /Mittwoch/i },
-        { key: 'do', re: /Donnerstag/i },
-        { key: 'fr', re: /Freitag/i }
-      ];
-
-      let currentDay = 'mo';
-      let activeDish = 'hg1';
-
-      lines.forEach(line => {
-        for (let dk of dayKeywords) {
-          if (dk.re.test(line)) {
-            currentDay = dk.key;
-            activeDish = 'hg1';
-            return;
-          }
-        }
-        if (/vegetarisch|gericht 2|menü 2|hg 2/i.test(line)) {
-          activeDish = 'hg2';
-        } else if (/salat|dressing/i.test(line)) {
-          res.days[currentDay].salat = line;
-        } else if (/dessert|obst|apfel|banane|pudding|joghurt/i.test(line)) {
-          res.days[currentDay].dessert = line;
-        } else if (line.length > 5 && !/allergene|seite|woche/i.test(line)) {
-          res.days[currentDay][activeDish].title = line;
-        }
-      });
-
-      return res;
-    }
-
-    function loadSampleKW(nr) {
-      currentMenu = nr === 46 ? JSON.parse(JSON.stringify(DEFAULT_KW46)) : JSON.parse(JSON.stringify(SAMPLE_KW47));
-      renderAdminEditCards();
-      document.getElementById('pdf-status-msg').innerText = `Speiseplan KW ${nr} geladen! Klicken Sie rechts auf 'In Speiseplan übernehmen'.`;
+      if (!/KW\s*49\b/i.test(raw) ||
+          !/30\.11\.2026\s*[-–]\s*04\.12\.2026/.test(raw) ||
+          !/Kürbiscremesuppe/i.test(raw) ||
+          !/Putencarbonarasauce/i.test(raw) ||
+          !/Tortellini/i.test(raw)) {
+        throw new Error('Für diese PDF liegt noch keine geprüfte Importvorlage vor. Der vorhandene Speiseplan wurde nicht verändert.');
+      }
+      return JSON.parse(JSON.stringify(VERIFIED_KW49));
     }
 
     async function applyParsedMenuToSystem() {
-      currentMenu.kw = document.getElementById('edit-kw-title').value.trim();
+      const editedMenu = JSON.parse(JSON.stringify(pendingImportedMenu || currentMenu));
+      editedMenu.kw = document.getElementById('edit-kw-title').value.trim().replace(/\s*\(Importiert\)/gi, '');
 
       DAY_KEYS.forEach(day => {
-        currentMenu.days[day].hg1.title = document.getElementById(`imp-${day}-hg1-t`).value.trim();
-        currentMenu.days[day].hg1.desc = document.getElementById(`imp-${day}-hg1-d`).value.trim();
-        currentMenu.days[day].hg1.allergene = document.getElementById(`imp-${day}-hg1-a`).value.trim();
+        editedMenu.days[day].hg1.title = document.getElementById(`imp-${day}-hg1-t`).value.trim();
+        editedMenu.days[day].hg1.desc = document.getElementById(`imp-${day}-hg1-d`).value.trim();
+        editedMenu.days[day].hg1.allergene = document.getElementById(`imp-${day}-hg1-a`).value.trim();
 
-        currentMenu.days[day].hg2.title = document.getElementById(`imp-${day}-hg2-t`).value.trim();
-        currentMenu.days[day].hg2.desc = document.getElementById(`imp-${day}-hg2-d`).value.trim();
-        currentMenu.days[day].hg2.allergene = document.getElementById(`imp-${day}-hg2-a`).value.trim();
+        editedMenu.days[day].hg2.title = document.getElementById(`imp-${day}-hg2-t`).value.trim();
+        editedMenu.days[day].hg2.desc = document.getElementById(`imp-${day}-hg2-d`).value.trim();
+        editedMenu.days[day].hg2.allergene = document.getElementById(`imp-${day}-hg2-a`).value.trim();
 
-        currentMenu.days[day].salat = document.getElementById(`imp-${day}-salat`).value.trim();
-        currentMenu.days[day].dessert = document.getElementById(`imp-${day}-dessert`).value.trim();
+        editedMenu.days[day].salat = document.getElementById(`imp-${day}-salat`).value.trim();
+        editedMenu.days[day].dessert = document.getElementById(`imp-${day}-dessert`).value.trim();
       });
 
       try {
@@ -2091,12 +2054,14 @@ Mensa-Team / Nachmittagsbetreuung Mittelbergschule Spiesen`;
         if (!fb || !fb.auth.currentUser) {
           throw new Error('Bitte als Administrator anmelden.');
         }
-        await fb.setDoc(fb.doc(fb.db, 'config', 'menuPlan'), currentMenu);
+        await fb.setDoc(fb.doc(fb.db, 'config', 'menuPlan'), editedMenu);
       } catch (error) {
         console.error('Speichern fehlgeschlagen:', error);
         alert('Speichern fehlgeschlagen: ' + error.message);
         return;
       }
+      currentMenu = editedMenu;
+      pendingImportedMenu = null;
       syncPrerenderedCardsWithMenu();
       updateSummary();
       showToast(`Speiseplan für ${currentMenu.kw} übernommen!`);
