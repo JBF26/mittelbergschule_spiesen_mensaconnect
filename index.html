@@ -89,7 +89,7 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <a id="header-pdf-link" href="#" onclick="event.preventDefault(); alert('Der Original-Speiseplan wird nach Einrichtung der dauerhaften PDF-Speicherung bereitgestellt.');" aria-label="Original-Speiseplan derzeit noch nicht verfügbar" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
+        <a id="header-pdf-link" href="https://firebasestorage.googleapis.com/v0/b/mensa-mittelbergschule.firebasestorage.app/o/speiseplaene%2Fkw_49.pdf?alt=media" target="_blank" rel="noopener noreferrer" aria-label="Original-Speiseplan als PDF öffnen" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-bold text-xs md:text-sm transition">
           <i class="ph-bold ph-file-pdf text-rose-600 text-base"></i>
           <span class="hidden sm:inline">Original-Speiseplan</span> (PDF)
         </a>
@@ -1138,6 +1138,24 @@
       const kw = (currentMenu.kw || "KW 46").replace(/\s*\(Importiert\)/gi, "");
       const bTag = document.getElementById('banner-kw-tag');
       if (bTag) bTag.innerText = kw;
+      // PDF-Link folgt der angezeigten Kalenderwoche. Die PDF muss vorher
+      // als speiseplaene/kw_NN.pdf in Firebase Storage hochgeladen sein.
+      const pdfLink = document.getElementById('header-pdf-link');
+      const weekMatch = kw.match(/\bKW\s*(\d{1,2})\b/i);
+      if (pdfLink) {
+        if (weekMatch) {
+          const fileName = `speiseplaene/kw_${weekMatch[1]}.pdf`;
+          pdfLink.href = 'https://firebasestorage.googleapis.com/v0/b/mensa-mittelbergschule.firebasestorage.app/o/'
+            + encodeURIComponent(fileName) + '?alt=media';
+          pdfLink.target = '_blank';
+          pdfLink.rel = 'noopener noreferrer';
+          pdfLink.title = `Original-Speiseplan für KW ${weekMatch[1]} öffnen`;
+        } else {
+          pdfLink.removeAttribute('href');
+          pdfLink.title = 'Für diese Kalenderwoche ist kein PDF-Link hinterlegt';
+        }
+      }
+
       const admBadge = document.getElementById('admin-kw-badge');
       if (admBadge) admBadge.innerText = kw.split(' ')[0] + ' ' + (kw.split(' ')[1] || '');
       const catTitle = document.getElementById('cat-meldungs-title');
